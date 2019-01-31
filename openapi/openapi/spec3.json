@@ -1,0 +1,2185 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "2.0.0",
+    "title": "Telnyx API",
+    "description": "SIP trunking, SMS, MMS, Call Control and Telephony Data Services.",
+    "license": {
+      "name": "MIT"
+    },
+    "contact": {
+      "email": "support@telnyx.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.telnyx.com/v2",
+      "description": "Version 2.0.0 of the Telnyx API"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "messaging_profiles",
+      "description": "Messaging profiles"
+    },
+    {
+      "name": "phone_numbers",
+      "description": "Messaging phone numbers"
+    },
+    {
+      "name": "messages",
+      "description": "Messages"
+    },
+    {
+      "name": "messaging_settings",
+      "description": "Endpoints implemented by messaging-settings"
+    },
+    {
+      "name": "messaging_outbound",
+      "description": "Endpoints implemented by messaging-outbound"
+    }
+  ],
+  "paths": {
+    "/messaging_profiles": {
+      "get": {
+        "summary": "List all Messaging Profiles",
+        "operationId": "listMessagingProfiles",
+        "tags": [
+          "messaging_profiles",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "page[number]",
+            "in": "query",
+            "description": "The page number to load",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "description": "The size of the page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 20
+            }
+          },
+          {
+            "name": "page[token]",
+            "in": "query",
+            "description": "Token to receive the next page. For guaranteed pagination that will not skip elements, use the token provided in a previous request.\n",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListMessagingProfilesResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a Messaging Profile",
+        "operationId": "createMessagingProfile",
+        "tags": [
+          "messaging_profiles"
+        ],
+        "requestBody": {
+          "description": "New Messaging Profile object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewMessagingProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateMessagingProfileResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        },
+        "callbacks": {
+          "inboundMessage": {
+            "{$request.body#/webhook_url}": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/InboundMessageEvent"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL.\n"
+                  }
+                }
+              }
+            }
+          },
+          "deliveryUpdate": {
+            "{$request.body#/webhook_url}": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/OutboundMessageEvent"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL.\n"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messaging_profiles/{id}": {
+      "get": {
+        "summary": "Retrieve a specific Messaging Profile",
+        "operationId": "retrieveMessagingProfileById",
+        "tags": [
+          "messaging_profiles",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the messaging profile to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveMessagingProfileResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a specific Messaging Profile",
+        "operationId": "updateMessagingProfile",
+        "tags": [
+          "messaging_profiles"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the messaging profile to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New Messaging Profile object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessagingProfileUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UpdateMessagingProfileResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a Messaging Profile",
+        "operationId": "deleteMessagingProfile",
+        "tags": [
+          "messaging_profiles"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the messaging profile to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DeleteMessagingProfileResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/messaging_profiles/{id}/phone_numbers": {
+      "get": {
+        "summary": "Get all the phone numbers associated with a specific messaging profile",
+        "operationId": "retrieveMessagingProfilePhoneNumbers",
+        "tags": [
+          "messaging_profiles",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "page[number]",
+            "in": "query",
+            "description": "The page number to load",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "description": "The size of the page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 20
+            }
+          },
+          {
+            "name": "page[token]",
+            "in": "query",
+            "description": "Token to receive the next page. For guaranteed pagination that will not skip elements, use the token provided in a previous request.\n",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the messaging profile",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveMessagingProfilePhoneNumbersResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/messaging_profiles/{id}/short_codes": {
+      "get": {
+        "summary": "Get all the short codes associated with a specific messaging profile",
+        "operationId": "retrieveMessagingProfileShortCodes",
+        "tags": [
+          "messaging_profiles",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "page[number]",
+            "in": "query",
+            "description": "The page number to load",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "description": "The size of the page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 20
+            }
+          },
+          {
+            "name": "page[token]",
+            "in": "query",
+            "description": "Token to receive the next page. For guaranteed pagination that will not skip elements, use the token provided in a previous request.\n",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the messaging profile",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveMessagingProfileShortCodesResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/messaging_profiles/{id}/sender_ids": {
+      "get": {
+        "summary": "Get all the alphanumeric sender IDs associated with a specific messaging profile",
+        "operationId": "listMessagingProfileSenderIds",
+        "tags": [
+          "messaging_profiles",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "page[number]",
+            "in": "query",
+            "description": "The page number to load",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "description": "The size of the page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 20
+            }
+          },
+          {
+            "name": "page[token]",
+            "in": "query",
+            "description": "Token to receive the next page. For guaranteed pagination that will not skip elements, use the token provided in a previous request.\n",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the messaging profile",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveMessagingProfileSenderIdsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/messaging_phone_numbers": {
+      "get": {
+        "summary": "Get all messaging enabled phone numbers",
+        "operationId": "listMessagingEnabledPhoneNumbers",
+        "tags": [
+          "phone_numbers",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "page[number]",
+            "in": "query",
+            "description": "The page number to load.",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page[token]",
+            "in": "query",
+            "description": "Token to receive the next page",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "description": "The size of the page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 20
+            }
+          },
+          {
+            "name": "filter[messaging_profile_id]",
+            "in": "query",
+            "description": "Filter by Messaging Profile ID. Use the string `null` for phone numbers without assigned profiles. A synonym for the `/messaging_profiles/{id}/phone_number` endpoint when querying about an extant profile.\n",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[phone_number]",
+            "in": "query",
+            "description": "A comma separated list of phone numbers to return",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListMessagingPhoneNumbersResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/messaging_phone_numbers/{id}": {
+      "get": {
+        "summary": "Retrieve a specific number",
+        "operationId": "retrievePhoneNumber",
+        "tags": [
+          "phone_numbers",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the phone number to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveMessagingPhoneNumberResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update messaging settings for a specific number",
+        "operationId": "updatePhoneNumber",
+        "description": "Update the settings for a specific number. To unbind a number from, a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
+        "tags": [
+          "phone_numbers",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the phone number to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Messaging Phone Number Update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessagingPhoneNumberUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UpdateMessagingPhoneNumberResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/messaging_short_codes": {
+      "get": {
+        "summary": "Get all short codes",
+        "operationId": "retrieveShortCodes",
+        "tags": [
+          "short_codes",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "page[number]",
+            "in": "query",
+            "description": "The page number to load.",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page[token]",
+            "in": "query",
+            "description": "Token to receive the next page",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "description": "The size of the page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 20
+            }
+          },
+          {
+            "name": "filter[messaging_profile_id]",
+            "in": "query",
+            "description": "Filter by Messaging Profile ID. Use the string `null` for phone numbers without assigned profiles. A synonym for the `/messaging_profiles/{id}/short_codes` endpoint when querying about an extant profile.\n",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListMessagingShortCodesResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/messaging_short_codes/{id}": {
+      "get": {
+        "summary": "Retrieve a specific short code",
+        "operationId": "retrieveShortCode",
+        "tags": [
+          "short_codes",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the short code to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveMessagingShortCodeResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update messaging settings for a specific short code",
+        "operationId": "updateShortcode",
+        "description": "Update the settings for a specific short code. To unbind a short code from a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
+        "tags": [
+          "short_codes",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the short code to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Messaging short code update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessagingShortCodeUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UpdateMessagingShortCodeResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/messaging_sender_ids": {
+      "post": {
+        "summary": "Create a new alphanumeric sender ID",
+        "operationId": "createSenderId",
+        "tags": [
+          "alphanum_sender_ids",
+          "messaging_settings"
+        ],
+        "requestBody": {
+          "description": "New alphanumeric sender ID",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewMessagingSenderId"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/CreateMessagingSenderIdResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all alphanumeric sender IDs",
+        "operationId": "listSenderIds",
+        "tags": [
+          "alphanum_sender_ids",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "page[number]",
+            "in": "query",
+            "description": "The page number to load.",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page[token]",
+            "in": "query",
+            "description": "Token to receive the next page",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "description": "The size of the page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 20
+            }
+          },
+          {
+            "name": "filter[messaging_profile_id]",
+            "in": "query",
+            "description": "Filter by Messaging Profile ID. Use the string `null` for phone numbers without assigned profiles. A synonym for the `/messaging_profiles/{id}/sender_ids` endpoint when querying about an extant profile.\n",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListMessagingSenderIdsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/messaging_sender_ids/{id}": {
+      "get": {
+        "summary": "Retrieve a specific alphanumeric sender ID",
+        "operationId": "retrieveSenderId",
+        "tags": [
+          "alphanum_sender_ids",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique ID of the alphanumeric sender ID to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveMessagingSenderIdResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a specific alphanumeric sender ID",
+        "operationId": "updateSenderId",
+        "description": "Update the settings for a specific alphanumeric sender ID. To unbind an alphanumeric sender ID from a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
+        "tags": [
+          "alphanum_sender_ids",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique ID of the alphanumeric sender ID to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Alphanumeric sender ID update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessagingSenderIdUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UpdateMessagingSenderIdResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove a specific alphanumeric sender ID",
+        "operationId": "deleteSenderId",
+        "description": "Delete a specific alphanumeric sender ID.\n",
+        "tags": [
+          "alphanum_sender_ids",
+          "messaging_settings"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique ID of the alphanumeric sender ID to delete",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DeleteMessagingSenderIdResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/messages": {
+      "post": {
+        "summary": "Send a message",
+        "operationId": "createMessage",
+        "tags": [
+          "messages",
+          "messaging_outbound"
+        ],
+        "requestBody": {
+          "description": "Message payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateMessageResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        },
+        "callbacks": {
+          "deliveryUpdate": {
+            "{$request.body#/webhook_url}": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/OutboundMessage"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL.\n"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messages/{id}": {
+      "get": {
+        "summary": "Retrieve a specific message",
+        "operationId": "retrieveMessageById",
+        "tags": [
+          "messages",
+          "messaging_outbound"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the message",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveMessageResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "PaginationMeta": {
+        "properties": {
+          "total_pages": {
+            "type": "integer",
+            "example": 3
+          },
+          "total_results": {
+            "type": "integer",
+            "example": 55
+          },
+          "page_number": {
+            "type": "integer",
+            "example": 2
+          },
+          "page_size": {
+            "type": "integer",
+            "example": 25
+          },
+          "next_page_token": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "required": [
+          "code",
+          "title"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "format": "int"
+          },
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "pointer": {
+                "description": "JSON pointer (RFC6901) to the offending entity.",
+                "type": "string",
+                "format": "json-pointer"
+              },
+              "parameter": {
+                "description": "Indicates which query parameter caused the error.",
+                "type": "string"
+              }
+            }
+          },
+          "meta": {
+            "type": "object"
+          }
+        }
+      },
+      "Errors": {
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "ShortCodeInfo": {
+        "description": "This information is attached to messages that are sent from short-codes. It includes carrier information which can influence billing.",
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "short_code_info_blob"
+          },
+          "om_carrier": {
+            "type": "string"
+          },
+          "om_normalized_carrier": {
+            "type": "string"
+          }
+        }
+      },
+      "AlphaSenderInfo": {
+        "description": "This information is attached to messages that are sent from alphanumeric sender IDs.",
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "alpha_sender_info_blob"
+          },
+          "hni": {
+            "description": "HNI (Home Network Identity) of the recipient's phone.",
+            "type": "string"
+          }
+        }
+      },
+      "NewMessagingProfile": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          },
+          "resource_group_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "webhook_url": {
+            "type": "string",
+            "format": "url",
+            "nullable": true,
+            "default": null
+          },
+          "webhook_failover_url": {
+            "type": "string",
+            "format": "url",
+            "nullable": true,
+            "default": null
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          },
+          "simplify_characters": {
+            "type": "boolean",
+            "default": true
+          },
+          "webhook_api_version": {
+            "type": "string",
+            "enum": [
+              "1",
+              "2"
+            ],
+            "default": "2"
+          }
+        }
+      },
+      "MessagingProfile": {
+        "type": "object",
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "messaging_profile"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "format": "string"
+          },
+          "resource_group_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "webhook_url": {
+            "type": "string",
+            "format": "url",
+            "nullable": true
+          },
+          "webhook_failover_url": {
+            "type": "string",
+            "format": "url",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "simplify_characters": {
+            "type": "boolean"
+          },
+          "whitelisted_destinations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "iso3166-alpha2"
+            }
+          },
+          "webhook_api_version": {
+            "type": "string",
+            "enum": [
+              "1",
+              "2"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "example": {
+          "record_type": "messaging_profile",
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "name": "Profile for Messages",
+          "resource_group_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "webhook_url": null,
+          "webhook_failover_url": null,
+          "enabled": true,
+          "simplify_characters": true,
+          "whitelisted_destinations": [
+            "US"
+          ],
+          "webhook_api_version": "2",
+          "created_at": "2019-01-23T18:10:02.574Z",
+          "updated_at": "2019-01-23T18:10:02.574Z"
+        }
+      },
+      "MessagingProfileUpdate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          },
+          "resource_group_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "webhook_url": {
+            "type": "string",
+            "format": "url",
+            "nullable": true
+          },
+          "webhook_failover_url": {
+            "type": "string",
+            "format": "url",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "simplify_characters": {
+            "type": "boolean"
+          },
+          "whitelisted_destinations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "iso3166-alpha2"
+            }
+          },
+          "webhook_api_version": {
+            "type": "string",
+            "enum": [
+              "1",
+              "2"
+            ]
+          }
+        }
+      },
+      "MessagingPhoneNumber": {
+        "type": "object",
+        "example": {
+          "record_type": "messaging_phone_number",
+          "phone_number": "+13115552368",
+          "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "created_at": "2019-01-23T18:10:02.574Z",
+          "updated_at": "2019-01-23T18:10:02.574Z"
+        },
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "messaging_phone_number",
+            "enum": [
+              "messaging_phone_number"
+            ]
+          },
+          "phone_number": {
+            "type": "string",
+            "format": "e164"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MessagingPhoneNumberUpdate": {
+        "type": "object",
+        "properties": {
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "MessagingShortCode": {
+        "type": "object",
+        "example": {
+          "record_type": "messaging_short_code",
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "short_code": "12345",
+          "country_code": "US",
+          "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "created_at": "2019-01-23T18:10:02.574Z",
+          "updated_at": "2019-01-23T18:10:02.574Z"
+        },
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "messaging_short_code",
+            "enum": [
+              "messaging_short_code"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "short_code": {
+            "type": "string"
+          },
+          "country_code": {
+            "type": "string",
+            "format": "iso3166-alpha2"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MessagingShortCodeUpdate": {
+        "type": "object",
+        "properties": {
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "NewMessagingSenderId": {
+        "type": "object",
+        "properties": {
+          "sender_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "MessagingSenderId": {
+        "type": "object",
+        "example": {
+          "record_type": "messaging_sender_id",
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "sender_id": "TelnyxID",
+          "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "approved": true,
+          "created_at": "2019-01-23T18:10:02.574Z",
+          "updated_at": "2019-01-23T18:10:02.574Z"
+        },
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "messaging_sender_id",
+            "enum": [
+              "messaging_sender_id"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sender_id": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "approved": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MessagingSenderIdUpdate": {
+        "type": "object",
+        "properties": {
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "NewMessage": {
+        "type": "object",
+        "required": [
+          "to"
+        ],
+        "properties": {
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "from": {
+            "type": "string",
+            "format": "address"
+          },
+          "to": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "address"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "address"
+                }
+              }
+            ]
+          },
+          "text": {
+            "type": "string"
+          },
+          "media_urls": {
+            "type": "array",
+            "description": "An array of media URLs. The total media size must be less than 1 MB.",
+            "items": {
+              "type": "string",
+              "format": "url"
+            }
+          },
+          "webhook_url": {
+            "type": "string",
+            "format": "url"
+          },
+          "webhook_failover_url": {
+            "type": "string",
+            "format": "url"
+          },
+          "use_profile_webhooks": {
+            "type": "boolean",
+            "description": "If the profile this number is associated with has webhooks, use them for delivery notifications. If webhooks are also specified on the message itself, they will be attempted first, then those on the profile.",
+            "default": true
+          },
+          "validity_period_secs": {
+            "type": "number",
+            "description": "If the message is not pulled off the queue and sending attempted within this amount of time, sending will be aborted and the message will be marked as expired."
+          },
+          "ignore_wire_type": {
+            "type": "boolean",
+            "description": "Typically, if the LRN dip (US numbers only(?)) indicates that the phone number is a land-line, the request will be rejected. However, some landlines can receive SMS, so that behavior can be overridden by setting this value to `true`"
+          }
+        }
+      },
+      "MessageQueueInfo": {
+        "type": "object",
+        "properties": {
+          "queue_lengths": {
+            "type": "object",
+            "description": "Approximate lengths of the user's queues",
+            "properties": {
+              "account": {
+                "type": "integer"
+              },
+              "messaging_profile": {
+                "type": "integer"
+              },
+              "phone_number": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "OutboundMessage": {
+        "type": "object",
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "message_outbound"
+          },
+          "direction": {
+            "type": "string",
+            "example": "outbound"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "sms",
+              "mms"
+            ]
+          },
+          "from": {
+            "type": "string",
+            "format": "address"
+          },
+          "to": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "type": "string",
+                  "format": "address"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "sending",
+                    "sent",
+                    "delivered",
+                    "sending_failed",
+                    "delivery_failed",
+                    "delivery_unconfirmed"
+                  ]
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "text": {
+            "type": "string"
+          },
+          "media": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "url"
+                },
+                "content_type": {
+                  "type": "string",
+                  "format": "mime-type",
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "webhook_url": {
+            "type": "string",
+            "format": "url",
+            "nullable": true
+          },
+          "webhook_failover_url": {
+            "type": "string",
+            "format": "url",
+            "nullable": true
+          },
+          "use_profile_webhooks": {
+            "type": "boolean",
+            "default": false
+          },
+          "cost": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "amount": {
+                "type": "string",
+                "format": "decimal"
+              },
+              "currency": {
+                "type": "string",
+                "format": "iso4217"
+              }
+            }
+          },
+          "parts": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "valid_until": {
+            "type": "string",
+            "description": "Message must be out of the queue by this time or else it will be discarded and marked as 'sending_failed'. Once the message moves out of the queue, this field will be nulled",
+            "format": "date-time",
+            "nullable": true
+          },
+          "info_blob_fieldname": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ShortCodeInfo"
+              },
+              {
+                "$ref": "#/components/schemas/AlphaSenderInfo"
+              }
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "description": "These errors may point at addressees when referring to unsuccessful/unconfirmed delivery statuses.",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          },
+          "carrier": {
+            "type": "string",
+            "description": "The carrier of the receiver.",
+            "nullable": true
+          },
+          "line_type": {
+            "type": "string",
+            "description": "The line-type of the receiver.",
+            "enum": [
+              "Wireline",
+              "Wireless",
+              "VoWiFi",
+              "VoIP",
+              "Pre-Paid Wireless"
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "OutboundMessageEvent": {
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "event"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "example": "message.delivery_update"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/OutboundMessage"
+          }
+        }
+      },
+      "InboundMessage": {
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "message_inbound"
+          },
+          "direction": {
+            "type": "string",
+            "example": "inbound"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "sms",
+              "mms"
+            ]
+          },
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "from": {
+            "type": "string",
+            "format": "address"
+          },
+          "to": {
+            "type": "string",
+            "format": "address"
+          },
+          "cc": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "address"
+            }
+          },
+          "text": {
+            "type": "string"
+          },
+          "media": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "url"
+                },
+                "content_type": {
+                  "type": "string",
+                  "format": "mime-type"
+                },
+                "size": {
+                  "type": "integer"
+                },
+                "hash_sha256": {
+                  "type": "string",
+                  "minLength": 32,
+                  "maxLength": 32
+                }
+              }
+            }
+          },
+          "cost": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "string",
+                "format": "decimal"
+              },
+              "currency": {
+                "type": "string",
+                "format": "iso4217"
+              }
+            }
+          },
+          "parts": {
+            "type": "integer",
+            "example": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "carrier": {
+            "type": "string",
+            "description": "The carrier of the sender.",
+            "nullable": true
+          },
+          "line_type": {
+            "type": "string",
+            "description": "The line-type of the sender.",
+            "enum": [
+              "Wireline",
+              "Wireless",
+              "VoWiFi",
+              "VoIP",
+              "Pre-Paid Wireless"
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "InboundMessageEvent": {
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "event"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "example": "message.received"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/InboundMessage"
+          }
+        }
+      }
+    },
+    "responses": {
+      "GenericErrorResponse": {
+        "description": "unexpected error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Errors"
+            }
+          }
+        }
+      },
+      "ListMessagingProfilesResponse": {
+        "description": "A paginated array of Messaging Profiles",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingProfile"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateMessagingProfileResponse": {
+        "description": "Expected messaging profile response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingProfileResponse": {
+        "description": "Expected messaging profile response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateMessagingProfileResponse": {
+        "description": "Expected messaging profile response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DeleteMessagingProfileResponse": {
+        "description": "Expected messaging profile response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingProfilePhoneNumbersResponse": {
+        "description": "Paginated array of phone numbers associated with the messaging profile",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingPhoneNumber"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingProfileShortCodesResponse": {
+        "description": "Paginated array of short codes associated with the messaging profile",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingShortCode"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingProfileSenderIdsResponse": {
+        "description": "Paginated array of alphanumeric sender IDs associated with the messaging profile",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingSenderId"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListMessagingPhoneNumbersResponse": {
+        "description": "A paginated array of the phone numbers",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingPhoneNumber"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingPhoneNumberResponse": {
+        "description": "Expected phone number response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingPhoneNumber"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateMessagingPhoneNumberResponse": {
+        "description": "Expected update response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingPhoneNumber"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListMessagingShortCodesResponse": {
+        "description": "A paginated array of the short codes",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingShortCode"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingShortCodeResponse": {
+        "description": "Expected short code detail response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingShortCode"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateMessagingShortCodeResponse": {
+        "description": "Expected update response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingShortCode"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateMessagingSenderIdResponse": {
+        "description": "The created alphanumeric sender ID",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingSenderId"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListMessagingSenderIdsResponse": {
+        "description": "A paginated array of the alphanumeric sender IDs",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingSenderId"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingSenderIdResponse": {
+        "description": "The requested alphanumeric sender ID record",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingSenderId"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateMessagingSenderIdResponse": {
+        "description": "Expected update response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingSenderId"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DeleteMessagingSenderIdResponse": {
+        "description": "The deleted alphanumeric sender ID record",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingSenderId"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateMessageResponse": {
+        "description": "Detailed message object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/OutboundMessage"
+                },
+                "statistics": {
+                  "$ref": "#/components/schemas/MessageQueueInfo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessageResponse": {
+        "description": "the message detail response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/OutboundMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "examples": {},
+    "links": {},
+    "parameters": {},
+    "requestBodies": {}
+  }
+}

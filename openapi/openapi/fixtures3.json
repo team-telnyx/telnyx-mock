@@ -1,0 +1,20 @@
+{
+  "resources": {
+    "messaging_profile": {
+      "record_type": "messaging_profile",
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "New Messaging Profile",
+      "resource_group_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "webhook_url": null,
+      "webhook_failover_url": null,
+      "enabled": true,
+      "simplify_characters": true,
+      "whitelisted_destinations": [
+      ],
+      "webhook_api_version": "1",
+      "created_at": "2019-01-23T18:10:02.574Z",
+      "updated_at": "2019-01-23T18:10:02.574Z"
+    }
+  }
+}
