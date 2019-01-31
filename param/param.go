@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/telnyx/telnyx-mock/param/form"
-	"github.com/telnyx/telnyx-mock/param/nestedtypeassembler"
-	"github.com/telnyx/telnyx-mock/param/parser"
+	"github.com/team-telnyx/telnyx-mock/param/form"
+	"github.com/team-telnyx/telnyx-mock/param/nestedtypeassembler"
+	"github.com/team-telnyx/telnyx-mock/param/parser"
 )
 
 //

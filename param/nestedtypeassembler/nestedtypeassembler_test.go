@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	assert "github.com/stretchr/testify/require"
-	"github.com/telnyx/telnyx-mock/param/form"
-	"github.com/telnyx/telnyx-mock/param/parser"
+	"github.com/team-telnyx/telnyx-mock/param/form"
+	"github.com/team-telnyx/telnyx-mock/param/parser"
 )
 
 //

@@ -10,7 +10,7 @@ package nestedtypeassembler
 import (
 	"fmt"
 
-	"github.com/telnyx/telnyx-mock/param/form"
+	"github.com/team-telnyx/telnyx-mock/param/form"
 )
 
 //

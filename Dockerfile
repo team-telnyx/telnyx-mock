@@ -10,7 +10,7 @@
 #
 
 FROM golang:1.9-alpine AS builder
-WORKDIR /go/src/github.com/telnyx/telnyx-mock/
+WORKDIR /go/src/github.com/team-telnyx/telnyx-mock/
 ADD ./ ./
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o telnyx-mock .
 
@@ -24,7 +24,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o telnyx-mock .
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 WORKDIR /
-COPY --from=builder /go/src/github.com/telnyx/telnyx-mock/telnyx-mock .
+COPY --from=builder /go/src/github.com/team-telnyx/telnyx-mock/telnyx-mock .
 ENTRYPOINT ["/telnyx-mock", "-http-port", "12111", "-https-port", "12112"]
 EXPOSE 12111
 EXPOSE 12112

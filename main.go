@@ -15,7 +15,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/telnyx/telnyx-mock/spec"
+	"github.com/team-telnyx/telnyx-mock/spec"
 )
 
 const defaultPortHTTP = 12111

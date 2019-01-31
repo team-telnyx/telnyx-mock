@@ -12,9 +12,9 @@ import (
 	"time"
 
 	"github.com/lestrrat/go-jsval"
-	"github.com/telnyx/telnyx-mock/param"
-	"github.com/telnyx/telnyx-mock/param/coercer"
-	"github.com/telnyx/telnyx-mock/spec"
+	"github.com/team-telnyx/telnyx-mock/param"
+	"github.com/team-telnyx/telnyx-mock/param/coercer"
+	"github.com/team-telnyx/telnyx-mock/spec"
 )
 
 //

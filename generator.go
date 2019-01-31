@@ -8,8 +8,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/telnyx/telnyx-mock/generator/datareplacer"
-	"github.com/telnyx/telnyx-mock/spec"
+	"github.com/team-telnyx/telnyx-mock/generator/datareplacer"
+	"github.com/team-telnyx/telnyx-mock/spec"
 )
 
 // GenerateParams is a parameters structure that's used to invoke Generate and

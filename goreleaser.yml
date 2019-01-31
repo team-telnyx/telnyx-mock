@@ -11,7 +11,7 @@ brew:
   github:
     owner: telnyx
     name: homebrew-telnyx-mock
-  homepage: "https://github.com/telnyx/telnyx-mock"
+  homepage: "https://github.com/team-telnyx/telnyx-mock"
   description: "telnyx-mock is a mock HTTP server that responds like the real Telnyx API. It can be used instead of Telnyx's testmode to make test suites integrating with Telnyx faster and less brittle."
 
   plist: |

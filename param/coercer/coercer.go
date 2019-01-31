@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/telnyx/telnyx-mock/spec"
+	"github.com/team-telnyx/telnyx-mock/spec"
 )
 
 // CoerceParams coerces the types of certain parameters according to typing

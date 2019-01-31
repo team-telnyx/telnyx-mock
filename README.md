@@ -168,7 +168,7 @@ goreleaser --rm-dist
 [go-bindata]: https://github.com/jteeuwen/go-bindata
 [goreleaser]: https://github.com/goreleaser/goreleaser
 [openapi]: https://api.telnyx.com/v2/mission_control_docs
-[releases]: https://github.com/telnyx/telnyx-mock/releases
+[releases]: https://github.com/team-telnyx/telnyx-mock/releases
 
 ## Acknowledgements
 

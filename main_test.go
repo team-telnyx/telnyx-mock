@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	assert "github.com/stretchr/testify/require"
-	"github.com/telnyx/telnyx-mock/spec"
+	"github.com/team-telnyx/telnyx-mock/spec"
 )
 
 var applicationFeeRefundCreateMethod *spec.Operation
