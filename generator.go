@@ -400,7 +400,7 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 
 	// If the schema is of the format we expect, this shouldn't ever happen.
 	panic(fmt.Sprintf(
-		"%sEncountered unusual scenario:\nschema=%s\nexample=%+v",
+		"%sEncountered unusual scenario:\nschema=%s\nexample=%+v\n Ensure that the schema has `type: object`",
 		context, schema, example))
 }
 

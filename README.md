@@ -164,7 +164,7 @@ Homebrew tap).
 goreleaser --rm-dist
 ```
 
-[apiref]: https://telnyx.com/docs/api
+[apiref]: https://developers.telnyx.com
 [go-bindata]: https://github.com/jteeuwen/go-bindata
 [goreleaser]: https://github.com/goreleaser/goreleaser
 [openapi]: https://api.telnyx.com/v2/mission_control_docs

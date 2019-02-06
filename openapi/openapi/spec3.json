@@ -24,34 +24,37 @@
   ],
   "tags": [
     {
-      "name": "messaging_profiles",
+      "name": "Messaging Profiles",
       "description": "Messaging profiles"
     },
     {
-      "name": "phone_numbers",
-      "description": "Messaging phone numbers"
+      "name": "Phone Numbers",
+      "description": "Phone numbers"
     },
     {
-      "name": "messages",
+      "name": "Messages",
       "description": "Messages"
     },
     {
-      "name": "messaging_settings",
-      "description": "Endpoints implemented by messaging-settings"
+      "name": "Sender IDs",
+      "description": "Alphanumeric sender ids"
     },
     {
-      "name": "messaging_outbound",
-      "description": "Endpoints implemented by messaging-outbound"
+      "name": "Short Codes",
+      "description": "Messaging short codes"
+    },
+    {
+      "name": "Public Key",
+      "description": "Public Key"
     }
   ],
   "paths": {
     "/messaging_profiles": {
       "get": {
-        "summary": "List all Messaging Profiles",
+        "summary": "List all messaging profiles",
         "operationId": "listMessagingProfiles",
         "tags": [
-          "messaging_profiles",
-          "messaging_settings"
+          "Messaging Profiles"
         ],
         "parameters": [
           {
@@ -94,10 +97,10 @@
         }
       },
       "post": {
-        "summary": "Create a Messaging Profile",
+        "summary": "Create a messaging profile",
         "operationId": "createMessagingProfile",
         "tags": [
-          "messaging_profiles"
+          "Messaging Profiles"
         ],
         "requestBody": {
           "description": "New Messaging Profile object",
@@ -166,11 +169,10 @@
     },
     "/messaging_profiles/{id}": {
       "get": {
-        "summary": "Retrieve a specific Messaging Profile",
+        "summary": "Retrieve a messaging profile",
         "operationId": "retrieveMessagingProfileById",
         "tags": [
-          "messaging_profiles",
-          "messaging_settings"
+          "Messaging Profiles"
         ],
         "parameters": [
           {
@@ -194,10 +196,10 @@
         }
       },
       "patch": {
-        "summary": "Update a specific Messaging Profile",
+        "summary": "Update a messaging profile",
         "operationId": "updateMessagingProfile",
         "tags": [
-          "messaging_profiles"
+          "Messaging Profiles"
         ],
         "parameters": [
           {
@@ -232,10 +234,10 @@
         }
       },
       "delete": {
-        "summary": "Delete a Messaging Profile",
+        "summary": "Delete a messaging profile",
         "operationId": "deleteMessagingProfile",
         "tags": [
-          "messaging_profiles"
+          "Messaging Profiles"
         ],
         "parameters": [
           {
@@ -261,11 +263,10 @@
     },
     "/messaging_profiles/{id}/phone_numbers": {
       "get": {
-        "summary": "Get all the phone numbers associated with a specific messaging profile",
+        "summary": "List all phone numbers associated with a messaging profile",
         "operationId": "retrieveMessagingProfilePhoneNumbers",
         "tags": [
-          "messaging_profiles",
-          "messaging_settings"
+          "Messaging Profiles"
         ],
         "parameters": [
           {
@@ -320,11 +321,10 @@
     },
     "/messaging_profiles/{id}/short_codes": {
       "get": {
-        "summary": "Get all the short codes associated with a specific messaging profile",
+        "summary": "List all short codes associated with a messaging profile",
         "operationId": "retrieveMessagingProfileShortCodes",
         "tags": [
-          "messaging_profiles",
-          "messaging_settings"
+          "Messaging Profiles"
         ],
         "parameters": [
           {
@@ -379,11 +379,10 @@
     },
     "/messaging_profiles/{id}/sender_ids": {
       "get": {
-        "summary": "Get all the alphanumeric sender IDs associated with a specific messaging profile",
+        "summary": "List all sender IDs associated with a messaging profile",
         "operationId": "listMessagingProfileSenderIds",
         "tags": [
-          "messaging_profiles",
-          "messaging_settings"
+          "Messaging Profiles"
         ],
         "parameters": [
           {
@@ -438,11 +437,10 @@
     },
     "/messaging_phone_numbers": {
       "get": {
-        "summary": "Get all messaging enabled phone numbers",
+        "summary": "List all messaging enabled phone numbers",
         "operationId": "listMessagingEnabledPhoneNumbers",
         "tags": [
-          "phone_numbers",
-          "messaging_settings"
+          "Phone Numbers"
         ],
         "parameters": [
           {
@@ -502,11 +500,10 @@
     },
     "/messaging_phone_numbers/{id}": {
       "get": {
-        "summary": "Retrieve a specific number",
+        "summary": "Retrieve a messaging phone number",
         "operationId": "retrievePhoneNumber",
         "tags": [
-          "phone_numbers",
-          "messaging_settings"
+          "Phone Numbers"
         ],
         "parameters": [
           {
@@ -530,12 +527,11 @@
         }
       },
       "patch": {
-        "summary": "Update messaging settings for a specific number",
+        "summary": "Update a messaging phone number",
         "operationId": "updatePhoneNumber",
         "description": "Update the settings for a specific number. To unbind a number from, a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
         "tags": [
-          "phone_numbers",
-          "messaging_settings"
+          "Phone Numbers"
         ],
         "parameters": [
           {
@@ -572,11 +568,10 @@
     },
     "/messaging_short_codes": {
       "get": {
-        "summary": "Get all short codes",
+        "summary": "List all short codes",
         "operationId": "retrieveShortCodes",
         "tags": [
-          "short_codes",
-          "messaging_settings"
+          "Short Codes"
         ],
         "parameters": [
           {
@@ -628,11 +623,10 @@
     },
     "/messaging_short_codes/{id}": {
       "get": {
-        "summary": "Retrieve a specific short code",
+        "summary": "Retrieve a short code",
         "operationId": "retrieveShortCode",
         "tags": [
-          "short_codes",
-          "messaging_settings"
+          "Short Codes"
         ],
         "parameters": [
           {
@@ -656,12 +650,11 @@
         }
       },
       "patch": {
-        "summary": "Update messaging settings for a specific short code",
+        "summary": "Update short code",
         "operationId": "updateShortcode",
         "description": "Update the settings for a specific short code. To unbind a short code from a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
         "tags": [
-          "short_codes",
-          "messaging_settings"
+          "Short Codes"
         ],
         "parameters": [
           {
@@ -698,11 +691,10 @@
     },
     "/messaging_sender_ids": {
       "post": {
-        "summary": "Create a new alphanumeric sender ID",
+        "summary": "Create a sender ID",
         "operationId": "createSenderId",
         "tags": [
-          "alphanum_sender_ids",
-          "messaging_settings"
+          "Sender IDs"
         ],
         "requestBody": {
           "description": "New alphanumeric sender ID",
@@ -725,11 +717,10 @@
         }
       },
       "get": {
-        "summary": "Get all alphanumeric sender IDs",
+        "summary": "List all sender IDs",
         "operationId": "listSenderIds",
         "tags": [
-          "alphanum_sender_ids",
-          "messaging_settings"
+          "Sender IDs"
         ],
         "parameters": [
           {
@@ -781,11 +772,10 @@
     },
     "/messaging_sender_ids/{id}": {
       "get": {
-        "summary": "Retrieve a specific alphanumeric sender ID",
+        "summary": "Retrieve a sender ID",
         "operationId": "retrieveSenderId",
         "tags": [
-          "alphanum_sender_ids",
-          "messaging_settings"
+          "Sender IDs"
         ],
         "parameters": [
           {
@@ -809,12 +799,11 @@
         }
       },
       "patch": {
-        "summary": "Update a specific alphanumeric sender ID",
+        "summary": "Update a sender ID",
         "operationId": "updateSenderId",
         "description": "Update the settings for a specific alphanumeric sender ID. To unbind an alphanumeric sender ID from a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
         "tags": [
-          "alphanum_sender_ids",
-          "messaging_settings"
+          "Sender IDs"
         ],
         "parameters": [
           {
@@ -849,12 +838,11 @@
         }
       },
       "delete": {
-        "summary": "Remove a specific alphanumeric sender ID",
+        "summary": "Delete a sender ID",
         "operationId": "deleteSenderId",
         "description": "Delete a specific alphanumeric sender ID.\n",
         "tags": [
-          "alphanum_sender_ids",
-          "messaging_settings"
+          "Sender IDs"
         ],
         "parameters": [
           {
@@ -883,8 +871,7 @@
         "summary": "Send a message",
         "operationId": "createMessage",
         "tags": [
-          "messages",
-          "messaging_outbound"
+          "Messages"
         ],
         "requestBody": {
           "description": "Message payload",
@@ -931,7 +918,7 @@
     },
     "/messages/{id}": {
       "get": {
-        "summary": "Retrieve a specific message",
+        "summary": "Retrieve a message",
         "operationId": "retrieveMessageById",
         "tags": [
           "messages",
@@ -952,6 +939,209 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/RetrieveMessageResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/available_phone_numbers": {
+      "get": {
+        "summary": "List all available Phone Numbers",
+        "operationId": "listAvailablePhoneNumbers",
+        "tags": [
+          "Number Searching"
+        ],
+        "parameters": [
+          {
+            "name": "filter[phone_number][starts_with]",
+            "in": "query",
+            "description": "Filter numbers starting with a pattern",
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "generic": {
+                "value": "FOO",
+                "summary": "Find numbers starting with the prefix 'FREE'"
+              }
+            }
+          },
+          {
+            "name": "filter[phone_number][ends_with]",
+            "in": "query",
+            "description": "Filter numbers ending with a pattern",
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "generic": {
+                "value": "CALL",
+                "summary": "Find numbers ending with the suffix 'CALL'"
+              }
+            }
+          },
+          {
+            "name": "filter[phone_number][contains]",
+            "in": "query",
+            "description": "Filter numbers containing a pattern",
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "generic": {
+                "value": "TELNYX",
+                "summary": "Find numbers that contain the word 'TELNYX' in any position"
+              }
+            }
+          },
+          {
+            "name": "filter[locality]",
+            "in": "query",
+            "description": "Filter phone numbers by city",
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "US": {
+                "value": "Chicago"
+              },
+              "CA": {
+                "value": "Toronto"
+              },
+              "AU": {
+                "value": "Canberra"
+              }
+            }
+          },
+          {
+            "name": "filter[administrative_area]",
+            "in": "query",
+            "description": "Filter phone numbers by US state/CA province",
+            "schema": {
+              "type": "string",
+              "example": "IL"
+            }
+          },
+          {
+            "name": "filter[country_code]",
+            "in": "query",
+            "description": "Filter phone numbers by ISO 2 country code",
+            "schema": {
+              "type": "string",
+              "example": "US"
+            }
+          },
+          {
+            "name": "filter[national_destination_code]",
+            "in": "query",
+            "description": "Filter by the national destination code of the number. This filter is only applicable to North American numbers",
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "US": {
+                "value": "312"
+              },
+              "CA": {
+                "value": "437"
+              },
+              "AU": {
+                "value": "0251"
+              }
+            }
+          },
+          {
+            "name": "filter[rate_center]",
+            "in": "query",
+            "description": "Filter phone numbers by NANP rate center. This filter is only applicable to North American numbers",
+            "schema": {
+              "type": "string",
+              "example": "CHICAGO HEIGHTS"
+            }
+          },
+          {
+            "name": "filter[number_type]",
+            "in": "query",
+            "description": "Filter phone numbers by number type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "toll-free",
+                "national",
+                "mobile",
+                "local"
+              ],
+              "example": "local"
+            }
+          },
+          {
+            "name": "filter[features]",
+            "in": "query",
+            "description": "Filter if the phone number should be used for voice, fax, sms",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "sms",
+                  "mms",
+                  "voice",
+                  "fax"
+                ]
+              },
+              "example": "voice,sms"
+            }
+          },
+          {
+            "name": "filter[limit]",
+            "in": "query",
+            "description": "Limits the number of results",
+            "schema": {
+              "type": "integer",
+              "example": 100
+            }
+          },
+          {
+            "name": "filter[best_effort]",
+            "in": "query",
+            "description": "Filter to determine if best effort results should be included.",
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
+          },
+          {
+            "name": "filter[exclude_regulatory_requirements]",
+            "in": "query",
+            "description": "Filter to determine if the phone number has regulatory requirements",
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListAvailablePhoneNumbersResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/public_key": {
+      "get": {
+        "summary": "Retrieve public key",
+        "operationId": "retrievePublicKey",
+        "tags": [
+          "Public Key"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PublicKeyResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -1231,6 +1421,7 @@
         "example": {
           "record_type": "messaging_phone_number",
           "phone_number": "+13115552368",
+          "id": "+13115552368",
           "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "created_at": "2019-01-23T18:10:02.574Z",
@@ -1247,6 +1438,9 @@
           "phone_number": {
             "type": "string",
             "format": "e164"
+          },
+          "id": {
+            "type": "string"
           },
           "organization_id": {
             "type": "string",
@@ -1803,6 +1997,167 @@
             "$ref": "#/components/schemas/InboundMessage"
           }
         }
+      },
+      "RegulatoryRequirement": {
+        "properties": {
+          "requirement_type": {
+            "type": "string",
+            "enum": [
+              "entity identification",
+              "end user address",
+              "end user proof of address"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "field_type": {
+            "type": "string",
+            "enum": [
+              "text field",
+              "file upload",
+              "address",
+              "datetime"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "RegionInformation": {
+        "properties": {
+          "region_type": {
+            "type": "string",
+            "example": "country_code",
+            "enum": [
+              "country_code",
+              "rate_center",
+              "state",
+              "location"
+            ]
+          },
+          "region_name": {
+            "type": "string",
+            "example": "US"
+          }
+        }
+      },
+      "CostInformation": {
+        "type": "object",
+        "properties": {
+          "upfront_cost": {
+            "type": "string",
+            "example": "3.21"
+          },
+          "monthly_cost": {
+            "type": "string",
+            "example": "6.54"
+          },
+          "currency": {
+            "type": "string",
+            "description": "The ISO 4217 code for the currency",
+            "example": "USD"
+          }
+        }
+      },
+      "AvailablePhoneNumber": {
+        "type": "object",
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "available_phone_number",
+            "enum": [
+              "available_phone_number"
+            ]
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+17735035030"
+          },
+          "vanity_format": {
+            "type": "string"
+          },
+          "best_effort": {
+            "type": "boolean",
+            "example": false
+          },
+          "region_information": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegionInformation"
+            }
+          },
+          "cost_information": {
+            "$ref": "#/components/schemas/CostInformation"
+          },
+          "regulatory_requirements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegulatoryRequirement"
+            }
+          }
+        },
+        "example": {
+          "record_type": "available_phone_number",
+          "phone_number": "+17735035030",
+          "vanity_format": "",
+          "best_effort": false,
+          "region_information": [
+            {
+              "region_type": "country_code",
+              "region_name": "US"
+            }
+          ],
+          "cost_information": {
+            "upfront_cost": "3.21",
+            "monthly_cost": "6.54",
+            "currency": "USD"
+          }
+        }
+      },
+      "AvailablePhoneNumbersMetadata": {
+        "type": "object",
+        "example": {
+          "total_results": 100,
+          "best_effort_results": 50
+        },
+        "properties": {
+          "total_results": {
+            "type": "integer",
+            "example": 1
+          },
+          "best_effort_results": {
+            "type": "integer",
+            "example": 0
+          }
+        }
+      },
+      "PublicKey": {
+        "type": "object",
+        "description": "Public key used to verify webhooks",
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "public_key",
+            "enum": [
+              "public_key"
+            ]
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "public": {
+            "type": "string",
+            "description": "The public key for the private key used to sign webhooks associated with your organization."
+          }
+        },
+        "example": {
+          "record_type": "public_key",
+          "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "public": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEA0fLzNgQ0YwweiG8HSwIUw2D7vsdyOXyOZUBJc55VAFGF2LrCmneF\nnpRTqPf2qQ1OdV5ZnndqsskJMX2251bvIj73+ehbdJxETpJiqAqzPieL5GI2EVaQ\nC/1V2BKistKdF82/VavR7pds2rjPkimbE8GQRgfSs1WGfWjaVbMD+U7rAIDzuhpf\n/cvRQB/G7S4FCSZ/Wd2QvkVd1Mi5e3n3VS0L+FD5BcblmBnjYyxw9N1cZi3ujwoj\nCubd3ZTZ96+vojS4gOOt1ojj9GhcBqK6AuBclbnLW/MBoX5LplzB3cterJdOjibe\nnyAsOXUdwW7Xoz353qYPxY6o5/kcG9DseQIDAQAB\n-----END RSA PUBLIC KEY-----"
+        }
       }
     },
     "responses": {
@@ -2170,6 +2525,42 @@
               "properties": {
                 "data": {
                   "$ref": "#/components/schemas/OutboundMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListAvailablePhoneNumbersResponse": {
+        "description": "A paginated array of Phone Numbers",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AvailablePhoneNumber"
+                  }
+                },
+                "metadata": {
+                  "$ref": "#/components/schemas/AvailablePhoneNumbersMetadata"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PublicKeyResponse": {
+        "description": "Successful response from public key endpoint",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/PublicKey"
                 }
               }
             }
