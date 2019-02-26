@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"sync"
 	"testing"
 
@@ -33,7 +34,7 @@ func init() {
 			},
 			"url": {
 				Type:    "string",
-				Pattern: "^/v1/charges",
+				Pattern: "^/v2/charges",
 			},
 		},
 	}
@@ -44,6 +45,7 @@ func init() {
 //
 
 func TestConcurrentAccess(t *testing.T) {
+	t.Skip("skipping test; fixtures not used. Use examples in spec instead.")
 	var generator DataGenerator
 
 	// We use the real spec here because when there was a concurrency problem,
@@ -57,7 +59,7 @@ func TestConcurrentAccess(t *testing.T) {
 		go func() {
 			defer wg.Done()
 			_, err := generator.Generate(&GenerateParams{
-				Schema: &spec.Schema{Ref: "#/components/schemas/subscription"},
+				Schema: &spec.Schema{Ref: "#/components/schemas/messaging_profile"},
 			})
 			assert.NoError(t, err)
 		}()
@@ -67,6 +69,7 @@ func TestConcurrentAccess(t *testing.T) {
 }
 
 func TestGenerateResponseData(t *testing.T) {
+	t.Skip("skipping test; fixtures not used. Use examples in spec instead.")
 	// basic reference
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
@@ -148,12 +151,12 @@ func TestGenerateResponseData(t *testing.T) {
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
 		data, err := generator.Generate(&GenerateParams{
-			RequestPath: "/v1/charges",
+			RequestPath: "/v2/charges",
 			Schema:      listSchema,
 		})
 		assert.Nil(t, err)
 		assert.Equal(t, "list", data.(map[string]interface{})["object"])
-		assert.Equal(t, "/v1/charges", data.(map[string]interface{})["url"])
+		assert.Equal(t, "/v2/charges", data.(map[string]interface{})["url"])
 		assert.Equal(t,
 			testFixtures.Resources["charge"].(map[string]interface{})["id"],
 			data.(map[string]interface{})["data"].([]interface{})[0].(map[string]interface{})["id"])
@@ -168,7 +171,7 @@ func TestGenerateResponseData(t *testing.T) {
 					spec.ResourceID("charge"): map[string]interface{}{"id": "ch_123"},
 					spec.ResourceID("with_charges_list"): map[string]interface{}{
 						"charges_list": map[string]interface{}{
-							"url": "/v1/charges",
+							"url": "/v2/charges",
 						},
 					},
 				},
@@ -186,7 +189,7 @@ func TestGenerateResponseData(t *testing.T) {
 		assert.Nil(t, err)
 		chargesList := data.(map[string]interface{})["charges_list"]
 		assert.Equal(t, "list", chargesList.(map[string]interface{})["object"])
-		assert.Equal(t, "/v1/charges", chargesList.(map[string]interface{})["url"])
+		assert.Equal(t, "/v2/charges", chargesList.(map[string]interface{})["url"])
 		assert.Equal(t,
 			testFixtures.Resources["charge"].(map[string]interface{})["id"],
 			chargesList.(map[string]interface{})["data"].([]interface{})[0].(map[string]interface{})["id"])
@@ -380,7 +383,21 @@ func TestValidFixtures(t *testing.T) {
 func TestResourcesCanBeGenerated(t *testing.T) {
 	for url, operations := range realSpec.Paths {
 		for method, operation := range operations {
-			schema := operation.Responses[spec.StatusCode("200")].Content["application/json"].Schema
+			ref := operation.Responses[spec.StatusCode("200")].Ref
+			if ref == "" {
+				ref = operation.Responses[spec.StatusCode("201")].Ref
+			}
+			responseName := strings.SplitAfterN(ref, "#/components/responses/", 2)
+			responseObject, _ := realSpec.Components.Responses[responseName[1]]
+			responseContent, _ := responseObject.Content["application/json"]
+			responseRef := responseContent.Schema.Properties["data"].Ref
+			if responseRef == "" {
+				responseRef = responseContent.Schema.Properties["data"].Items.Ref
+			}
+
+			schemaName := strings.SplitAfterN(responseRef, "#/components/schemas/", 2)
+			schema, _ := realSpec.Components.Schemas[schemaName[1]]
+
 			t.Run(
 				fmt.Sprintf("%s %s (without expansions)", method, url),
 				func(t2 *testing.T) { testCanGenerate(t2, url, schema, false) },
@@ -442,7 +459,7 @@ func TestDistributeReplacedIDs(t *testing.T) {
 				map[string]interface{}{
 					"key_with_id":   oldID,
 					"unrelated_key": "foo",
-					"url":           "/v1/charges/" + oldID + "/refunds",
+					"url":           "/v2/charges/" + oldID + "/refunds",
 				},
 			},
 		},
@@ -461,7 +478,7 @@ func TestDistributeReplacedIDs(t *testing.T) {
 					map[string]interface{}{
 						"key_with_id":   newID,
 						"unrelated_key": "foo",
-						"url":           "/v1/charges/" + newID + "/refunds",
+						"url":           "/v2/charges/" + newID + "/refunds",
 					},
 				},
 			},
@@ -491,21 +508,21 @@ func TestDistributeReplacedIDsInURL(t *testing.T) {
 
 	// Replaces primary ID
 	{
-		data, ok := distributeReplacedIDsInURL(pathParams, "/v1/charges/"+oldID+"/refunds")
+		data, ok := distributeReplacedIDsInURL(pathParams, "/v2/charges/"+oldID+"/refunds")
 		assert.True(t, ok)
-		assert.Equal(t, "/v1/charges/"+newID+"/refunds", data)
+		assert.Equal(t, "/v2/charges/"+newID+"/refunds", data)
 	}
 
 	// Replaces secondary ID
 	{
-		data, ok := distributeReplacedIDsInURL(pathParams, "/v1/charges/"+oldSecondaryID+"/refunds")
+		data, ok := distributeReplacedIDsInURL(pathParams, "/v2/charges/"+oldSecondaryID+"/refunds")
 		assert.True(t, ok)
-		assert.Equal(t, "/v1/charges/"+newSecondaryID+"/refunds", data)
+		assert.Equal(t, "/v2/charges/"+newSecondaryID+"/refunds", data)
 	}
 
 	// Doesn't replace a value that's not present
 	{
-		_, ok := distributeReplacedIDsInURL(pathParams, "/v1/charges/other/refunds")
+		_, ok := distributeReplacedIDsInURL(pathParams, "/v2/charges/other/refunds")
 		assert.False(t, ok)
 	}
 
@@ -842,7 +859,8 @@ func testCanGenerate(t *testing.T, path spec.Path, schema *spec.Schema, expand b
 
 	validator, err := spec.GetValidatorForOpenAPI3Schema(schema, realComponentsForValidation)
 	assert.NoError(t, err)
-	err = validator.Validate(example)
+	ex, _ := example.(map[string]interface{})
+	err = validator.Validate(ex["data"])
 	if err != nil {
 		t.Logf("Schema is: %s", schema)
 		exampleJSON, err := json.MarshalIndent(example, "", "  ")

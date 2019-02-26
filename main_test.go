@@ -78,20 +78,14 @@ func initTestSpec() {
 		},
 		Responses: map[spec.StatusCode]spec.Response{
 			"200": {
-				Content: map[string]spec.MediaType{
-					"application/json": {
-						Schema: &spec.Schema{
-							Type: spec.TypeObject,
-						},
-					},
-				},
+				Ref: "#/components/responses/ChargeListResponse",
 			},
 		},
 	}
 	chargeCreateMethod = &spec.Operation{
 		RequestBody: &spec.RequestBody{
 			Content: map[string]spec.MediaType{
-				"application/x-www-form-urlencoded": {
+				"application/json": {
 					Schema: &spec.Schema{
 						AdditionalProperties: false,
 						Properties: map[string]*spec.Schema{
@@ -106,13 +100,7 @@ func initTestSpec() {
 		},
 		Responses: map[spec.StatusCode]spec.Response{
 			"200": {
-				Content: map[string]spec.MediaType{
-					"application/json": {
-						Schema: &spec.Schema{
-							Ref: "#/components/schemas/charge",
-						},
-					},
-				},
+				Ref: "#/components/responses/ChargeResponse",
 			},
 		},
 	}
@@ -121,7 +109,7 @@ func initTestSpec() {
 	customerDeleteMethod = &spec.Operation{
 		RequestBody: &spec.RequestBody{
 			Content: map[string]spec.MediaType{
-				"application/x-www-form-urlencoded": {
+				"application/json": {
 					Schema: &spec.Schema{
 						AdditionalProperties: false,
 						Type:                 spec.TypeObject,
@@ -131,13 +119,7 @@ func initTestSpec() {
 		},
 		Responses: map[spec.StatusCode]spec.Response{
 			"200": {
-				Content: map[string]spec.MediaType{
-					"application/json": {
-						Schema: &spec.Schema{
-							Ref: "#/components/schemas/deleted_customer",
-						},
-					},
-				},
+				Ref: "#/components/responses/DeletedCustomerResponse",
 			},
 		},
 	}
@@ -164,9 +146,55 @@ func initTestSpec() {
 
 	testSpec = spec.Spec{
 		Components: spec.Components{
+			Responses: map[string]*spec.Response{
+				"DeletedCustomerResponse": {
+					Content: map[string]spec.MediaType{
+						"application/json": {
+							Schema: &spec.Schema{
+								Properties: map[string]*spec.Schema{
+									"data": &spec.Schema{
+										Ref: "#/components/schemas/deleted_customer",
+									},
+								},
+							},
+						},
+					},
+				},
+				"ChargeResponse": {
+					Content: map[string]spec.MediaType{
+						"application/json": {
+							Schema: &spec.Schema{
+								Properties: map[string]*spec.Schema{
+									"data": &spec.Schema{
+										Ref: "#/components/schemas/charge",
+									},
+								},
+							},
+						},
+					},
+				},
+				"ChargeListResponse": {
+					Content: map[string]spec.MediaType{
+						"application/json": {
+							Schema: &spec.Schema{
+								Properties: map[string]*spec.Schema{
+									"data": &spec.Schema{
+										Ref:  "",
+										Type: "array",
+										Items: &spec.Schema{
+											Ref: "#/components/schemas/charge",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			Schemas: map[string]*spec.Schema{
 				"charge": {
-					Type: "object",
+					Example: json.RawMessage(`{"id": "foo"}`),
+					Type:    "object",
 					Properties: map[string]*spec.Schema{
 						"id": {Type: "string"},
 						// Normally a customer ID, but expandable to a full
@@ -187,10 +215,12 @@ func initTestSpec() {
 					XResourceID:       "charge",
 				},
 				"customer": {
+					Example:     json.RawMessage(`{"id": "foo"}`),
 					Type:        "object",
 					XResourceID: "customer",
 				},
 				"deleted_customer": {
+					Example: json.RawMessage(`{"id": "foo"}`),
 					Properties: map[string]*spec.Schema{
 						"deleted": {Type: "boolean"},
 					},
@@ -200,23 +230,23 @@ func initTestSpec() {
 			},
 		},
 		Paths: map[spec.Path]map[spec.HTTPVerb]*spec.Operation{
-			spec.Path("/v1/application_fees/{fee}/refunds"): {
+			spec.Path("/application_fees/{fee}/refunds"): {
 				"get": applicationFeeRefundCreateMethod,
 			},
-			spec.Path("/v1/application_fees/{fee}/refunds/{id}"): {
+			spec.Path("/application_fees/{fee}/refunds/{id}"): {
 				"get": applicationFeeRefundGetMethod,
 			},
-			spec.Path("/v1/charges"): {
+			spec.Path("/charges"): {
 				"get":  chargeAllMethod,
 				"post": chargeCreateMethod,
 			},
-			spec.Path("/v1/charges/{id}"): {
+			spec.Path("/charges/{id}"): {
 				"get": chargeGetMethod,
 			},
-			spec.Path("/v1/customers/{id}"): {
+			spec.Path("/customers/{id}"): {
 				"delete": customerDeleteMethod,
 			},
-			spec.Path("/v1/invoices/{id}/pay"): {
+			spec.Path("/invoices/{id}/pay"): {
 				"post": invoicePayMethod,
 			},
 		},

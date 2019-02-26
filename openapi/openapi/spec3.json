@@ -32,6 +32,14 @@
       "description": "Phone numbers"
     },
     {
+      "name": "Numbers",
+      "description": "Numbers"
+    },
+    {
+      "name": "Number Search",
+      "description": "Number search"
+    },
+    {
       "name": "Messages",
       "description": "Messages"
     },
@@ -46,6 +54,22 @@
     {
       "name": "Public Key",
       "description": "Public Key"
+    },
+    {
+      "name": "Call Commands",
+      "description": "Call control command operations"
+    },
+    {
+      "name": "Conferences",
+      "description": "Conference operations"
+    },
+    {
+      "name": "Conference Commands",
+      "description": "Conference command operations"
+    },
+    {
+      "name": "Debugging",
+      "description": "Call control debugging"
     }
   ],
   "paths": {
@@ -58,33 +82,13 @@
         ],
         "parameters": [
           {
-            "name": "page[number]",
-            "in": "query",
-            "description": "The page number to load",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
-            }
+            "$ref": "#/components/parameters/PageNumber"
           },
           {
-            "name": "page[size]",
-            "in": "query",
-            "description": "The size of the page",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 250,
-              "default": 20
-            }
+            "$ref": "#/components/parameters/PageSize"
           },
           {
-            "name": "page[token]",
-            "in": "query",
-            "description": "Token to receive the next page. For guaranteed pagination that will not skip elements, use the token provided in a previous request.\n",
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/PageToken"
           }
         ],
         "responses": {
@@ -170,20 +174,13 @@
     "/messaging_profiles/{id}": {
       "get": {
         "summary": "Retrieve a messaging profile",
-        "operationId": "retrieveMessagingProfileById",
+        "operationId": "retrieveMessagingProfile",
         "tags": [
           "Messaging Profiles"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the messaging profile to retrieve",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/MessagingProfileId"
           }
         ],
         "responses": {
@@ -203,14 +200,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the messaging profile to update",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/MessagingProfileId"
           }
         ],
         "requestBody": {
@@ -241,14 +231,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the messaging profile to retrieve",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/MessagingProfileId"
           }
         ],
         "responses": {
@@ -264,49 +247,22 @@
     "/messaging_profiles/{id}/phone_numbers": {
       "get": {
         "summary": "List all phone numbers associated with a messaging profile",
-        "operationId": "retrieveMessagingProfilePhoneNumbers",
+        "operationId": "listMessagingProfilePhoneNumbers",
         "tags": [
           "Messaging Profiles"
         ],
         "parameters": [
           {
-            "name": "page[number]",
-            "in": "query",
-            "description": "The page number to load",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
-            }
+            "$ref": "#/components/parameters/PageNumber"
           },
           {
-            "name": "page[size]",
-            "in": "query",
-            "description": "The size of the page",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 250,
-              "default": 20
-            }
+            "$ref": "#/components/parameters/PageSize"
           },
           {
-            "name": "page[token]",
-            "in": "query",
-            "description": "Token to receive the next page. For guaranteed pagination that will not skip elements, use the token provided in a previous request.\n",
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/PageToken"
           },
           {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the messaging profile",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/MessagingProfileId"
           }
         ],
         "responses": {
@@ -322,49 +278,22 @@
     "/messaging_profiles/{id}/short_codes": {
       "get": {
         "summary": "List all short codes associated with a messaging profile",
-        "operationId": "retrieveMessagingProfileShortCodes",
+        "operationId": "listMessagingProfileShortCodes",
         "tags": [
           "Messaging Profiles"
         ],
         "parameters": [
           {
-            "name": "page[number]",
-            "in": "query",
-            "description": "The page number to load",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
-            }
+            "$ref": "#/components/parameters/PageNumber"
           },
           {
-            "name": "page[size]",
-            "in": "query",
-            "description": "The size of the page",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 250,
-              "default": 20
-            }
+            "$ref": "#/components/parameters/PageSize"
           },
           {
-            "name": "page[token]",
-            "in": "query",
-            "description": "Token to receive the next page. For guaranteed pagination that will not skip elements, use the token provided in a previous request.\n",
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/PageToken"
           },
           {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the messaging profile",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/MessagingProfileId"
           }
         ],
         "responses": {
@@ -386,43 +315,16 @@
         ],
         "parameters": [
           {
-            "name": "page[number]",
-            "in": "query",
-            "description": "The page number to load",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
-            }
+            "$ref": "#/components/parameters/PageNumber"
           },
           {
-            "name": "page[size]",
-            "in": "query",
-            "description": "The size of the page",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 250,
-              "default": 20
-            }
+            "$ref": "#/components/parameters/PageSize"
           },
           {
-            "name": "page[token]",
-            "in": "query",
-            "description": "Token to receive the next page. For guaranteed pagination that will not skip elements, use the token provided in a previous request.\n",
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/PageToken"
           },
           {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the messaging profile",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/MessagingProfileId"
           }
         ],
         "responses": {
@@ -438,38 +340,19 @@
     "/messaging_phone_numbers": {
       "get": {
         "summary": "List all messaging enabled phone numbers",
-        "operationId": "listMessagingEnabledPhoneNumbers",
+        "operationId": "listMessagingPhoneNumbers",
         "tags": [
           "Phone Numbers"
         ],
         "parameters": [
           {
-            "name": "page[number]",
-            "in": "query",
-            "description": "The page number to load.",
-            "schema": {
-              "type": "integer",
-              "default": 1
-            }
+            "$ref": "#/components/parameters/PageNumber"
           },
           {
-            "name": "page[token]",
-            "in": "query",
-            "description": "Token to receive the next page",
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/PageSize"
           },
           {
-            "name": "page[size]",
-            "in": "query",
-            "description": "The size of the page",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 250,
-              "default": 20
-            }
+            "$ref": "#/components/parameters/PageToken"
           },
           {
             "name": "filter[messaging_profile_id]",
@@ -501,20 +384,13 @@
     "/messaging_phone_numbers/{id}": {
       "get": {
         "summary": "Retrieve a messaging phone number",
-        "operationId": "retrievePhoneNumber",
+        "operationId": "retrieveMessagingPhoneNumber",
         "tags": [
           "Phone Numbers"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the phone number to retrieve",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/MessagingPhoneNumberId"
           }
         ],
         "responses": {
@@ -528,21 +404,14 @@
       },
       "patch": {
         "summary": "Update a messaging phone number",
-        "operationId": "updatePhoneNumber",
+        "operationId": "updateMessagingPhoneNumber",
         "description": "Update the settings for a specific number. To unbind a number from, a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
         "tags": [
           "Phone Numbers"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the phone number to update",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/MessagingPhoneNumberId"
           }
         ],
         "requestBody": {
@@ -569,38 +438,19 @@
     "/messaging_short_codes": {
       "get": {
         "summary": "List all short codes",
-        "operationId": "retrieveShortCodes",
+        "operationId": "listShortCodes",
         "tags": [
           "Short Codes"
         ],
         "parameters": [
           {
-            "name": "page[number]",
-            "in": "query",
-            "description": "The page number to load.",
-            "schema": {
-              "type": "integer",
-              "default": 1
-            }
+            "$ref": "#/components/parameters/PageNumber"
           },
           {
-            "name": "page[token]",
-            "in": "query",
-            "description": "Token to receive the next page",
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/PageSize"
           },
           {
-            "name": "page[size]",
-            "in": "query",
-            "description": "The size of the page",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 250,
-              "default": 20
-            }
+            "$ref": "#/components/parameters/PageToken"
           },
           {
             "name": "filter[messaging_profile_id]",
@@ -630,14 +480,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the short code to retrieve",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/MessagingShortCodeId"
           }
         ],
         "responses": {
@@ -651,21 +494,14 @@
       },
       "patch": {
         "summary": "Update short code",
-        "operationId": "updateShortcode",
+        "operationId": "updateShortCode",
         "description": "Update the settings for a specific short code. To unbind a short code from a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
         "tags": [
           "Short Codes"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "The ID of the short code to update",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/MessagingShortCodeId"
           }
         ],
         "requestBody": {
@@ -724,32 +560,13 @@
         ],
         "parameters": [
           {
-            "name": "page[number]",
-            "in": "query",
-            "description": "The page number to load.",
-            "schema": {
-              "type": "integer",
-              "default": 1
-            }
+            "$ref": "#/components/parameters/PageNumber"
           },
           {
-            "name": "page[token]",
-            "in": "query",
-            "description": "Token to receive the next page",
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/PageSize"
           },
           {
-            "name": "page[size]",
-            "in": "query",
-            "description": "The size of the page",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 250,
-              "default": 20
-            }
+            "$ref": "#/components/parameters/PageToken"
           },
           {
             "name": "filter[messaging_profile_id]",
@@ -779,14 +596,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "The unique ID of the alphanumeric sender ID to retrieve",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/SenderId"
           }
         ],
         "responses": {
@@ -807,14 +617,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "The unique ID of the alphanumeric sender ID to update",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/SenderId"
           }
         ],
         "requestBody": {
@@ -846,14 +649,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "The unique ID of the alphanumeric sender ID to delete",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/SenderId"
           }
         ],
         "responses": {
@@ -919,10 +715,9 @@
     "/messages/{id}": {
       "get": {
         "summary": "Retrieve a message",
-        "operationId": "retrieveMessageById",
+        "operationId": "retrieveMessage",
         "tags": [
-          "messages",
-          "messaging_outbound"
+          "Messages"
         ],
         "parameters": [
           {
@@ -948,10 +743,10 @@
     },
     "/available_phone_numbers": {
       "get": {
-        "summary": "List all available Phone Numbers",
+        "summary": "List available phone numbers",
         "operationId": "listAvailablePhoneNumbers",
         "tags": [
-          "Number Searching"
+          "Number Search"
         ],
         "parameters": [
           {
@@ -1142,6 +937,709 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/PublicKeyResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/answer": {
+      "post": {
+        "summary": "Answer call",
+        "description": "Answer an incoming call.\n\n\n**Expected Webhooks:**\n- [Call answered](/docs/v1/call-control/Call%20Webhooks#call-answered)\n",
+        "operationId": "CallControlAnswer",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Answer call request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnswerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/bridge": {
+      "post": {
+        "summary": "Bridge calls",
+        "description": "Bridge two call control calls.\n\n\n**Expected Webhooks:**\n- [Call bridged](/docs/v1/call-control/Call%20Webhooks#call-bridged) for Leg A\n- [Call bridged](/docs/v1/call-control/Call%20Webhooks#call-bridged) for Leg B\n",
+        "operationId": "CallControlBridge",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Bridge call request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BridgeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/fork_start": {
+      "post": {
+        "summary": "Forking start",
+        "description": "Call forking allows you to stream the media from a call to a specific target in realtime. \nThis stream can be used to enable realtime audio analysis in support of a \nvariety of use cases, including fraud detection, or the creation of AI-generated audio responses. \nRequests must specify either the \"target\" attribute or the \"rx\" and \"tx\" attributes.\n\n**Expected Webhooks**\n\nThere are currently no webhooks associated with the Forking start command.\n\n\n**Encapsulation Protocol Header**\n\n*Note: this header is not sent when using \"rx\" and \"tx\" parameters.*\n\n```\n  0                   1                   2                   3\n  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1\n +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n |1 1|Version|L|D|    HeaderLen  |  reserved (2 bytes)           |\n +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n |       reserved (4 bytes, for UDP ports or anything else)      |\n +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n |           The call_leg_id                                     |\n |            from Call Control                                  |\n |            (128 bits / 32 hex characters / 16 bytes)          |\n |                             (this is binary data)             |\n +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n\n 11\n   Static bits 11, always set to 11, so that we humans can easily\n   visually distinguish forked media from RTP (10) and T.38 media (usually 00)\n   and SIP (which begins with a capital letter, so begins with bits 01)\n   This is a magic number.\n\n Version\n   Four bits to indicate the version number of the protocol, starting at 0001.\n\n L\n   One bit to represent the leg of the call (A or B).\n   0 represents the A (first) leg of the call.\n   1 represents the B (second) leg of the call.\n\n D\n   One bit to represent the direction of this RTP stream.\n   0 represents media received by Telnyx.\n   1 represents media transmitted by Telnyx.\n\n HeaderLen\n    The length of the header in bytes. For simplicity (for parsing), this is\n    a byte count rather than a 32-bit-word count and is an 8-bit value.\n    Note that this is not the payload length and that we can calculate the\n    total size of the RTP by subtracting this HeaderLen from the UDP length (minus 8).\n    In version 1, this value will always be 24.\n\n Reserved (6 bytes)\n   Reserved for future use and to make sure that the header is a multiple of 32 bits\n\n Call Leg ID\n   A 128-bit identifier for the call leg.\n   This is the call_leg_id from Call Control.\n```\n",
+        "operationId": "CallControlForkStart",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Fork media request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartForkingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/fork_stop": {
+      "post": {
+        "summary": "Forking stop",
+        "description": "Stop forking a call.\n\n**Expected Webhooks**\n\nThere are currently no webhooks associated with the Forking start command.\n",
+        "operationId": "CallControlForkStop",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Stop forking media request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StopForkingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/gather_using_audio": {
+      "post": {
+        "summary": "Gather using audio",
+        "description": "The gather using audio command enables you to build interactive menus by playing back an audio file on the call until the required DTMF signals are gathered.\nYou can pass a list of valid digits along with an 'invalid_audio_url', which will be played back at the beginning of each prompt.\nPlayback will be interrupted when a DTMF signal is received.\n\n**Expected Webhooks**\n- [Playback started](/docs/v1/call-control/Call%20Webhooks#playback-started)\n- [Playback ended](/docs/v1/call-control/Call%20Webhooks#playback-ended)\n- [DTMF](/docs/v1/call-control/Call%20Webhooks#dtmf) (you may receive many of these webhooks)\n- [Gather ended](/docs/v1/call-control/Call%20Webhooks#gather-ended)\n",
+        "operationId": "CallControlGatherUsingAudio",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Gather using audio request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GatherUsingAudioRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/gather_using_speak": {
+      "post": {
+        "summary": "Gather using speak",
+        "description": "The gather using speak command enables you to build interactive menus by converting text to speech and play it back on the call until the required DTMF signals are gathered.\nYou can pass a list of valid digits along with an 'invalid_payload', which will be played back at the beginning of each prompt.\nSpeech will be interrupted when a DTMF signal is received.\n\n**Expected Webhooks**\n- [DTMF](/docs/v1/call-control/Call%20Webhooks#dtmf) (you may receive many of these webhooks)\n- [Gather ended](/docs/v1/call-control/Call%20Webhooks#gather-ended)\n",
+        "operationId": "CallControlGatherUsingSpeak",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Gather using speak request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GatherUsingSpeakRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/hangup": {
+      "post": {
+        "summary": "Hangup call",
+        "description": "**Expected Webhooks**\r\n- [Call hangup](/docs/v1/call-control/Call%20Webhooks#call-hangup)\r\n- [Recording saved](/docs/v1/call-control/Call%20Webhooks#recording-saved) (applies only if a call is being recorded)\r\n",
+        "operationId": "CallControlHangup",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Hangup request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HangupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/reject": {
+      "post": {
+        "summary": "Reject call",
+        "description": "Reject an incoming call\r\n\r\n**Expected Webhooks**\r\n- [Call hangup](/docs/v1/call-control/Call%20Webhooks#call-hangup)\r\n",
+        "operationId": "CallControlReject",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Reject request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/playback_start": {
+      "post": {
+        "summary": "Play audio URL",
+        "description": "Play an audio file on the call. If multiple play audio commands are consecutively issued,\nthe audio files will be placed in a queue awaiting playback.\n\n\n*Notes:*\n* *when 'overlay' is enabled, 'loop' is limited to 1, and 'target_legs' is limited to 'self'.*\n* *A customer cannot Play Audio with overlay=true unless there is a Play Audio with overlay=false actively playing.*\n\n**Expected Webhooks**\n- [Playback started](/docs/v1/call-control/Call%20Webhooks#playback-started)\n- [Playback ended](/docs/v1/call-control/Call%20Webhooks#playback-ended)\n",
+        "operationId": "CallControlPlaybackStart",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Play audio URL request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayAudioUrlRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/playback_stop": {
+      "post": {
+        "summary": "Stop audio playback",
+        "description": "Stops audio being played on the call.\n\n**Expected Webhooks**\n- Either [Playback ended](/docs/v1/call-control/Call%20Webhooks#playback-ended) or [Speak ended](/docs/v1/call-control/Call%20Webhooks#speak-ended)\n\n\n\n",
+        "operationId": "CallControlPlaybackStop",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Stop audio playback request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaybackStopRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/record_start": {
+      "post": {
+        "summary": "Recording start",
+        "description": "Start recording the call. Recording will stop on call hang-up, or can be initiated via the Stop Recording command.\n\n**Expected Webhooks**\nThere are no webhooks associated with this Command.\n\n",
+        "operationId": "CallControlRecordStart",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Start recording audio request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartRecordingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/record_stop": {
+      "post": {
+        "summary": "Recording stop",
+        "description": "Stop recording the call.\n\n**Expected Webhooks**\n- [Recording saved](/docs/v1/call-control/Call%20Webhooks#recording-saved)\n",
+        "operationId": "CallControlRecordStop",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Answer call request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StopRecordingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/send_dtmf": {
+      "post": {
+        "summary": "Send DTMF",
+        "description": "Sends DTMF tones from this leg. DTMF tones will be heard by the other end of the call.\n\n**Expected Webhooks**\n\nThere are no webhooks associated with this command.\n",
+        "operationId": "CallControlSendDTMF",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Send DTMF request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendDTMFRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/speak": {
+      "post": {
+        "summary": "Speak text",
+        "description": "Convert text to speech and play it back on the call.  If multiple speak text commands are issued consecutively, the audio files will be placed in a queue awaiting playback.\n\n**Expected Webhooks**\n- [Speak started](/docs/v1/call-control/Call%20Webhooks#speak-started)\n- [Speak ended](/docs/v1/call-control/Call%20Webhooks#speak-ended)\n",
+        "operationId": "CallControlSpeak",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Speak request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpeakRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/actions/transfer": {
+      "post": {
+        "summary": "Transfer call",
+        "description": "Transfer a call to a new destination. If the transfer is unsuccessful, a 'call_hangup' webhook will be sent indicating that the transfer could not be completed. The original call will remain active and may be issued additional commands, potentially transfering the call to an alternate destination.\n\n**Expected Webhooks**\n- [Call initiated](docs/v1/call-control/Call%20Webhooks#call-initiated)\n- [Call bridged](docs/v1/call-control/Call%20Webhooks#call-bridged) to Leg B\n- You will receive either a [Call answered](/docs/v1/call-control/Call%20Webhooks#call-answered) webhook or a [Call hangup](/docs/v1/call-control/Call%20Webhooks#call-hangup) webhook.\n- [Answering Machine Detection Result](/docs/v1/call-control/Call%20Webhooks#amd-result) (when using `answering_machine_detection`)\n",
+        "operationId": "CallControlTransfer",
+        "tags": [
+          "Call Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "requestBody": {
+          "description": "Transfer call request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferCallRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls": {
+      "post": {
+        "summary": "Dial",
+        "description": "Dial a number from a given connection. A successful response will include a `call_leg_id` which can be used to correlate the command with subsequent webhooks.\n\n**Expected Webhooks**\n\n- [Call initiated](/docs/v1/call-control/Call%20Webhooks#call-initiated)\n- You will receive either a [Call answered](/docs/v1/call-control/Call%20Webhooks#call-answered) webhook or a [Call hangup](/docs/v1/call-control/Call%20Webhooks#call-hangup) webhook.\n- [Answering Machine Detection Result](/docs/v1/call-control/Call%20Webhooks#amd-result) (when using `answering_machine_detection`)\n",
+        "operationId": "CallControlDial",
+        "tags": [
+          "Call Commands"
+        ],
+        "requestBody": {
+          "description": "Dial request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DialRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CallControlCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/calls/{call_control_id}/status": {
+      "get": {
+        "summary": "Retrieve the call status",
+        "description": "Returns the status of a call.",
+        "operationId": "CallControlStatus",
+        "tags": [
+          "Call Information"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CallControlId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveCallStatusResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/call_events": {
+      "get": {
+        "summary": "List all call events",
+        "description": "Lists all events for a given call.\n\n**Note**: input either a `call_leg_id` or a `call_session_id`. If a request has both, it will only filter by `call_leg_id`.\n",
+        "operationId": "CallControlDebuggingEventList",
+        "tags": [
+          "Debugging"
+        ],
+        "parameters": [
+          {
+            "name": "filter[call_leg_id]",
+            "in": "query",
+            "description": "The unique identifier of an individual call leg.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "filter[call_session_id]",
+            "in": "query",
+            "description": "The unique identifier of the call control session. A session may include multiple call leg events.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListCallEventsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/conferences": {
+      "post": {
+        "summary": "Create Conference",
+        "description": "Creates a conference from an existing call leg using a call_control_id and a conference name. Upon creating the conference, the call will be automatically bridged to the conference.",
+        "operationId": "CreateConference",
+        "tags": [
+          "Conference Commands"
+        ],
+        "requestBody": {
+          "description": "Create a conference",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateConferenceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateConferenceResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "get": {
+        "description": "Lists conferences. Conferences are created on demand, and will expire after all participants have left the conference or after 4 hours regardless of the number of active participants.",
+        "summary": "List all conferences",
+        "operationId": "GetConferences",
+        "tags": [
+          "Conference Commands"
+        ],
+        "parameters": [
+          {
+            "name": "filter[name]",
+            "in": "query",
+            "description": "If present, conferences will be filtered to those with a matching `name` attribute. Matching is case-sensitive",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListConferencesResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/conferences/{id}/actions/join": {
+      "post": {
+        "summary": "Join a conference",
+        "description": "Joins an existing call_leg to a conference. Issue the Join Conference command with the conference ID in the path and the call_control_id of the leg you wish to join to the conference as an attribute.",
+        "operationId": "JoinConference",
+        "tags": [
+          "Conference Commands"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Unique identifier of the conference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New Messaging Profile object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinConferenceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ConferenceCommandResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -1689,7 +2187,7 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "message_outbound"
+            "example": "outbound_message"
           },
           "direction": {
             "type": "string",
@@ -1839,6 +2337,35 @@
             ],
             "nullable": true
           }
+        },
+        "example": {
+          "record_type": "outbound_message",
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "direction": "outbound",
+          "type": "sms",
+          "from": "+13115554343",
+          "to": [
+            {
+              "address": "+13115554343",
+              "status": "queued",
+              "updated_at": "2019-01-23T18:10:02.574Z"
+            }
+          ],
+          "text": "Hello, World!",
+          "webhook_url": "https://www.example.com/hooks",
+          "webhook_failover_url": "https://www.example.com/callbacks",
+          "use_profile_webhooks": false,
+          "cost": {
+            "amount": "1.23",
+            "currency": "USD"
+          },
+          "parts": 1,
+          "created_at": "2019-01-23T18:10:02.574Z",
+          "updated_at": "2019-01-23T18:10:02.574Z",
+          "valid_until": "2019-01-23T18:10:02.574Z",
+          "errors": [],
+          "carrier": "Verizon",
+          "line_type": "Wireless"
         }
       },
       "OutboundMessageEvent": {
@@ -2157,6 +2684,935 @@
           "record_type": "public_key",
           "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "public": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEA0fLzNgQ0YwweiG8HSwIUw2D7vsdyOXyOZUBJc55VAFGF2LrCmneF\nnpRTqPf2qQ1OdV5ZnndqsskJMX2251bvIj73+ehbdJxETpJiqAqzPieL5GI2EVaQ\nC/1V2BKistKdF82/VavR7pds2rjPkimbE8GQRgfSs1WGfWjaVbMD+U7rAIDzuhpf\n/cvRQB/G7S4FCSZ/Wd2QvkVd1Mi5e3n3VS0L+FD5BcblmBnjYyxw9N1cZi3ujwoj\nCubd3ZTZ96+vojS4gOOt1ojj9GhcBqK6AuBclbnLW/MBoX5LplzB3cterJdOjibe\nnyAsOXUdwW7Xoz353qYPxY6o5/kcG9DseQIDAQAB\n-----END RSA PUBLIC KEY-----"
+        }
+      },
+      "AnswerRequest": {
+        "type": "object",
+        "title": "Answer request",
+        "properties": {
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "StartForkingRequest": {
+        "type": "object",
+        "title": "Start Forking request",
+        "properties": {
+          "target": {
+            "description": "The network target, <udp:ip_address:port>, where the call's RTP media packets should be forwarded. Both incoming and outgoing media packets will be delivered to the specified target, and information about the stream will be included in the encapsulation protocol header, including the direction (0 = inbound; 1 = outbound), leg (0 = A-leg; 1 = B-leg), and call_leg_id.",
+            "type": "string",
+            "example": "udp:192.0.2.1:9000"
+          },
+          "rx": {
+            "description": "The network target, <udp:ip_address:port>, where the call's incoming RTP media packets should be forwarded.",
+            "type": "string",
+            "example": "192.0.2.1:9000"
+          },
+          "tx": {
+            "description": "The network target, <udp:ip_address:port>, where the call's outgoing RTP media packets should be forwarded.",
+            "type": "string",
+            "example": "192.0.2.1:9001"
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "StopForkingRequest": {
+        "type": "object",
+        "title": "Stop Forking request",
+        "properties": {
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "RejectRequest": {
+        "type": "object",
+        "title": "Reject request",
+        "properties": {
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "GatherUsingAudioRequest": {
+        "type": "object",
+        "title": "Gather using audio with all parameters request",
+        "required": [
+          "audio_url"
+        ],
+        "properties": {
+          "audio_url": {
+            "type": "string",
+            "example": "http://example.com/message.wav",
+            "description": "The URL of a file to be played back at the beginning of each prompt. The URL can point to either a WAV or MP3 file."
+          },
+          "invalid_audio_url": {
+            "type": "string",
+            "description": "The URL of a file to play when digits don't match the 'valid_digits' parameter or the number of digits is not between 'min' and 'max'. The URL can point to either a WAV or MP3 file.",
+            "example": "http://example.com/invalid.wav"
+          },
+          "minimum": {
+            "description": "The minimum number of digits to fetch. This parameter has a minimum value of 1.",
+            "default": 1,
+            "type": "integer",
+            "example": 1,
+            "format": "int32"
+          },
+          "maximum": {
+            "description": "The maximum number of digits to fetch. This parameter has a maximum value of 128.",
+            "default": 128,
+            "type": "integer",
+            "example": 10,
+            "format": "int32"
+          },
+          "maximum_tries": {
+            "description": "The maximum number of times the file should be played if there is no input from the user on the call.",
+            "default": 3,
+            "type": "integer",
+            "example": 3,
+            "format": "int32"
+          },
+          "timeout_millis": {
+            "description": "The number of milliseconds to wait for a DTMF response after file playback ends before a replaying the sound file.",
+            "default": 60000,
+            "type": "integer",
+            "example": 60000,
+            "format": "int32"
+          },
+          "terminating_digit": {
+            "description": "The digit used to terminate input if fewer than \"max\" digits have been gathered.",
+            "default": "#",
+            "type": "string",
+            "example": "#"
+          },
+          "valid_digits": {
+            "description": "A list of all digits accepted as valid.",
+            "default": "0123456789#*",
+            "type": "string",
+            "example": "123"
+          },
+          "inter_digit_timeout_millis": {
+            "description": "The number of milliseconds to wait for input between digits.",
+            "default": 5000,
+            "type": "integer",
+            "example": 10000,
+            "format": "int32"
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "GatherUsingSpeakRequest": {
+        "type": "object",
+        "title": "Gather using speak with all parameters request",
+        "required": [
+          "voice",
+          "language",
+          "payload"
+        ],
+        "properties": {
+          "payload": {
+            "description": "The text or SSML to be converted into speech. There is a 5,000 character limit.",
+            "type": "string",
+            "example": "Say this on the call"
+          },
+          "invalid_payload": {
+            "description": "The text or SSML to be converted into speech when digits don't match the 'valid_digits' parameter or the number of digits is not between 'min' and 'max'. There is a 5,000 character limit.",
+            "type": "string",
+            "example": "Say this on the call"
+          },
+          "payload_type": {
+            "description": "The type of the provided payload. The payload can either be plain text, or Speech Synthesis Markup Language (SSML).",
+            "default": "text",
+            "type": "string",
+            "enum": [
+              "text",
+              "ssml"
+            ],
+            "example": "ssml"
+          },
+          "voice": {
+            "description": "The gender of the voice used to speak back the text.",
+            "type": "string",
+            "enum": [
+              "male",
+              "female"
+            ],
+            "example": "female"
+          },
+          "language": {
+            "description": "The language you want spoken.",
+            "type": "string",
+            "enum": [
+              "de-DE",
+              "en-AU",
+              "en-GB",
+              "en-US",
+              "es-ES",
+              "fr-CA",
+              "fr-FR",
+              "it-IT",
+              "ja-JP",
+              "ko-KR",
+              "nl-NL",
+              "pt-BR",
+              "sv-SE",
+              "tr-TR"
+            ],
+            "example": "en-US"
+          },
+          "minimum": {
+            "description": "The minimum number of digits to fetch. This parameter has a minimum value of 1.",
+            "default": 1,
+            "type": "integer",
+            "example": 1,
+            "format": "int32"
+          },
+          "maximum": {
+            "description": "The maximum number of digits to fetch. This parameter has a maximum value of 128.",
+            "default": 128,
+            "type": "integer",
+            "example": 10,
+            "format": "int32"
+          },
+          "tries": {
+            "description": "The maximum number of times that a file should be played back if there is no input from the user on the call.",
+            "default": 3,
+            "type": "integer",
+            "example": 3,
+            "format": "int32"
+          },
+          "timeout_millis": {
+            "description": "The number of milliseconds to wait for a DTMF response after file playback ends before a replaying the sound file.",
+            "default": 60000,
+            "type": "integer",
+            "example": 60000,
+            "format": "int32"
+          },
+          "terminating_digit": {
+            "description": "The digit used to terminate input if fewer than \"max\" digits have been gathered.",
+            "default": "#",
+            "type": "string",
+            "example": "#"
+          },
+          "valid_digits": {
+            "description": "A list of all digits accepted as valid.",
+            "default": "0123456789#*",
+            "type": "string",
+            "example": "123"
+          },
+          "inter_digit_timeout_millis": {
+            "description": "The number of milliseconds to wait for input between digits.",
+            "default": 5000,
+            "type": "integer",
+            "example": 10000,
+            "format": "int32"
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "PlayAudioUrlRequest": {
+        "type": "object",
+        "title": "Play Audio URL request",
+        "required": [
+          "audio_url"
+        ],
+        "properties": {
+          "audio_url": {
+            "description": "The URL of the file to be played back on the call. The URL can point to either a WAV or MP3 file.",
+            "type": "string",
+            "example": "http://www.example.com/sounds/greeting.wav"
+          },
+          "loop": {
+            "description": "The number of times the audio file should be played. If supplied, the value must be an integer between 1 and 100, or the special string 'infinity' for an endless loop.",
+            "type": "string",
+            "example": "infinity",
+            "default": 1
+          },
+          "overlay": {
+            "description": "When enabled, audio will be mixed on top of any other audio that is actively being played back. Note that `overlay: true` will only work if there is another audio file already being played on the call.",
+            "type": "boolean",
+            "example": "true",
+            "default": "false"
+          },
+          "stop": {
+            "description": "When specified, it stops the current audio being played.  Specify 'current' to stop the current audio being played, and to play the next file in the queue. Specify 'all' to stop the current audio file being played and to also clear all audio files from the queue.",
+            "type": "string",
+            "default": null,
+            "example": "current"
+          },
+          "target_legs": {
+            "description": "Specifies the leg or legs on which audio will be played. If supplied, the value must be either 'self', 'opposite' or 'both'.",
+            "type": "string",
+            "default": "self",
+            "example": "self"
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "PlaybackStopRequest": {
+        "type": "object",
+        "title": "Playback Stop request",
+        "properties": {
+          "stop": {
+            "description": "Use 'current' to stop only the current audio or 'all' to stop all audios in the queue.",
+            "type": "string",
+            "default": "all",
+            "example": "current"
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "StartRecordingRequest": {
+        "type": "object",
+        "title": "Start Recording request",
+        "required": [
+          "format",
+          "channels"
+        ],
+        "properties": {
+          "format": {
+            "description": "The audio file format used when storing the call recording. Can be either 'mp3' or 'wav'.",
+            "type": "string",
+            "enum": [
+              "wav",
+              "mp3"
+            ],
+            "example": "mp3"
+          },
+          "channels": {
+            "description": "When 'dual', final audio file will be stereo recorded with the first leg on channel A, and the rest on channel B.",
+            "enum": [
+              "single",
+              "dual"
+            ],
+            "type": "string",
+            "example": "single"
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          },
+          "play_beep": {
+            "description": "If enabled, a beep sound will be played at the start of a recording.",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "StopRecordingRequest": {
+        "type": "object",
+        "title": "Strop Recording request",
+        "properties": {
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "SendDTMFRequest": {
+        "type": "object",
+        "title": "Send DTMF request",
+        "required": [
+          "digits"
+        ],
+        "properties": {
+          "digits": {
+            "description": "DTMF digits to send. Valid digits are 0-9, A-D, *, and #. Pauses can be added using w (0.5s) and W (1s).",
+            "type": "string",
+            "example": "1www2WABCDw9"
+          },
+          "duration_millis": {
+            "description": "Specifies for how many milliseconds each digit will be played in the audio stream. Ranges from 100 to 500ms",
+            "type": "integer",
+            "format": "int32",
+            "example": 500,
+            "default": 250
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "CallControlCommandResult": {
+        "type": "object",
+        "example": {
+          "result": "ok"
+        },
+        "properties": {
+          "result": {
+            "type": "string",
+            "example": "ok"
+          }
+        }
+      },
+      "CallEvent": {
+        "type": "object",
+        "required": [
+          "record_type"
+        ],
+        "example": {
+          "record_type": "call_event"
+        },
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "description": "The type of record being returned. This will always be `call_event`.",
+            "enum": [
+              "call_event"
+            ],
+            "example": "call_event"
+          }
+        }
+      },
+      "CallControlInvalidParamsResponse": {
+        "type": "object",
+        "title": "Invalid command parameters response",
+        "required": [
+          "code",
+          "title",
+          "detail"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "90015"
+          },
+          "title": {
+            "type": "string",
+            "example": "Invalid Call Control ID"
+          },
+          "detail": {
+            "type": "string",
+            "example": "The call_control_id provided was not valid."
+          }
+        }
+      },
+      "CallStatus": {
+        "type": "object",
+        "required": [
+          "record_type",
+          "call_control_id",
+          "call_leg_id",
+          "call_session_id",
+          "is_alive"
+        ],
+        "example": {
+          "record_type": "call_status",
+          "call_control_id": "AgDIxmoRX6QMuaIj_uXRXnPAXP0QlNfXczRrZvZakpWxBlpw48KyZQ==",
+          "call_leg_id": "428c31b6-7af4-4bcb-b7f5-5013ef9657c1",
+          "call_session_id": "428c31b6-7af4-4bcb-b7f5-5013ef9657c1",
+          "is_alive": true
+        },
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "description": "The type of record being returned. This will always be `call_status`.",
+            "enum": [
+              "call_status"
+            ],
+            "example": "call_status"
+          },
+          "call_control_id": {
+            "description": "Unique identifier and token for controlling the call",
+            "type": "string",
+            "example": "AgDIxmoRX6QMuaIj_uXRXnPAXP0QlNfXczRrZvZakpWxBlpw48KyZQ=="
+          },
+          "call_leg_id": {
+            "description": "ID that is unique to the call and can be used to correlate webhook events",
+            "type": "string",
+            "example": "428c31b6-7af4-4bcb-b7f5-5013ef9657c1"
+          },
+          "call_session_id": {
+            "description": "ID that is unique to the call session and can be used to correlate webhook events",
+            "type": "string",
+            "example": "428c31b6-7af4-4bcb-b7f5-5013ef9657c1"
+          },
+          "is_alive": {
+            "description": "Indicates whether the call is alive or not.",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "TransferCallRequest": {
+        "type": "object",
+        "title": "Transfer call request",
+        "required": [
+          "to"
+        ],
+        "properties": {
+          "to": {
+            "description": "The DID or SIP URI to dial out and bridge to the given call.",
+            "type": "string",
+            "example": "+18005550100"
+          },
+          "from": {
+            "description": "The 'from' number to be used as the caller id presented to the destination ('to' number). The number should be in +E164 format. This attribute will default to the 'from' number of the original call if omitted.",
+            "type": "string",
+            "example": "+18005550100"
+          },
+          "audio_url": {
+            "description": "The URL of a file to be played back to the callee before bridging the call. The URL can point to either a WAV or MP3 file.",
+            "type": "string",
+            "example": "http://www.example.com/sounds/greeting.wav"
+          },
+          "timeout_secs": {
+            "description": "The number of seconds that Telnyx will wait for the call to be answered by the destination to which it is being transferred. If the timeout is reached before an answer is received, the call will hangup and a 'call_hangup' webhook with a 'hangup_cause' of 'timeout' will be sent. Minimum value is 5 seconds. Maximum value is 120 seconds.",
+            "default": 30,
+            "type": "integer",
+            "example": 60,
+            "format": "int32"
+          },
+          "time_limit_secs": {
+            "description": "Sets the maximum duration of a Call Control Leg in seconds. If the time limit is reached, the call will hangup and a 'call_hangup' webhook with a 'hangup_cause' of 'time_limit' will be sent. For example, by setting a time limit of 120 seconds, a Call Leg will be automatically terminated two minutes after being answered. The default time limit is 14400 seconds or 4 hours and this is also the maximum allowed call length.",
+            "default": 14400,
+            "type": "integer",
+            "example": 600,
+            "format": "int32"
+          },
+          "answering_machine_detection": {
+            "description": "Enables Answering Machine Detection. When call gets answered, Telnyx runs an algorithm to determine whether it was picked up by a human or a machine and sends an 'answering_machine_detection_result' webhook with the analysis result.",
+            "default": true,
+            "type": "boolean"
+          },
+          "custom_headers": {
+            "description": "Custom headers to be added to the SIP INVITE.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomSipHeader"
+            }
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          },
+          "sip_auth_username": {
+            "description": "SIP Authentication username used for SIP challenges.",
+            "type": "string"
+          },
+          "sip_auth_password": {
+            "description": "SIP Authentication password used for SIP challenges.",
+            "type": "string"
+          }
+        }
+      },
+      "DialRequest": {
+        "type": "object",
+        "title": "Dial request",
+        "required": [
+          "connection_id",
+          "to",
+          "from"
+        ],
+        "properties": {
+          "to": {
+            "description": "The DID or SIP URI to dial out to.",
+            "type": "string",
+            "example": "+18005550100"
+          },
+          "from": {
+            "description": "The 'from' number to be used as the caller id presented to the destination ('to' number). The number should be in +E164 format. This attribute will default to the 'from' number of the original call if omitted.",
+            "type": "string",
+            "example": "+18005550100"
+          },
+          "connection_id": {
+            "type": "string",
+            "description": "The ID of the connection to be used when dialing the destination."
+          },
+          "audio_url": {
+            "type": "string",
+            "example": "http://example.com/message.wav",
+            "description": "The URL of a file to be played back to the callee when the call is answered. The URL can point to either a WAV or MP3 file."
+          },
+          "timeout_secs": {
+            "description": "The number of seconds that Telnyx will wait for the call to be answered by the destination to which it is being called. If the timeout is reached before an answer is received, the call will hangup and a 'call_hangup' webhook with a 'hangup_cause' of 'timeout' will be sent. Minimum value is 5 seconds. Maximum value is 120 seconds.",
+            "default": 30,
+            "type": "integer",
+            "example": 60,
+            "format": "int32"
+          },
+          "time_limit_secs": {
+            "description": "Sets the maximum duration of a Call Control Leg in seconds. If the time limit is reached, the call will hangup and a 'call_hangup' webhook with a 'hangup_cause' of 'time_limit' will be sent. For example, by setting a time limit of 120 seconds, a Call Leg will be automatically terminated two minutes after being answered. The default time limit is 14400 seconds or 4 hours and this is also the maximum allowed call length.",
+            "default": 14400,
+            "type": "integer",
+            "example": 600,
+            "format": "int32"
+          },
+          "answering_machine_detection": {
+            "description": "Enables Answering Machine Detection. When call gets answered, Telnyx runs an algorithm to determine whether it was picked up by a human or a machine and sends an 'answering_machine_detection_result' webhook with the analysis result.",
+            "default": true,
+            "type": "boolean"
+          },
+          "custom_headers": {
+            "description": "Custom headers to be added to the SIP INVITE.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomSipHeader"
+            }
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          },
+          "link_to": {
+            "description": "Use another call's control id for sharing the same call session id",
+            "type": "string",
+            "example": "ilditnZK_eVysupV21KzmzN_sM29ygfauQojpm4BgFtfX5hXAcjotg=="
+          },
+          "sip_auth_username": {
+            "description": "SIP Authentication username used for SIP challenges.",
+            "type": "string"
+          },
+          "sip_auth_password": {
+            "description": "SIP Authentication password used for SIP challenges.",
+            "type": "string"
+          }
+        }
+      },
+      "SpeakRequest": {
+        "type": "object",
+        "title": "Speak request",
+        "required": [
+          "payload",
+          "voice",
+          "language"
+        ],
+        "properties": {
+          "payload": {
+            "description": "The text or SSML to be converted into speech. There is a 5,000 character limit.",
+            "type": "string",
+            "example": "Say this on the call"
+          },
+          "payload_type": {
+            "description": "The type of the provided payload. The payload can either be plain text, or Speech Synthesis Markup Language (SSML).",
+            "default": "text",
+            "type": "string",
+            "enum": [
+              "text",
+              "ssml"
+            ],
+            "example": "ssml"
+          },
+          "stop": {
+            "description": "When specified, it stops the current audio being played.  Specify 'current' to stop the current audio being played, and to play the next file in the queue. Specify 'all' to stop the current audio file being played and to also clear all audio files from the queue.",
+            "type": "string",
+            "default": null,
+            "example": "current"
+          },
+          "voice": {
+            "description": "The gender of the voice used to speak back the text.",
+            "type": "string",
+            "enum": [
+              "male",
+              "female"
+            ],
+            "example": "female"
+          },
+          "language": {
+            "description": "The language you want spoken.",
+            "type": "string",
+            "enum": [
+              "de-DE",
+              "en-AU",
+              "en-GB",
+              "en-US",
+              "es-ES",
+              "fr-CA",
+              "fr-FR",
+              "it-IT",
+              "ja-JP",
+              "ko-KR",
+              "nl-NL",
+              "pt-BR",
+              "sv-SE",
+              "tr-TR"
+            ],
+            "example": "en-US"
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "BridgeRequest": {
+        "type": "object",
+        "title": "Bridge request",
+        "required": [
+          "call_control_id"
+        ],
+        "properties": {
+          "call_control_id": {
+            "description": "The call control id of the call you want to bridge with.",
+            "type": "string",
+            "example": "c8ac9611-25c3-494a-b8b4-2f036a18a6b2"
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          },
+          "park_after_unbridge": {
+            "description": "Specifies behavior after the bridge ends (i.e. the opposite leg either hangs up or is transferred). If supplied with the value 'self', the current leg will be parked after unbridge. If not set, the default behavior is to hang up the leg.",
+            "type": "string",
+            "example": "self"
+          }
+        }
+      },
+      "CustomSipHeader": {
+        "type": "object",
+        "title": "Custom SIP header",
+        "required": [
+          "name",
+          "value"
+        ],
+        "properties": {
+          "name": {
+            "description": "The name of the header to add.",
+            "type": "string",
+            "example": "head_1"
+          },
+          "value": {
+            "description": "The value of the header.",
+            "type": "string",
+            "example": "val_1"
+          }
+        }
+      },
+      "HangupRequest": {
+        "type": "object",
+        "title": "Hangup request",
+        "properties": {
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "Conference": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "created_at",
+          "expires_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the conference"
+          },
+          "record_type": {
+            "type": "string",
+            "example": "conference",
+            "enum": [
+              "conference"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the conference"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date of when the conference was created"
+          },
+          "expires_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date of when the conference will expire"
+          }
+        },
+        "example": {
+          "record_type": "conference",
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "name": "All hands meeting",
+          "created_at": "2019-01-23T18:10:02.574Z",
+          "expires_at": "2019-01-23T18:10:02.574Z"
+        }
+      },
+      "CreateConferenceRequest": {
+        "required": [
+          "call_control_id",
+          "name"
+        ],
+        "type": "object",
+        "title": "Create Conference request",
+        "properties": {
+          "call_control_id": {
+            "description": "Unique identifier and token for controlling the call",
+            "type": "string",
+            "example": "AgDIxmoRX6QMuaIj_uXRXnPAXP0QlNfXczRrZvZakpWxBlpw48KyZQ=="
+          },
+          "name": {
+            "description": "Name of the conference",
+            "type": "string",
+            "example": "Business"
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "JoinConferenceRequest": {
+        "required": [
+          "call_control_id"
+        ],
+        "type": "object",
+        "title": "Join Conference request",
+        "properties": {
+          "call_control_id": {
+            "description": "Unique identifier and token for controlling the call",
+            "type": "string",
+            "example": "AgDIxmoRX6QMuaIj_uXRXnPAXP0QlNfXczRrZvZakpWxBlpw48KyZQ=="
+          },
+          "client_state": {
+            "description": "Use this field to add state to every subsequent webhook. It must be a valid Base-64 encoded string.",
+            "type": "string",
+            "example": "aGF2ZSBhIG5pY2UgZGF5ID1d"
+          },
+          "command_id": {
+            "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
+            "type": "string",
+            "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "ConferenceCommandResult": {
+        "type": "object",
+        "title": "Command result",
+        "required": [
+          "result"
+        ],
+        "properties": {
+          "result": {
+            "type": "string",
+            "example": "ok"
+          }
+        },
+        "example": {
+          "result": "ok"
         }
       }
     },
@@ -2517,7 +3973,7 @@
         }
       },
       "RetrieveMessageResponse": {
-        "description": "the message detail response",
+        "description": "Detailed message object",
         "content": {
           "application/json": {
             "schema": {
@@ -2566,11 +4022,188 @@
             }
           }
         }
+      },
+      "CallControlCommandResponse": {
+        "description": "Command response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/CallControlCommandResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveCallStatusResponse": {
+        "description": "Retrieve call status response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/CallStatus"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListCallEventsResponse": {
+        "description": "An array of call events",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CallEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateConferenceResponse": {
+        "description": "Expected response to successful conference creation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/Conference"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListConferencesResponse": {
+        "description": "A paginated array of conferences",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Conference"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ConferenceCommandResponse": {
+        "description": "Conference command response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/ConferenceCommandResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "PageSize": {
+        "name": "page[size]",
+        "in": "query",
+        "description": "The size of the page",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 20
+        }
+      },
+      "PageNumber": {
+        "name": "page[number]",
+        "in": "query",
+        "description": "The page number to load",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      "PageToken": {
+        "name": "page[token]",
+        "in": "query",
+        "description": "Token to receive the next page. For guaranteed pagination that will not skip elements, use the token provided in a previous request.\n",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "SenderId": {
+        "name": "id",
+        "in": "path",
+        "description": "The unique ID of the alphanumeric sender ID to retrieve",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "MessagingProfileId": {
+        "name": "id",
+        "in": "path",
+        "description": "The id of the messaging profile to retrieve",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "MessagingPhoneNumberId": {
+        "name": "id",
+        "in": "path",
+        "description": "The id of the phone number",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "MessagingShortCodeId": {
+        "name": "id",
+        "in": "path",
+        "description": "The id of the phone number",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "CallControlId": {
+        "name": "call_control_id",
+        "description": "Unique identifier and token for controlling the call",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
       }
     },
     "examples": {},
     "links": {},
-    "parameters": {},
     "requestBodies": {}
   }
 }

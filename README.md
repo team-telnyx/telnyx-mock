@@ -1,5 +1,4 @@
-# telnyx-mock [![Build
-Status](https://travis-ci.org/team-telnyx/telnyx-mock.svg?branch=master)](https://travis-ci.org/team-telnyx/telnyx-mock)
+# telnyx-mock [![Build Status](https://travis-ci.org/team-telnyx/telnyx-mock.svg?branch=master)](https://travis-ci.org/team-telnyx/telnyx-mock)
 
 telnyx-mock is a mock HTTP server that responds like the real Telnyx API. It
 can be used instead of Telnyx's test mode to make test suites integrating with
@@ -21,8 +20,8 @@ following features:
   from within Telnyx's API, and similar to the sample data available in
   Telnyx's [API reference][apiref].
 * It reflects the values of valid input parameters into responses where the
-  naming and type are the same. So if a charge is created with `name=foo`, a
-  charge will be returned with `"name": "foo"`.
+  naming and type are the same. So if a messaging profile is created with `name=foo`, a
+  messaging profile will be returned with `"name": "foo"`.
 * It will respond over HTTP or over HTTPS. HTTP/2 over HTTPS is available if
   the client supports it.
 
@@ -107,7 +106,8 @@ for HTTPS and HTTP/2.
 After you've started telnyx-mock, you can try a sample request against it:
 
 ``` sh
-curl -i http://localhost:12111/v1/charges -H "Authorization: Bearer sk_test_123"
+curl -i http://localhost:12111/v2/messaging_profiles -H "Authorization: Bearer
+KEYSUPERSECRET"
 ```
 
 ## Development
@@ -124,16 +124,19 @@ go test ./...
 
 The project uses [go-bindata] to bundle OpenAPI and fixture data into
 `bindata.go` so that it's automatically included with built executables.
+
+You can retrieve the latest OpenAPI spec from
+https://api.telnyx.com/v2/mission_control_docs
+
+Pretty format the json and overwrite the `spec3.json` file in
+`openapi/openapi/`
+
 Rebuild it with:
 
 ``` sh
 # Make sure you have the go-bindata executable (it's not vendored into this
 # repository).
 go get -u github.com/jteeuwen/go-bindata/...
-
-# Drop into the openapi/ Git submodule and update it (you may have to commit a
-# change).
-pushd openapi/ && git pull origin master && popd
 
 # Generates `bindata.go`.
 go generate

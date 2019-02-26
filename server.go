@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -138,8 +137,11 @@ func (s *StubServer) HandleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Every response needs a Request-Id header except the invalid authorization
+	// Every response needs a X-Request-Id header except the invalid authorization
 	w.Header().Set("X-Request-Id", "req_123")
+
+	// Reflect the Request-Id header
+	w.Header().Set("Request-Id", r.Header.Get("Request-Id"))
 
 	route, pathParams := s.routeRequest(r)
 
@@ -360,6 +362,9 @@ func (s *StubServer) routeRequest(r *http.Request) (*stubServerRoute, *PathParam
 	splitPath := strings.SplitAfterN(r.URL.Path, "/v2", 2)
 
 	for _, route := range verbRoutes {
+		if len(splitPath) < 2 {
+			continue
+		}
 		matches := route.pattern.FindAllStringSubmatch(splitPath[1], -1)
 
 		if len(matches) < 1 {
@@ -436,7 +441,7 @@ const (
 
 	invalidAuthorization = "Please authenticate by specifying an " +
 		"`Authorization` header with any valid looking testmode secret API " +
-		"key. For example, `Authorization: Bearer sk_test_123`. " +
+		"key. For example, `Authorization: Bearer KEYSUPERSECRET`. " +
 		"Authorization was '%s'."
 
 	invalidRoute = "Unrecognized request URL (%s: %s)."
@@ -685,44 +690,28 @@ func validateAuth(auth string) bool {
 
 	parts := strings.Split(auth, " ")
 
-	// Expect ["Bearer", "sk_test_123"] or ["Basic", "aaaaa"]
+	// Expect ["Bearer", "KEYSUPERSECRET"]
 	if len(parts) != 2 || parts[1] == "" {
 		return false
 	}
 
 	var key string
 	switch parts[0] {
-	case "Basic":
-		keyBytes, err := base64.StdEncoding.DecodeString(parts[1])
-		if err != nil {
-			return false
-		}
-		key = string(keyBytes)
-
 	case "Bearer":
 		key = parts[1]
-
 	default:
 		return false
 	}
 
-	keyParts := strings.Split(key, "_")
+	keyParts := strings.Split(key, "KEY")
 
-	// Expect ["sk", "test", "123"]
-	if len(keyParts) != 3 {
+	// Expect ["", "arbitrary-string"]
+	if len(keyParts) != 2 {
 		return false
 	}
 
-	if keyParts[0] != "sk" {
-		return false
-	}
-
-	if keyParts[1] != "test" {
-		return false
-	}
-
-	// Expect something (anything but an empty string) in the third position
-	if len(keyParts[2]) == 0 {
+	// Expect something (anything but an empty string) in the first position
+	if len(keyParts[1]) == 0 {
 		return false
 	}
 

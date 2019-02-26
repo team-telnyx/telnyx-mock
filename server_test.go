@@ -20,19 +20,23 @@ import (
 //
 
 func TestStubServer(t *testing.T) {
-	resp, body := sendRequest(t, "POST", "/v1/charges",
+	resp, body := sendRequest(t, "POST", "/v2/charges",
 		"amount=123", getDefaultHeaders())
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 	var data map[string]interface{}
 	err := json.Unmarshal(body, &data)
 	assert.NoError(t, err)
-	_, ok := data["id"]
+	blob, ok := data["data"]
 	assert.True(t, ok)
+	blob_map, ok2 := blob.(map[string]interface{})
+	assert.True(t, ok2)
+	_, ok3 := blob_map["id"]
+	assert.True(t, ok3)
 }
 
 func TestStubServer_MissingParam(t *testing.T) {
-	resp, body := sendRequest(t, "POST", "/v1/charges",
+	resp, body := sendRequest(t, "POST", "/v2/charges",
 		"", getDefaultHeaders())
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 
@@ -50,8 +54,8 @@ func TestStubServer_MissingParam(t *testing.T) {
 }
 
 func TestStubServer_ExtraParam(t *testing.T) {
-	resp, body := sendRequest(t, "POST", "/v1/charges",
-		"amount=123&doesntexist=foo", getDefaultHeaders())
+	resp, body := sendRequest(t, "POST", "/v2/charges",
+		"amount=123&doesntexist=bar", getDefaultHeaders())
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 
 	var data map[string]interface{}
@@ -68,7 +72,7 @@ func TestStubServer_ExtraParam(t *testing.T) {
 }
 
 func TestStubServer_QueryParam(t *testing.T) {
-	resp, body := sendRequest(t, "GET", "/v1/charges?limit=10",
+	resp, body := sendRequest(t, "GET", "/v2/charges?limit=10",
 		"", getDefaultHeaders())
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 
@@ -78,7 +82,7 @@ func TestStubServer_QueryParam(t *testing.T) {
 }
 
 func TestStubServer_QueryExtraParam(t *testing.T) {
-	resp, body := sendRequest(t, "GET", "/v1/charges?limit=10&doesntexist=foo",
+	resp, body := sendRequest(t, "GET", "/v2/charges?limit=10&doesntexist=bar",
 		"", getDefaultHeaders())
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 
@@ -113,9 +117,9 @@ func TestStubServer_InvalidAuthorization(t *testing.T) {
 
 func TestStubServer_AllowsContentTypeWithParameters(t *testing.T) {
 	headers := getDefaultHeaders()
-	headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8"
+	headers["Content-Type"] = "application/json; charset=utf-8"
 
-	resp, _ := sendRequest(t, "POST", "/v1/charges",
+	resp, _ := sendRequest(t, "POST", "/v2/charges",
 		"amount=123", headers)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 }
@@ -130,11 +134,11 @@ func TestStubServer_SetsSpecialHeaders(t *testing.T) {
 	resp, _ = sendRequest(t, "POST", "/", "", getDefaultHeaders())
 	assert.Equal(t, http.StatusNotFound, resp.StatusCode)
 	assert.Equal(t, version, resp.Header.Get("Telnyx-Mock-Version"))
-	assert.Equal(t, "req_123", resp.Header.Get("Request-Id"))
+	assert.Equal(t, "req_123", resp.Header.Get("X-Request-Id"))
 }
 
 func TestStubServer_ParameterValidation(t *testing.T) {
-	resp, body := sendRequest(t, "POST", "/v1/charges", "", getDefaultHeaders())
+	resp, body := sendRequest(t, "POST", "/v2/charges", "", getDefaultHeaders())
 	assert.Contains(t, string(body), "property 'amount' is required")
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 }
@@ -142,7 +146,7 @@ func TestStubServer_ParameterValidation(t *testing.T) {
 func TestStubServer_FormatsForCurl(t *testing.T) {
 	headers := getDefaultHeaders()
 	headers["User-Agent"] = "curl/1.2.3"
-	resp, body := sendRequest(t, "POST", "/v1/charges",
+	resp, body := sendRequest(t, "POST", "/v2/charges",
 		"amount=123", headers)
 
 	// Note the two spaces in front of "id" which indicate that our JSON is
@@ -155,7 +159,7 @@ func TestStubServer_ErrorsOnEmptyContentType(t *testing.T) {
 	headers := getDefaultHeaders()
 	headers["Content-Type"] = ""
 
-	resp, body := sendRequest(t, "POST", "/v1/charges",
+	resp, body := sendRequest(t, "POST", "/v2/charges",
 		"amount=123", headers)
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 
@@ -166,7 +170,7 @@ func TestStubServer_ErrorsOnEmptyContentType(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, "invalid_request_error", errorInfo["type"])
 	assert.Equal(t,
-		fmt.Sprintf(contentTypeEmpty, "application/x-www-form-urlencoded"),
+		fmt.Sprintf(contentTypeEmpty, "application/json"),
 		errorInfo["message"])
 }
 
@@ -174,15 +178,15 @@ func TestStubServer_AllowsEmptyContentTypeOnDelete(t *testing.T) {
 	headers := getDefaultHeaders()
 	headers["Content-Type"] = ""
 
-	resp, _ := sendRequest(t, "DELETE", "/v1/customers/cus_123", "", headers)
+	resp, _ := sendRequest(t, "DELETE", "/v2/customers/cus_123", "", headers)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 }
 
 func TestStubServer_ErrorsOnMismatchedContentType(t *testing.T) {
 	headers := getDefaultHeaders()
-	headers["Content-Type"] = "application/json"
+	headers["Content-Type"] = "application/x-www-form-urlencoded"
 
-	resp, body := sendRequest(t, "POST", "/v1/charges",
+	resp, body := sendRequest(t, "POST", "/v2/charges",
 		"amount=123", headers)
 	fmt.Printf("body = %+v\n", string(body))
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
@@ -195,18 +199,18 @@ func TestStubServer_ErrorsOnMismatchedContentType(t *testing.T) {
 	assert.Equal(t, "invalid_request_error", errorInfo["type"])
 	assert.Equal(t,
 		fmt.Sprintf(contentTypeMismatched,
-			"application/x-www-form-urlencoded",
-			"application/json"),
+			"application/json",
+			"application/x-www-form-urlencoded"),
 		errorInfo["message"])
 }
 
-func TestStubServer_ReflectsIdempotencyKey(t *testing.T) {
+func TestStubServer_ReflectsRequestId(t *testing.T) {
 	headers := getDefaultHeaders()
-	headers["Idempotency-Key"] = "my-key"
+	headers["Request-Id"] = "my-key"
 
-	resp, _ := sendRequest(t, "POST", "/v1/charges",
+	resp, _ := sendRequest(t, "POST", "/v2/charges",
 		"amount=123", headers)
-	assert.Equal(t, "my-key", resp.Header.Get("Idempotency-Key"))
+	assert.Equal(t, "my-key", resp.Header.Get("Request-Id"))
 }
 
 func TestStubServer_RoutesRequest(t *testing.T) {
@@ -214,7 +218,7 @@ func TestStubServer_RoutesRequest(t *testing.T) {
 
 	{
 		route, pathParams := server.routeRequest(
-			&http.Request{Method: "GET", URL: &url.URL{Path: "/v1/charges"}})
+			&http.Request{Method: "GET", URL: &url.URL{Path: "/v2/charges"}})
 		assert.NotNil(t, route)
 		assert.Equal(t, chargeAllMethod, route.operation)
 		assert.Nil(t, pathParams)
@@ -222,7 +226,7 @@ func TestStubServer_RoutesRequest(t *testing.T) {
 
 	{
 		route, pathParams := server.routeRequest(
-			&http.Request{Method: "POST", URL: &url.URL{Path: "/v1/charges"}})
+			&http.Request{Method: "POST", URL: &url.URL{Path: "/v2/charges"}})
 		assert.NotNil(t, route)
 		assert.Equal(t, chargeCreateMethod, route.operation)
 		assert.Nil(t, pathParams)
@@ -230,7 +234,7 @@ func TestStubServer_RoutesRequest(t *testing.T) {
 
 	{
 		route, pathParams := server.routeRequest(
-			&http.Request{Method: "GET", URL: &url.URL{Path: "/v1/charges/ch_123"}})
+			&http.Request{Method: "GET", URL: &url.URL{Path: "/v2/charges/ch_123"}})
 		assert.NotNil(t, route)
 		assert.Equal(t, chargeGetMethod, route.operation)
 		assert.Equal(t, "ch_123", *(*pathParams).PrimaryID)
@@ -239,7 +243,7 @@ func TestStubServer_RoutesRequest(t *testing.T) {
 
 	{
 		route, pathParams := server.routeRequest(
-			&http.Request{Method: "DELETE", URL: &url.URL{Path: "/v1/customers/cus_123"}})
+			&http.Request{Method: "DELETE", URL: &url.URL{Path: "/v2/customers/cus_123"}})
 		assert.NotNil(t, route)
 		assert.Equal(t, customerDeleteMethod, route.operation)
 		assert.Equal(t, "cus_123", *(*pathParams).PrimaryID)
@@ -248,7 +252,7 @@ func TestStubServer_RoutesRequest(t *testing.T) {
 
 	{
 		route, pathParams := server.routeRequest(
-			&http.Request{Method: "GET", URL: &url.URL{Path: "/v1/doesnt-exist"}})
+			&http.Request{Method: "GET", URL: &url.URL{Path: "/v2/doesnt-exist"}})
 		assert.Equal(t, (*stubServerRoute)(nil), route)
 		assert.Nil(t, pathParams)
 	}
@@ -257,7 +261,7 @@ func TestStubServer_RoutesRequest(t *testing.T) {
 	{
 		route, pathParams := server.routeRequest(
 			&http.Request{Method: "POST",
-				URL: &url.URL{Path: "/v1/invoices/in_123/pay"}})
+				URL: &url.URL{Path: "/v2/invoices/in_123/pay"}})
 		assert.NotNil(t, route)
 		assert.Equal(t, invoicePayMethod, route.operation)
 		assert.Equal(t, "in_123", *(*pathParams).PrimaryID)
@@ -268,7 +272,7 @@ func TestStubServer_RoutesRequest(t *testing.T) {
 	{
 		route, pathParams := server.routeRequest(
 			&http.Request{Method: "GET",
-				URL: &url.URL{Path: "/v1/application_fees/fee_123/refunds"}})
+				URL: &url.URL{Path: "/v2/application_fees/fee_123/refunds"}})
 		assert.NotNil(t, route)
 		assert.Equal(t, invoicePayMethod, route.operation)
 		assert.Equal(t, (*string)(nil), (*pathParams).PrimaryID)
@@ -281,7 +285,7 @@ func TestStubServer_RoutesRequest(t *testing.T) {
 	{
 		route, pathParams := server.routeRequest(
 			&http.Request{Method: "GET",
-				URL: &url.URL{Path: "/v1/application_fees/fee_123/refunds/fr_123"}})
+				URL: &url.URL{Path: "/v2/application_fees/fee_123/refunds/fr_123"}})
 		assert.NotNil(t, route)
 		assert.Equal(t, applicationFeeRefundGetMethod, route.operation)
 		assert.Equal(t, "fr_123", *(*pathParams).PrimaryID)
@@ -294,10 +298,10 @@ func TestStubServer_RoutesRequest(t *testing.T) {
 func TestGetValidator(t *testing.T) {
 	operation := &spec.Operation{RequestBody: &spec.RequestBody{
 		Content: map[string]spec.MediaType{
-			"application/x-www-form-urlencoded": {
+			"application/json": {
 				Schema: &spec.Schema{
 					Properties: map[string]*spec.Schema{
-						"name": {
+						"amount": {
 							Type: "string",
 						},
 					},
@@ -307,7 +311,7 @@ func TestGetValidator(t *testing.T) {
 	}}
 	mediaType, schema := getRequestBodySchema(operation)
 	assert.NotNil(t, mediaType)
-	assert.Equal(t, "application/x-www-form-urlencoded", *mediaType)
+	assert.Equal(t, "application/json", *mediaType)
 	assert.NotNil(t, schema)
 
 	validator, err := spec.GetValidatorForOpenAPI3Schema(schema, nil)
@@ -315,12 +319,12 @@ func TestGetValidator(t *testing.T) {
 	assert.NotNil(t, validator)
 
 	goodData := map[string]interface{}{
-		"name": "foo",
+		"amount": "123",
 	}
 	assert.NoError(t, validator.Validate(goodData))
 
 	badData := map[string]interface{}{
-		"name": 7,
+		"amount": 7,
 	}
 	assert.Error(t, validator.Validate(badData))
 }
@@ -360,20 +364,12 @@ func TestValidateAuth(t *testing.T) {
 		auth string
 		want bool
 	}{
-		{"Basic " + encode64("sk_test_123"), true},
-		{"Bearer sk_test_123", true},
+		{"Bearer KEYS", true},
 		{"", false},
 		{"Bearer", false},
-		{"Basic", false},
 		{"Bearer ", false},
-		{"Basic ", false},
-		{"Basic 123", false}, // "123" is not a valid key when base64 decoded
-		{"Basic " + encode64("sk_test"), false},
-		{"Bearer sk_test_123 extra", false},
-		{"Bearer sk_test", false},
-		{"Bearer sk_test_123_extra", false},
-		{"Bearer sk_live_123", false},
-		{"Bearer sk_test_", false},
+		{"Bearer KEYSUPERSECRET extra", false},
+		{"Bearer KEY", false},
 	}
 	for _, tc := range testCases {
 		t.Run("Authorization: "+tc.auth, func(t *testing.T) {
@@ -388,14 +384,14 @@ func TestValidateAuth(t *testing.T) {
 
 func TestCompilePath(t *testing.T) {
 	{
-		pattern, pathParamNames := compilePath(spec.Path("/v1/charges"))
-		assert.Equal(t, `\A/v1/charges\z`, pattern.String())
+		pattern, pathParamNames := compilePath(spec.Path("/v2/charges"))
+		assert.Equal(t, `\A/v2/charges\z`, pattern.String())
 		assert.Equal(t, []string(nil), pathParamNames)
 	}
 
 	{
-		pattern, pathParamNames := compilePath(spec.Path("/v1/charges/{id}"))
-		assert.Equal(t, `\A/v1/charges/(?P<id>[\w-_.]+)\z`, pattern.String())
+		pattern, pathParamNames := compilePath(spec.Path("/v2/charges/{id}"))
+		assert.Equal(t, `\A/v2/charges/(?P<id>[^\.\/\?]+)\z`, pattern.String())
 		assert.Equal(t, []string{"id"}, pathParamNames)
 	}
 }
@@ -460,7 +456,7 @@ func encode64(s string) string {
 
 func getDefaultHeaders() map[string]string {
 	headers := make(map[string]string)
-	headers["Authorization"] = "Bearer sk_test_123"
+	headers["Authorization"] = "Bearer KEYSUPERSECRET"
 	headers["Content-Type"] = "application/json"
 	return headers
 }
