@@ -21,7 +21,7 @@ import (
 
 func TestStubServer(t *testing.T) {
 	resp, body := sendRequest(t, "POST", "/v2/charges",
-		"amount=123", getDefaultHeaders())
+		"{\"amount\": \"123\"}", getDefaultHeaders())
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 	var data map[string]interface{}
@@ -37,7 +37,7 @@ func TestStubServer(t *testing.T) {
 
 func TestStubServer_MissingParam(t *testing.T) {
 	resp, body := sendRequest(t, "POST", "/v2/charges",
-		"", getDefaultHeaders())
+		"{}", getDefaultHeaders())
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 
 	var data map[string]interface{}
@@ -55,7 +55,7 @@ func TestStubServer_MissingParam(t *testing.T) {
 
 func TestStubServer_ExtraParam(t *testing.T) {
 	resp, body := sendRequest(t, "POST", "/v2/charges",
-		"amount=123&doesntexist=bar", getDefaultHeaders())
+		"{\"amount\":\"123\", \"doesntexist\":\"bar\"}", getDefaultHeaders())
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 
 	var data map[string]interface{}
@@ -120,7 +120,7 @@ func TestStubServer_AllowsContentTypeWithParameters(t *testing.T) {
 	headers["Content-Type"] = "application/json; charset=utf-8"
 
 	resp, _ := sendRequest(t, "POST", "/v2/charges",
-		"amount=123", headers)
+		"{\"amount\": \"123\"}", headers)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 }
 
@@ -138,7 +138,7 @@ func TestStubServer_SetsSpecialHeaders(t *testing.T) {
 }
 
 func TestStubServer_ParameterValidation(t *testing.T) {
-	resp, body := sendRequest(t, "POST", "/v2/charges", "", getDefaultHeaders())
+	resp, body := sendRequest(t, "POST", "/v2/charges", "{}", getDefaultHeaders())
 	assert.Contains(t, string(body), "property 'amount' is required")
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 }
@@ -147,7 +147,7 @@ func TestStubServer_FormatsForCurl(t *testing.T) {
 	headers := getDefaultHeaders()
 	headers["User-Agent"] = "curl/1.2.3"
 	resp, body := sendRequest(t, "POST", "/v2/charges",
-		"amount=123", headers)
+		"{\"amount\": \"123\"}", headers)
 
 	// Note the two spaces in front of "id" which indicate that our JSON is
 	// pretty printed.
@@ -160,7 +160,7 @@ func TestStubServer_ErrorsOnEmptyContentType(t *testing.T) {
 	headers["Content-Type"] = ""
 
 	resp, body := sendRequest(t, "POST", "/v2/charges",
-		"amount=123", headers)
+		"{\"amount\": \"123\"}", headers)
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 
 	var data map[string]interface{}
@@ -187,7 +187,7 @@ func TestStubServer_ErrorsOnMismatchedContentType(t *testing.T) {
 	headers["Content-Type"] = "application/x-www-form-urlencoded"
 
 	resp, body := sendRequest(t, "POST", "/v2/charges",
-		"amount=123", headers)
+		"{\"amount\": \"123\"}", headers)
 	fmt.Printf("body = %+v\n", string(body))
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 
@@ -209,7 +209,7 @@ func TestStubServer_ReflectsRequestId(t *testing.T) {
 	headers["Request-Id"] = "my-key"
 
 	resp, _ := sendRequest(t, "POST", "/v2/charges",
-		"amount=123", headers)
+		"{\"amount\": \"123\"}", headers)
 	assert.Equal(t, "my-key", resp.Header.Get("Request-Id"))
 }
 
@@ -457,7 +457,7 @@ func encode64(s string) string {
 func getDefaultHeaders() map[string]string {
 	headers := make(map[string]string)
 	headers["Authorization"] = "Bearer KEYSUPERSECRET"
-	headers["Content-Type"] = "application/json"
+	headers["Content-Type"] = "application/json; charset=utf-8"
 	return headers
 }
 

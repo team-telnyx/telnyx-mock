@@ -128,6 +128,7 @@ func (s *StubServer) HandleRequest(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Headers: %v\n", r.Header)
 	q, _ := url.ParseQuery(r.URL.RawQuery)
 	fmt.Printf("Query: %v\n", q)
+	fmt.Printf("Body: %v\n", r.Body)
 
 	auth := r.Header.Get("Authorization")
 	if !validateAuth(auth) {

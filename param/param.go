@@ -1,6 +1,7 @@
 package param
 
 import (
+  "encoding/json"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -18,7 +19,7 @@ import (
 // consume.
 //
 // Depending on the type of request, parameters may be extracted from either
-// the query string, a form-encoded body, or a multipart form-encoded body (the
+// the query string, a json encoded body, or a multipart form-encoded body (the
 // latter being specific to only a very small number of endpoints).
 //
 // Regardless of origin, parameters are assumed to follow "Rack-style"
@@ -53,7 +54,21 @@ func ParseParams(r *http.Request) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	if contentType == multipartMediaType {
+	if contentType == jsonMediaType && (r.Method == "POST" || r.Method == "PATCH" || r.Method == "PUT") {
+    var data map[string]interface{}
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			return nil, err
+		}
+		r.Body.Close()
+
+    err = json.Unmarshal(body, &data)
+    if err != nil {
+      return nil, err
+    }
+    return data, nil
+
+  } else if contentType == multipartMediaType {
 		err := r.ParseMultipartForm(maxMemory)
 		if err != nil {
 			return nil, err
@@ -113,3 +128,6 @@ const maxMemory = 1 * 1024 * 1024
 
 // multipartMediaType is the `Content-Type` for a multipart request.
 const multipartMediaType = "multipart/form-data"
+
+// jsonMediatType is the 'Content-Type' for a json request.
+const jsonMediaType = "application/json"
