@@ -13,3 +13,7 @@ test:
 
 vet:
 	go vet ./...
+
+container:
+	docker build . -t telnyx-mock
+	docker run -p 12111-12112:12111-12112 telnyx-mock

@@ -11,8 +11,18 @@
 
 FROM golang:1.9-alpine AS builder
 WORKDIR /go/src/github.com/team-telnyx/telnyx-mock/
-ADD ./ ./
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o telnyx-mock .
+COPY ./ ./
+RUN set -o nounset -o xtrace \
+    && apk --no-cache add \
+        git \
+    \
+    # get what you need to make 'Asset's work  \
+    && go get -u github.com/jteeuwen/go-bindata/... \
+    # && git -C openapi/ pull origin master \
+    # ^^^ stripe has a separate openapi repo that was a submodule of this
+    && go generate \
+    \
+    && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o telnyx-mock .
 
 #
 # STAGE 2

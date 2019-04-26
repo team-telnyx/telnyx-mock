@@ -3,4 +3,3 @@ LICENSE
 Makefile
 dist/
 goreleaser.yml
-openapi/

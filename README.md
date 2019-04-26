@@ -175,11 +175,9 @@ goreleaser --rm-dist
 
 ## Acknowledgements
 
-The contributors and maintainers of Telnyx Mock would like to extend their deep gratitude to the
-authors of [Stripe Mock](https://github.com/stripe/stripe-mock), upon which
-this project is based. Thank you for developing such elegant, usable, and extensible code
+The contributors and maintainers of Telnyx Mock would like to extend their deep
+gratitude to the authors of [Stripe Mock][stripe-mock], upon which this project
+is based. Thank you for developing such elegant, usable, and extensible code
 and for sharing it with the community.
 
-<!--
-# vim: set tw=79:
--->
+[stripe-mock]: https://github.com/stripe/stripe-mock
