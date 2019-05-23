@@ -15,6 +15,20 @@
       "webhook_api_version": "1",
       "created_at": "2019-01-23T18:10:02.574Z",
       "updated_at": "2019-01-23T18:10:02.574Z"
+    },
+    "number_orders": {
+      "id": "12ade33a-21c0-473b-b055-b3c836e1c292",
+      "record_type": "number_order",
+      "phone_numbers_count": 10,
+      "status": "pending",
+      "customer_reference": "MY REF 001",
+      "connection_id": "442191469269222625",
+      "messaging_profile_id": "730911e3-8488-40a8-a818-dc0a5df8bc03",
+      "webhook_url": "https://webhook.test",
+      "webhook_failover_url": "https://webhook-failover.test",
+      "created_at": "2018-01-01T00:00:00.000000Z",
+      "updated_at": "2018-01-01T00:00:00.000000Z",
+      "requirements_met": true
     }
   }
 }
