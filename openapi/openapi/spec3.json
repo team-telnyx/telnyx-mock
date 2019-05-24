@@ -129,14 +129,14 @@
           }
         ],
         "responses": {
-            "200": {
-              "$ref": "#/components/responses/NumberOrdersResponse"
-            },
-            "default": {
-              "$ref": "#/components/responses/GenericErrorResponse"
-            }
+          "200": {
+            "$ref": "#/components/responses/NumberOrdersResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
           }
-        },
+        }
+      },
       "post": {
         "tags": [
           "Number Orders"
@@ -935,170 +935,71 @@
         ],
         "parameters": [
           {
-            "name": "filter[phone_number][starts_with]",
+            "name": "filter",
             "in": "query",
-            "description": "Filter numbers starting with a pattern",
             "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "generic": {
-                "value": "FOO",
-                "summary": "Find numbers starting with the prefix 'FREE'"
+              "type": "object",
+              "properties": {
+                "phone_number": {
+                  "type": "object",
+                  "properties": {
+                    "contains": {
+                      "type": "string"
+                    },
+                    "ends_with": {
+                      "type": "string"
+                    },
+                    "starts_with": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "locality": {
+                  "type": "string"
+                },
+                "administrative_area": {
+                  "type": "string"
+                },
+                "country_code": {
+                  "type": "string"
+                },
+                "national_destination_code": {
+                  "type": "string"
+                },
+                "rate_center": {
+                  "type": "string"
+                },
+                "number_type": {
+                  "type": "string",
+                  "enum": [
+                    "toll-free",
+                    "national",
+                    "mobile",
+                    "local"
+                  ]
+                },
+                "limit": {
+                  "type": "integer"
+                },
+                "best_effort": {
+                  "type": "boolean"
+                },
+                "exclude_regulatory_requirements": {
+                  "type": "boolean"
+                },
+                "features": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "sms",
+                      "mms",
+                      "voice",
+                      "fax"
+                    ]
+                  }
+                }
               }
-            }
-          },
-          {
-            "name": "filter[phone_number][ends_with]",
-            "in": "query",
-            "description": "Filter numbers ending with a pattern",
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "generic": {
-                "value": "CALL",
-                "summary": "Find numbers ending with the suffix 'CALL'"
-              }
-            }
-          },
-          {
-            "name": "filter[phone_number][contains]",
-            "in": "query",
-            "description": "Filter numbers containing a pattern",
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "generic": {
-                "value": "TELNYX",
-                "summary": "Find numbers that contain the word 'TELNYX' in any position"
-              }
-            }
-          },
-          {
-            "name": "filter[locality]",
-            "in": "query",
-            "description": "Filter phone numbers by city",
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "US": {
-                "value": "Chicago"
-              },
-              "CA": {
-                "value": "Toronto"
-              },
-              "AU": {
-                "value": "Canberra"
-              }
-            }
-          },
-          {
-            "name": "filter[administrative_area]",
-            "in": "query",
-            "description": "Filter phone numbers by US state/CA province",
-            "schema": {
-              "type": "string",
-              "example": "IL"
-            }
-          },
-          {
-            "name": "filter[country_code]",
-            "in": "query",
-            "description": "Filter phone numbers by ISO 2 country code",
-            "schema": {
-              "type": "string",
-              "example": "US"
-            }
-          },
-          {
-            "name": "filter[national_destination_code]",
-            "in": "query",
-            "description": "Filter by the national destination code of the number. This filter is only applicable to North American numbers",
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "US": {
-                "value": "312"
-              },
-              "CA": {
-                "value": "437"
-              },
-              "AU": {
-                "value": "0251"
-              }
-            }
-          },
-          {
-            "name": "filter[rate_center]",
-            "in": "query",
-            "description": "Filter phone numbers by NANP rate center. This filter is only applicable to North American numbers",
-            "schema": {
-              "type": "string",
-              "example": "CHICAGO HEIGHTS"
-            }
-          },
-          {
-            "name": "filter[number_type]",
-            "in": "query",
-            "description": "Filter phone numbers by number type",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "toll-free",
-                "national",
-                "mobile",
-                "local"
-              ],
-              "example": "local"
-            }
-          },
-          {
-            "name": "filter[features]",
-            "in": "query",
-            "description": "Filter if the phone number should be used for voice, fax, sms",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "sms",
-                  "mms",
-                  "voice",
-                  "fax"
-                ]
-              },
-              "example": "voice,sms"
-            }
-          },
-          {
-            "name": "filter[limit]",
-            "in": "query",
-            "description": "Limits the number of results",
-            "schema": {
-              "type": "integer",
-              "example": 100
-            }
-          },
-          {
-            "name": "filter[best_effort]",
-            "in": "query",
-            "description": "Filter to determine if best effort results should be included.",
-            "schema": {
-              "type": "boolean",
-              "example": true
-            }
-          },
-          {
-            "name": "filter[exclude_regulatory_requirements]",
-            "in": "query",
-            "description": "Filter to determine if the phone number has regulatory requirements",
-            "schema": {
-              "type": "boolean",
-              "example": false
             }
           }
         ],
@@ -1958,40 +1859,40 @@
         }
       },
       "NumberOrderDetailed": {
-          "type": "array",
-          "$ref": "#/components/schemas/NumberOrder",
-          "example": {
-            "id": "12ade33a-21c0-473b-b055-b3c836e1c292",
-            "record_type": "number_order",
-            "phone_numbers_count": 1,
-            "status": "pending",
-            "customer_reference": "MY REF 001",
-            "connection_id": "442191469269222625",
-            "messaging_profile_id": "730911e3-8488-40a8-a818-dc0a5df8bc03",
-            "webhook_url": "https://webhook.test",
-            "webhook_failover_url": "https://webhook-failover.test",
-            "created_at": "2018-01-01T00:00:00.000000Z",
-            "updated_at": "2018-01-01T00:00:00.000000Z",
-            "requirements_met": true,
-            "phone_numbers": [
-              {
-                  "regulatory_requirements": [],
-                  "requirements_met": true,
-                  "status": "success",
-                  "id": "621415a0-7035-42d1-bfba-0b16e43d79ed",
-                  "phone_number": "+13127000000",
-                  "record_type": "number_order_phone_number"
-              },
-              {
-                  "regulatory_requirements": [],
-                  "requirements_met": true,
-                  "status": "success",
-                  "id": "27be8dfc-7cc9-4541-a148-1b0185c4aa3f",
-                  "phone_number": "+13127000099",
-                  "record_type": "number_order_phone_number"
-              }
-            ]
-          }
+        "type": "array",
+        "$ref": "#/components/schemas/NumberOrder",
+        "example": {
+          "id": "12ade33a-21c0-473b-b055-b3c836e1c292",
+          "record_type": "number_order",
+          "phone_numbers_count": 1,
+          "status": "pending",
+          "customer_reference": "MY REF 001",
+          "connection_id": "442191469269222625",
+          "messaging_profile_id": "730911e3-8488-40a8-a818-dc0a5df8bc03",
+          "webhook_url": "https://webhook.test",
+          "webhook_failover_url": "https://webhook-failover.test",
+          "created_at": "2018-01-01T00:00:00.000000Z",
+          "updated_at": "2018-01-01T00:00:00.000000Z",
+          "requirements_met": true,
+          "phone_numbers": [
+            {
+              "regulatory_requirements": [],
+              "requirements_met": true,
+              "status": "success",
+              "id": "621415a0-7035-42d1-bfba-0b16e43d79ed",
+              "phone_number": "+13127000000",
+              "record_type": "number_order_phone_number"
+            },
+            {
+              "regulatory_requirements": [],
+              "requirements_met": true,
+              "status": "success",
+              "id": "27be8dfc-7cc9-4541-a148-1b0185c4aa3f",
+              "phone_number": "+13127000099",
+              "record_type": "number_order_phone_number"
+            }
+          ]
+        }
       },
       "PhoneNumber": {
         "type": "object",
@@ -4140,20 +4041,20 @@
           }
         }
       },
-      "NumberOrdersDetailedResponse":{
+      "NumberOrdersDetailedResponse": {
         "description": "",
         "content": {
           "application/json": {
             "schema": {
               "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/NumberOrderDetailed"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/PaginationMeta"
-                    }
-                  }
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/NumberOrderDetailed"
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
             }
           }
         }
