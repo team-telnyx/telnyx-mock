@@ -40,6 +40,10 @@
       "description": "Number search"
     },
     {
+      "name": "Number Reservations",
+      "description": "Number reservations"
+    },
+    {
       "name": "Messages",
       "description": "Messages"
     },
@@ -244,6 +248,186 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/NumberOrdersDetailedResponse"
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/number_reservations": {
+      "get": {
+        "description": "Gets a paginated list of Phone Number Reservations",
+        "tags": [
+          "Number Reservations"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filter[status]",
+            "description": "Filter number reservations by status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filter[created_at][gt]",
+            "description": "Filter number reservations later than this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filter[created_at][lt]",
+            "description": "Filter number reservations earlier than this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filter[phone_numbers]",
+            "description": "Filter number reservations having these phone numbers",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filter[customer_reference]",
+            "description": "Filter number reservations via the customer reference set",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/NumberReservationsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a Phone Number Reservation for multiple numbers",
+        "tags": [
+          "Number Reservations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Number reservation has been created successfully.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/responses/NumberReservation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NumberReservation"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/number_reservations/{number_reservation_id}": {
+      "get": {
+        "description": "Gets a single Phone Number Reservation",
+        "tags": [
+          "Number Reservations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "number_reservation_id",
+            "description": "The number reservation id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/NumberReservationsDetailedResponse"
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/number_reservations/{number_reservation_id}/actions/extend": {
+      "post": {
+        "description": "Extends reservation expiry time on all phone numbers",
+        "tags": [
+          "Number Reservations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "number_reservation_id",
+            "description": "The number reservation id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Number reservation was extended",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NumberReservation"
+                    }
+                  }
+                }
+              }
+            }
           },
           "default": {
             "description": "unexpected error",
@@ -1892,6 +2076,143 @@
               "record_type": "number_order_phone_number"
             }
           ]
+        }
+      },
+      "NumberReservation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the number reservation",
+            "example": "12ade33a-21c0-473b-b055-b3c836e1c292"
+          },
+          "record_type": {
+            "type": "string",
+            "example": "phone_number_reservation"
+          },
+          "phone_numbers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReservedPhoneNumber"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "failure"
+            ],
+            "description": "The status of the entire reservation"
+          },
+          "customer_reference": {
+            "type": "string",
+            "example": "MY REF 001",
+            "description": "A customer reference string for customer look ups"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2018-01-01T00:00:00.000000Z",
+            "description": "A datetime string denoting when the numbers reservation was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2018-01-01T00:00:00.000000Z",
+            "description": "A datetime string for when the number reservation was updated"
+          }
+        },
+        "example": {
+          "status": "pending",
+          "created_at": "2019-06-06T17:10:37.984311Z",
+          "phone_numbers": [
+            {
+              "expired_at": "2019-06-04T17:10:37.887000Z",
+              "status": "failure",
+              "phone_number": "+13122076000",
+              "expired": true,
+              "updated_at": "2019-06-11T19:40:01.190425Z",
+              "id": "4d731178-a0e1-4145-bddd-0265120123b8",
+              "created_at": "2019-06-06T17:10:37.984311Z",
+              "record_type": "reserved_phone_number"
+            }
+          ],
+          "customer_reference": "CUSTOMER_REF_1",
+          "updated_at": "2019-06-06T17:10:37.984311Z",
+          "user_id": "1a8752a5-63e8-4c16-9655-d2c515f42aed",
+          "id": "f7964e2b-a9f9-4eb6-ab16-e570ffc4bc83",
+          "record_type": "number_reservation"
+        }
+      },
+      "ReservedPhoneNumber": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "12ade33a-21c0-473b-b055-b3c836e1c292"
+          },
+          "record_type": {
+            "type": "string",
+            "example": "reserved_phone_number"
+          },
+          "phone_number": {
+            "type": "string",
+            "format": "e164_phone_number",
+            "example": "+13125000000"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "failure"
+            ],
+            "description": "The status of the phone number's reservation"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2018-01-01T00:00:00.000000Z",
+            "description": "A datetime string denoting when the individual number reservation was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2018-01-01T00:00:00.000000Z",
+            "description": "A datetime string for when the the individual number reservation was updated"
+          },
+          "expired_at": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2018-01-01T00:00:00.000000Z",
+            "description": "A datetime string for when the individual number reservation is going to expire"
+          }
+        }
+      },
+      "NumberReservationDetailed": {
+        "type": "array",
+        "$ref": "#/components/schemas/NumberReservation",
+        "example": {
+          "id": "122644a6-aa12-4832-b353-7a88e89722fd",
+          "created_at": "2019-06-06T22:32:45.075437Z",
+          "customer_reference": "CUSTOMER_REF_1",
+          "updated_at": "2019-06-06T22:32:51.299616Z",
+          "status": "success",
+          "phone_numbers": [
+            {
+              "expired_at": "2019-06-11T22:32:45.056436Z",
+              "id": "e39ba25a-1fb2-44e2-8b07-543853ac9c29",
+              "created_at": "2019-06-06T22:32:45.075437Z",
+              "updated_at": "2019-06-06T22:32:51.303978Z",
+              "expired": false,
+              "phone_number": "+13122708609",
+              "status": "success",
+              "record_type": "reserved_phone_number"
+            }
+          ],
+          "user_id": "22083c08-4e1f-4e25-be08-3e0f51f581dc",
+          "record_type": "number_reservation"
         }
       },
       "PhoneNumber": {
@@ -4050,6 +4371,48 @@
               "properties": {
                 "data": {
                   "$ref": "#/components/schemas/NumberOrderDetailed"
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NumberReservationsResponse": {
+        "description": "",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NumberReservation"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NumberReservationsDetailedResponse": {
+        "description": "",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NumberReservationDetailed"
+                  }
                 },
                 "meta": {
                   "$ref": "#/components/schemas/PaginationMeta"

@@ -29,6 +29,27 @@
       "created_at": "2018-01-01T00:00:00.000000Z",
       "updated_at": "2018-01-01T00:00:00.000000Z",
       "requirements_met": true
+    },
+    "number_reservations": {
+      "status": "pending",
+      "created_at": "2019-06-06T17:10:37.984311Z",
+      "phone_numbers": [
+        {
+          "expired_at": "2019-06-04T17:10:37.887000Z",
+          "status": "failure",
+          "phone_number": "+13122076000",
+          "expired": true,
+          "updated_at": "2019-06-11T19:40:01.190425Z",
+          "id": "4d731178-a0e1-4145-bddd-0265120123b8",
+          "created_at": "2019-06-06T17:10:37.984311Z",
+          "record_type": "reserved_phone_number"
+        }
+      ],
+      "customer_reference": null,
+      "updated_at": "2019-06-06T17:10:37.984311Z",
+      "user_id": "1a8752a5-63e8-4c16-9655-d2c515f42aed",
+      "id": "f7964e2b-a9f9-4eb6-ab16-e570ffc4bc83",
+      "record_type": "number_reservation"
     }
   }
 }
