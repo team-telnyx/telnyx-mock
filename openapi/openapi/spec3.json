@@ -333,7 +333,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/responses/NumberReservation"
+                      "$ref": "#/components/schemas/NumberReservation"
                     }
                   }
                 }
