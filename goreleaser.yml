@@ -13,41 +13,41 @@ checksum:
 env_files:
   github_token: ~/.config/goreleaser/github_token
 
-brews:
-  -
-    github:
-      owner: telnyx
-      name: homebrew-telnyx-mock
-    homepage: "https://github.com/team-telnyx/telnyx-mock"
-    description: "telnyx-mock is a mock HTTP server that responds like the real Telnyx API. It can be used instead of Telnyx's testmode to make test suites integrating with Telnyx faster and less brittle."
+# brews:
+#   -
+#     github:
+#       owner: telnyx
+#       name: homebrew-telnyx-mock
+#     homepage: "https://github.com/team-telnyx/telnyx-mock"
+#     description: "telnyx-mock is a mock HTTP server that responds like the real Telnyx API. It can be used instead of Telnyx's testmode to make test suites integrating with Telnyx faster and less brittle."
 
-    plist: |
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-        <dict>
-          <key>KeepAlive</key>
-          <dict>
-            <key>SuccessfulExit</key>
-            <false/>
-          </dict>
-          <key>Label</key>
-          <string>#{plist_name}</string>
-          <key>ProgramArguments</key>
-          <array>
-            <string>#{opt_bin}/telnyx-mock</string>
-            <string>-http-port</string>
-            <string>12111</string>
-            <string>-https-port</string>
-            <string>12112</string>
-          </array>
-          <key>RunAtLoad</key>
-          <true/>
-          <key>WorkingDirectory</key>
-          <string>#{var}</string>
-          <key>StandardErrorPath</key>
-          <string>#{var}/log/telnyx-mock.log</string>
-          <key>StandardOutPath</key>
-          <string>#{var}/log/telnyx-mock.log</string>
-        </dict>
-      </plist>
+#     plist: |
+#       <?xml version="1.0" encoding="UTF-8"?>
+#       <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+#       <plist version="1.0">
+#         <dict>
+#           <key>KeepAlive</key>
+#           <dict>
+#             <key>SuccessfulExit</key>
+#             <false/>
+#           </dict>
+#           <key>Label</key>
+#           <string>#{plist_name}</string>
+#           <key>ProgramArguments</key>
+#           <array>
+#             <string>#{opt_bin}/telnyx-mock</string>
+#             <string>-http-port</string>
+#             <string>12111</string>
+#             <string>-https-port</string>
+#             <string>12112</string>
+#           </array>
+#           <key>RunAtLoad</key>
+#           <true/>
+#           <key>WorkingDirectory</key>
+#           <string>#{var}</string>
+#           <key>StandardErrorPath</key>
+#           <string>#{var}/log/telnyx-mock.log</string>
+#           <key>StandardOutPath</key>
+#           <string>#{var}/log/telnyx-mock.log</string>
+#         </dict>
+#       </plist>
