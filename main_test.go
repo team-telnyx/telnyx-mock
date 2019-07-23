@@ -152,7 +152,7 @@ func initTestSpec() {
 						"application/json": {
 							Schema: &spec.Schema{
 								Properties: map[string]*spec.Schema{
-									"data": &spec.Schema{
+									"data": {
 										Ref: "#/components/schemas/deleted_customer",
 									},
 								},
@@ -165,7 +165,7 @@ func initTestSpec() {
 						"application/json": {
 							Schema: &spec.Schema{
 								Properties: map[string]*spec.Schema{
-									"data": &spec.Schema{
+									"data": {
 										Ref: "#/components/schemas/charge",
 									},
 								},
@@ -178,7 +178,7 @@ func initTestSpec() {
 						"application/json": {
 							Schema: &spec.Schema{
 								Properties: map[string]*spec.Schema{
-									"data": &spec.Schema{
+									"data": {
 										Ref:  "",
 										Type: "array",
 										Items: &spec.Schema{

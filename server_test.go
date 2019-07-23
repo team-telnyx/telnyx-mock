@@ -29,9 +29,9 @@ func TestStubServer(t *testing.T) {
 	assert.NoError(t, err)
 	blob, ok := data["data"]
 	assert.True(t, ok)
-	blob_map, ok2 := blob.(map[string]interface{})
+	blobMap, ok2 := blob.(map[string]interface{})
 	assert.True(t, ok2)
-	_, ok3 := blob_map["id"]
+	_, ok3 := blobMap["id"]
 	assert.True(t, ok3)
 }
 

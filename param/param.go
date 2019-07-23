@@ -1,7 +1,7 @@
 package param
 
 import (
-  "encoding/json"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -55,20 +55,20 @@ func ParseParams(r *http.Request) (map[string]interface{}, error) {
 	}
 
 	if contentType == jsonMediaType && (r.Method == "POST" || r.Method == "PATCH" || r.Method == "PUT") {
-    var data map[string]interface{}
+		var data map[string]interface{}
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			return nil, err
 		}
 		r.Body.Close()
 
-    err = json.Unmarshal(body, &data)
-    if err != nil {
-      return nil, err
-    }
-    return data, nil
+		err = json.Unmarshal(body, &data)
+		if err != nil {
+			return nil, err
+		}
+		return data, nil
 
-  } else if contentType == multipartMediaType {
+	} else if contentType == multipartMediaType {
 		err := r.ParseMultipartForm(maxMemory)
 		if err != nil {
 			return nil, err

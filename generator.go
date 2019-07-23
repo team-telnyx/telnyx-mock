@@ -152,15 +152,14 @@ func (g *DataGenerator) Generate(params *GenerateParams) (interface{}, error) {
 
 	if params.WrapWithList {
 		nestedData := map[string][]interface{}{
-			"data": []interface{}{data},
-		}
-		return nestedData, nil
-	} else {
-		nestedData := map[string]interface{}{
-			"data": data,
+			"data": {data},
 		}
 		return nestedData, nil
 	}
+	nestedData := map[string]interface{}{
+		"data": data,
+	}
+	return nestedData, nil
 }
 
 // generateInternal encompasses all the generation logic. It's separate from
