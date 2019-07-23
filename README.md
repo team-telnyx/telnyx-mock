@@ -77,7 +77,7 @@ telnyx-mock -http-unix /tmp/telnyx-mock.sock -https-unix /tmp/telnyx-mock-secure
 Get it from Homebrew or download it [from the releases page][releases]:
 
 ``` sh
-brew install telnyx/telnyx-mock/telnyx-mock
+brew install team-telnyx/telnyx-mock/telnyx-mock
 
 # start a telnyx-mock service at login
 brew services start telnyx-mock

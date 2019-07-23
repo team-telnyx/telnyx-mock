@@ -11,7 +11,15 @@ checksum:
   name_template: 'checksums.txt'
 
 env_files:
+  # create a token at https://github.com/settings/tokens
+  # permissions required:
+  #   - write:packages (for uploading the binaries to telnyx-mock)
+  #   - repo (for modifying homebrew-telnyx-mock)
   github_token: ~/.config/goreleaser/github_token
+
+commit_author:
+  name: Telnyx Engineering
+  email: engineering@telnyx.com
 
 brews:
   -
