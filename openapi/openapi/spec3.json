@@ -2123,6 +2123,7 @@
           "status": {
             "type": "string",
             "enum": [
+              "pending",
               "success",
               "failure"
             ],
@@ -2188,6 +2189,7 @@
           "status": {
             "type": "string",
             "enum": [
+              "pending",
               "success",
               "failure"
             ],
