@@ -326,19 +326,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Number reservation has been created successfully.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/NumberReservation"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref":"#/components/responses/NumberReservationCreatedResponse"
           },
           "default": {
             "description": "unexpected error",
@@ -415,19 +403,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Number reservation was extended",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/NumberReservation"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NumberReservationActionsExtendResponse"
           },
           "default": {
             "description": "unexpected error",
@@ -4481,6 +4457,21 @@
           }
         }
       },
+      "NumberReservationCreatedResponse": {
+        "description": "Number reservation has been created successfully.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/NumberReservation"
+                }
+              }
+            }
+          }
+        }
+      },
       "NumberReservationsResponse": {
         "description": "",
         "content": {
@@ -4517,6 +4508,21 @@
                 },
                 "meta": {
                   "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NumberReservationActionsExtendResponse": {
+        "description": "Number reservation was extended",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/NumberReservation"
                 }
               }
             }
