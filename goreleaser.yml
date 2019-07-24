@@ -17,20 +17,23 @@ env_files:
   #   - repo (for modifying homebrew-telnyx-mock)
   github_token: ~/.config/goreleaser/github_token
 
-commit_author:
-  name: Telnyx Engineering
-  email: engineering@telnyx.com
-
 brews:
   -
     github:
       owner: team-telnyx
       name: homebrew-telnyx-mock
+
+    commit_author:
+      name: Telnyx Engineering
+      email: engineering@telnyx.com
+
     homepage: "https://github.com/team-telnyx/telnyx-mock"
+
     description: >-
       telnyx-mock is a mock HTTP server that responds like the real Telnyx API.
       It can be used instead of Telnyx's testmode to make test suites integrating
       with Telnyx faster and less brittle.
+
     plist: |
       <?xml version="1.0" encoding="UTF-8"?>
       <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
