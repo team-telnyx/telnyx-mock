@@ -17,6 +17,12 @@ env_files:
   #   - repo (for modifying homebrew-telnyx-mock)
   github_token: ~/.config/goreleaser/github_token
 
+archives:
+  -
+    format_overrides:
+      - goos: windows
+        format: zip
+
 brews:
   -
     github:
