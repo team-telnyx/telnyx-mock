@@ -1,6 +1,6 @@
 .env
 .envrc
 /TODO.md
-/stripe-mock
+/telnyx-mock
 /dist/
 bindata.go
