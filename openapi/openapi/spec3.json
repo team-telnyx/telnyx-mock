@@ -109,7 +109,7 @@
           },
           {
             "in": "query",
-            "name": "filter[phone_numbers]",
+            "name": "filter[phone_numbers.phone_number]",
             "description": "Filter number orders having these phone numbers",
             "schema": {
               "type": "string"
@@ -206,13 +206,7 @@
         ],
         "parameters": [
           {
-            "in": "path",
-            "name": "number_order_id",
-            "description": "The number order id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/NumberOrderId"
           }
         ],
         "responses": {
@@ -227,13 +221,7 @@
         ],
         "parameters": [
           {
-            "in": "path",
-            "name": "number_order_id",
-            "description": "The number order id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/NumberOrderId"
           }
         ],
         "requestBody": {
@@ -340,7 +328,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/CreateNumberReservationsResponse"
+            "$ref": "#/components/responses/NumberReservationCreatedResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -358,13 +346,7 @@
         ],
         "parameters": [
           {
-            "name": "number_reservation_id",
-            "in": "path",
-            "description": "The number reservation id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/NumberReservationId"
           }
         ],
         "responses": {
@@ -387,13 +369,7 @@
         ],
         "parameters": [
           {
-            "name": "number_reservation_id",
-            "in": "path",
-            "description": "The number reservation id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/NumberReservationId"
           }
         ],
         "requestBody": {
@@ -4457,8 +4433,41 @@
           }
         }
       },
-      "CreateNumberReservationsResponse": {
-        "description": "Number reservation has been created successfully",
+      "NumberReservationCreatedResponse": {
+        "description": "Number reservation has been created successfully.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/NumberReservation"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NumberOrdersDetailedResponse": {
+        "description": "",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/NumberOrderDetailed"
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NumberReservationsResponse": {
+        "description": "",
         "content": {
           "application/json": {
             "schema": {
@@ -5067,6 +5076,24 @@
         "schema": {
           "type": "string",
           "format": "uuid"
+        }
+      },
+      "NumberOrderId": {
+        "in": "path",
+        "name": "number_order_id",
+        "description": "The number order id",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "NumberReservationId": {
+        "name": "number_reservation_id",
+        "in": "path",
+        "description": "The number reservation id",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       },
       "MessagingPhoneNumberId": {
