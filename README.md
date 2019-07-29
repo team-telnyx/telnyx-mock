@@ -36,9 +36,44 @@ Limitations:
 * Testing for specific responses and error is currently not supported.
   It will return a success response instead of the desired error response.
 
-## Usage
+## Installation
 
-If you have Go installed, you can install the basic binary with:
+### Binary Release
+
+You can download [a precompiled release][releases] for your platform (64-bit Windows, macOS, and Linux) and execute it. With no options, it will start an HTTP server on port 12111.
+
+### Homebrew
+
+Get it from Homebrew:
+
+``` sh
+brew install team-telnyx/telnyx-mock/telnyx-mock
+
+# start a telnyx-mock service at login
+brew services start telnyx-mock
+
+# upgrade if you already have it
+brew upgrade telnyx-mock
+```
+
+The Homebrew service listens on port `12111` for HTTP and `12112` for HTTPS and
+HTTP/2.
+
+### From Source (built in Docker)
+
+``` sh
+# build
+docker build . -t telnyx-mock
+# run
+docker run -p 12111-12112:12111-12112 telnyx-mock
+```
+
+The default Docker `ENTRYPOINT` listens on port `12111` for HTTP and `12112`
+for HTTPS and HTTP/2.
+
+### From Source
+
+If you have Go installed, you can build the basic binary with:
 
 ``` sh
 go get -u github.com/team-telnyx/telnyx-mock
@@ -72,34 +107,7 @@ It can also listen via Unix socket:
 telnyx-mock -http-unix /tmp/telnyx-mock.sock -https-unix /tmp/telnyx-mock-secure.sock
 ```
 
-### Homebrew
-
-Get it from Homebrew or download it [from the releases page][releases]:
-
-``` sh
-brew install team-telnyx/telnyx-mock/telnyx-mock
-
-# start a telnyx-mock service at login
-brew services start telnyx-mock
-
-# upgrade if you already have it
-brew upgrade telnyx-mock
-```
-
-The Homebrew service listens on port `12111` for HTTP and `12112` for HTTPS and
-HTTP/2.
-
-### Docker
-
-``` sh
-# build
-docker build . -t telnyx-mock
-# run
-docker run -p 12111-12112:12111-12112 telnyx-mock
-```
-
-The default Docker `ENTRYPOINT` listens on port `12111` for HTTP and `12112`
-for HTTPS and HTTP/2.
+## Usage
 
 ### Sample request
 
@@ -109,6 +117,8 @@ After you've started telnyx-mock, you can try a sample request against it:
 curl -i http://localhost:12111/v2/messaging_profiles -H "Authorization: Bearer
 KEYSUPERSECRET"
 ```
+
+---
 
 ## Development
 
@@ -138,14 +148,14 @@ Rebuild it with:
 # repository).
 go get -u github.com/jteeuwen/go-bindata/...
 
-# Generates `bindata.go`.
+# Generates `bindata.go`, packing the spec as a string into a `.go`-file.
 go generate
 ```
 
-## Release
+## Releasing
 
 Release builds are generated with [goreleaser]. Make sure you have the software
-and a `GITHUB_TOKEN`:
+and a GitHub token set at `~/.config/goreleaser/github_token` (brief docs [here](https://github.com/team-telnyx/telnyx-mock/blob/0af23956/.goreleaser.yml#L13-L18) about it). Sorry about configuring it in the file; I (Nick) has issues where goreleaser seemed to ignore `GITHUB_TOKEN` in the environment...
 
 ``` sh
 go get -u github.com/goreleaser/goreleaser
@@ -160,24 +170,25 @@ git tag v0.1.1
 git push origin --tags
 ```
 
-Then run goreleaser and you're done! Check [releases] (it also pushes to the
-Homebrew tap).
+Then run goreleaser and you're done! Check [releases] (it also pushes to [the
+Homebrew tap][homebrew-telnyx-mock]).
 
 ``` sh
 goreleaser --rm-dist
 ```
 
-[apiref]: https://developers.telnyx.com
-[go-bindata]: https://github.com/jteeuwen/go-bindata
-[goreleaser]: https://github.com/goreleaser/goreleaser
-[openapi]: https://api.telnyx.com/v2/mission_control_docs
-[releases]: https://github.com/team-telnyx/telnyx-mock/releases
-
-## Acknowledgements
+## Acknowledgments
 
 The contributors and maintainers of Telnyx Mock would like to extend their deep
 gratitude to the authors of [Stripe Mock][stripe-mock], upon which this project
 is based. Thank you for developing such elegant, usable, and extensible code
 and for sharing it with the community.
 
+
+[apiref]: https://developers.telnyx.com
+[homebrew-telnyx-mock]: https://github.com/team-telnyx/homebrew-telnyx-mock
+[go-bindata]: https://github.com/jteeuwen/go-bindata
+[goreleaser]: https://github.com/goreleaser/goreleaser
+[openapi]: https://api.telnyx.com/v2/mission_control_docs
+[releases]: https://github.com/team-telnyx/telnyx-mock/releases
 [stripe-mock]: https://github.com/stripe/stripe-mock
