@@ -1860,22 +1860,152 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "description": "Unique identifier of the conference",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/ConferenceId"
           }
         ],
         "requestBody": {
-          "description": "New Messaging Profile object",
+          "description": "Join Conference object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/JoinConferenceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ConferenceCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/conferences/{id}/actions/mute": {
+      "post": {
+        "summary": "Mute a conference participant",
+        "description": "Mute a list of participants in a conference call",
+        "operationId": "MuteConference",
+        "tags": [
+          "Conference Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ConferenceId"
+          }
+        ],
+        "requestBody": {
+          "description": "Mute participants Conference object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConferenceMuteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ConferenceCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/conferences/{id}/actions/unmute": {
+      "post": {
+        "summary": "Unmute a conference participant",
+        "description": "Unmute a list of participants in a conference call",
+        "operationId": "UnmuteConference",
+        "tags": [
+          "Conference Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ConferenceId"
+          }
+        ],
+        "requestBody": {
+          "description": "Unute participants Conference object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConferenceMuteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ConferenceCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/conferences/{id}/actions/hold": {
+      "post": {
+        "summary": "Hold a conference participant",
+        "description": "Hold a list of participants in a conference call",
+        "operationId": "HoldConference",
+        "tags": [
+          "Conference Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ConferenceId"
+          }
+        ],
+        "requestBody": {
+          "description": "Hold participants Conference object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConferenceHoldRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ConferenceCommandResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/conferences/{id}/actions/unhold": {
+      "post": {
+        "summary": "Unhold a conference participant",
+        "description": "Unhold a list of participants in a conference call",
+        "operationId": "UnholdConference",
+        "tags": [
+          "Conference Commands"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ConferenceId"
+          }
+        ],
+        "requestBody": {
+          "description": "Hold participants Conference object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConferenceHoldRequest"
               }
             }
           }
@@ -4271,22 +4401,22 @@
       "Conference": {
         "type": "object",
         "required": [
+          "record_type",
           "id",
           "name",
           "created_at",
           "expires_at"
         ],
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the conference"
-          },
           "record_type": {
             "type": "string",
-            "example": "conference",
             "enum": [
               "conference"
             ]
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the conference"
           },
           "name": {
             "type": "string",
@@ -4315,7 +4445,7 @@
           "name"
         ],
         "type": "object",
-        "title": "Create Conference request",
+        "title": "Create conference request",
         "properties": {
           "call_control_id": {
             "description": "Unique identifier and token for controlling the call",
@@ -4344,7 +4474,7 @@
           "call_control_id"
         ],
         "type": "object",
-        "title": "Join Conference request",
+        "title": "Join a conference request",
         "properties": {
           "call_control_id": {
             "description": "Unique identifier and token for controlling the call",
@@ -4360,6 +4490,50 @@
             "description": "Use this field to avoid duplicate commands. Telnyx will ignore commands with the same \"command_id\".",
             "type": "string",
             "example": "891510ac-f3e4-11e8-af5b-de00688a4901"
+          }
+        }
+      },
+      "ConferenceMuteRequest": {
+        "type": "object",
+        "title": "Mute Conference participants request",
+        "properties": {
+          "call_control_ids": {
+            "description": "List of unique identifiers and tokens for controlling the call. When empty all participants will be muted.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ConferenceHoldRequest": {
+        "type": "object",
+        "title": "Hold Conference participants request",
+        "properties": {
+          "call_control_ids": {
+            "description": "List of unique identifiers and tokens for controlling the call. When empty all participants will be placed on hold.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "audio_url": {
+            "type": "string",
+            "example": "http://example.com/message.wav",
+            "description": "The URL of a file to be played back at the beginning of each prompt. The URL can point to either a WAV or MP3 file."
+          }
+        }
+      },
+      "ConferenceUnholdRequest": {
+        "type": "object",
+        "title": "Unhold Conference participants request",
+        "properties": {
+          "call_control_ids": {
+            "description": "List of unique identifiers and tokens for controlling the call. When empty all participants will be unhold.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -5118,6 +5292,15 @@
       "CallControlId": {
         "name": "call_control_id",
         "description": "Unique identifier and token for controlling the call",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "ConferenceId": {
+        "name": "id",
+        "description": "Unique identifier of the conference",
         "in": "path",
         "required": true,
         "schema": {
