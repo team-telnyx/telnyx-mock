@@ -48,12 +48,12 @@
       "description": "Messages"
     },
     {
-      "name": "Sender IDs",
+      "name": "Alphanumeric Sender IDs",
       "description": "Alphanumeric sender ids"
     },
     {
       "name": "Short Codes",
-      "description": "Messaging short codes"
+      "description": "Short codes"
     },
     {
       "name": "Public Key",
@@ -460,7 +460,7 @@
                 },
                 "responses": {
                   "200": {
-                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL.\n"
+                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL."
                   }
                 }
               }
@@ -481,7 +481,7 @@
                 },
                 "responses": {
                   "200": {
-                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL.\n"
+                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL."
                   }
                 }
               }
@@ -625,10 +625,10 @@
         }
       }
     },
-    "/messaging_profiles/{id}/sender_ids": {
+    "/messaging_profiles/{id}/alphanumeric_sender_ids": {
       "get": {
-        "summary": "List all sender IDs associated with a messaging profile",
-        "operationId": "listMessagingProfileSenderIds",
+        "summary": "List all alphanumeric sender IDs associated with a messaging profile",
+        "operationId": "listMessagingProfileAlphanumericSenderIds",
         "tags": [
           "Messaging Profiles"
         ],
@@ -648,7 +648,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/RetrieveMessagingProfileSenderIdsResponse"
+            "$ref": "#/components/responses/RetrieveMessagingProfileAlphanumericSenderIdsResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -676,7 +676,7 @@
           {
             "name": "filter[messaging_profile_id]",
             "in": "query",
-            "description": "Filter by Messaging Profile ID. Use the string `null` for phone numbers without assigned profiles. A synonym for the `/messaging_profiles/{id}/phone_number` endpoint when querying about an extant profile.\n",
+            "description": "Filter by Messaging Profile ID. Use the string `null` for phone numbers without assigned profiles. A synonym for the `/messaging_profiles/{id}/phone_number` endpoint when querying about an extant profile.",
             "schema": {
               "type": "string"
             }
@@ -724,7 +724,7 @@
       "patch": {
         "summary": "Update a messaging phone number",
         "operationId": "updateMessagingPhoneNumber",
-        "description": "Update the settings for a specific number. To unbind a number from, a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
+        "description": "Update the settings for a specific number. To unbind a number from, a profile, set the `messaging_profile_id` to `null` or an empty string.",
         "tags": [
           "Phone Numbers"
         ],
@@ -754,7 +754,7 @@
         }
       }
     },
-    "/messaging_short_codes": {
+    "/short_codes": {
       "get": {
         "summary": "List all short codes",
         "operationId": "listShortCodes",
@@ -774,7 +774,7 @@
           {
             "name": "filter[messaging_profile_id]",
             "in": "query",
-            "description": "Filter by Messaging Profile ID. Use the string `null` for phone numbers without assigned profiles. A synonym for the `/messaging_profiles/{id}/short_codes` endpoint when querying about an extant profile.\n",
+            "description": "Filter by Messaging Profile ID. Use the string `null` for phone numbers without assigned profiles. A synonym for the `/messaging_profiles/{id}/short_codes` endpoint when querying about an extant profile.",
             "schema": {
               "type": "string"
             }
@@ -782,7 +782,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/ListMessagingShortCodesResponse"
+            "$ref": "#/components/responses/ListShortCodesResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -790,7 +790,7 @@
         }
       }
     },
-    "/messaging_short_codes/{id}": {
+    "/short_codes/{id}": {
       "get": {
         "summary": "Retrieve a short code",
         "operationId": "retrieveShortCode",
@@ -799,12 +799,12 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/MessagingShortCodeId"
+            "$ref": "#/components/parameters/ShortCodeId"
           }
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/RetrieveMessagingShortCodeResponse"
+            "$ref": "#/components/responses/RetrieveShortCodeResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -814,29 +814,29 @@
       "patch": {
         "summary": "Update short code",
         "operationId": "updateShortCode",
-        "description": "Update the settings for a specific short code. To unbind a short code from a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
+        "description": "Update the settings for a specific short code. To unbind a short code from a profile, set the `messaging_profile_id` to `null` or an empty string.",
         "tags": [
           "Short Codes"
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/MessagingShortCodeId"
+            "$ref": "#/components/parameters/ShortCodeId"
           }
         ],
         "requestBody": {
-          "description": "Messaging short code update",
+          "description": "Short code update",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MessagingShortCodeUpdate"
+                "$ref": "#/components/schemas/ShortCodeUpdate"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/UpdateMessagingShortCodeResponse"
+            "$ref": "#/components/responses/UpdateShortCodeResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -844,12 +844,12 @@
         }
       }
     },
-    "/messaging_sender_ids": {
+    "/alphanumeric_sender_ids": {
       "post": {
-        "summary": "Create a sender ID",
-        "operationId": "createSenderId",
+        "summary": "Create an alphanumeric sender ID",
+        "operationId": "createAlphanumericSenderId",
         "tags": [
-          "Sender IDs"
+          "Alphanumeric Sender IDs"
         ],
         "requestBody": {
           "description": "New alphanumeric sender ID",
@@ -857,14 +857,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewMessagingSenderId"
+                "$ref": "#/components/schemas/NewAlphanumericSenderId"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "$ref": "#/components/responses/CreateMessagingSenderIdResponse"
+            "$ref": "#/components/responses/CreateAlphanumericSenderIdResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -872,10 +872,10 @@
         }
       },
       "get": {
-        "summary": "List all sender IDs",
-        "operationId": "listSenderIds",
+        "summary": "List all alphanumeric sender IDs",
+        "operationId": "listAlphanumericSenderIds",
         "tags": [
-          "Sender IDs"
+          "Alphanumeric Sender IDs"
         ],
         "parameters": [
           {
@@ -890,7 +890,7 @@
           {
             "name": "filter[messaging_profile_id]",
             "in": "query",
-            "description": "Filter by Messaging Profile ID. Use the string `null` for phone numbers without assigned profiles. A synonym for the `/messaging_profiles/{id}/sender_ids` endpoint when querying about an extant profile.\n",
+            "description": "Filter by Messaging Profile ID. Use the string `null` for phone numbers without assigned profiles. A synonym for the `/messaging_profiles/{id}/alphanumeric_sender_ids` endpoint when querying about an extant profile.",
             "schema": {
               "type": "string"
             }
@@ -898,7 +898,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/ListMessagingSenderIdsResponse"
+            "$ref": "#/components/responses/ListAlphanumericSenderIdsResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -906,53 +906,21 @@
         }
       }
     },
-    "/messaging_sender_ids/{id}": {
+    "/alphanumeric_sender_ids/{id}": {
       "get": {
-        "summary": "Retrieve a sender ID",
-        "operationId": "retrieveSenderId",
+        "summary": "Retrieve an alphanumeric sender ID",
+        "operationId": "retrieveAlphanumericSenderId",
         "tags": [
-          "Sender IDs"
+          "Alphanumeric Sender IDs"
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/SenderId"
+            "$ref": "#/components/parameters/AlphanumericSenderId"
           }
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/RetrieveMessagingSenderIdResponse"
-          },
-          "default": {
-            "$ref": "#/components/responses/GenericErrorResponse"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update a sender ID",
-        "operationId": "updateSenderId",
-        "description": "Update the settings for a specific alphanumeric sender ID. To unbind an alphanumeric sender ID from a profile, set the `messaging_profile_id` to `null` or an empty string.\n",
-        "tags": [
-          "Sender IDs"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/SenderId"
-          }
-        ],
-        "requestBody": {
-          "description": "Alphanumeric sender ID update",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MessagingSenderIdUpdate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/UpdateMessagingSenderIdResponse"
+            "$ref": "#/components/responses/RetrieveAlphanumericSenderIdResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -960,20 +928,20 @@
         }
       },
       "delete": {
-        "summary": "Delete a sender ID",
-        "operationId": "deleteSenderId",
-        "description": "Delete a specific alphanumeric sender ID.\n",
+        "summary": "Delete an alphanumeric sender ID",
+        "operationId": "deleteAlphanumericSenderId",
+        "description": "Delete a specific alphanumeric sender ID.",
         "tags": [
-          "Sender IDs"
+          "Alphanumeric Sender IDs"
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/SenderId"
+            "$ref": "#/components/parameters/AlphanumericSenderId"
           }
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/DeleteMessagingSenderIdResponse"
+            "$ref": "#/components/responses/DeleteAlphanumericSenderIdResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -1022,7 +990,57 @@
                 },
                 "responses": {
                   "200": {
-                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL.\n"
+                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messages/alphanumeric_sender_id": {
+      "post": {
+        "summary": "Send a message using an alphanumeric sender ID",
+        "operationId": "createAlphanumericSenderIdMessage",
+        "tags": [
+          "Messages"
+        ],
+        "requestBody": {
+          "description": "Message payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAlphanumericSenderIdMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateMessageResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        },
+        "callbacks": {
+          "deliveryUpdate": {
+            "{$request.body#/webhook_url}": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/OutboundMessage"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL."
                   }
                 }
               }
@@ -2569,12 +2587,54 @@
           }
         }
       },
+      "NumberPoolSettings": {
+        "type": "object",
+        "default": null,
+        "required": [
+          "toll_free_weight",
+          "long_code_weight",
+          "skip_unhealthy",
+          "geomatch"
+        ],
+        "description": "Number Pool allows you to send messages from a pool of numbers of different types, assigning\nweights to each type.\nThe pool consists of all the Long Code and Toll Free numbers assigned\nto the Messaging profile.\n",
+        "properties": {
+          "toll_free_weight": {
+            "type": "number",
+            "example": 10.0,
+            "description": "Defines the probability weight for a Toll Free number to be selected when sending a message.\nThe higher the weight the higher the probability. The sum of the weights for all number types\ndoes not necessarily need to add to 100. Weight must be a non-negative number, and when equal\nto zero it will remove the number type from the pool.\n"
+          },
+          "long_code_weight": {
+            "type": "number",
+            "example": 1.0,
+            "description": "Defines the probability weight for a Long Code number to be selected when sending a message.\nThe higher the weight the higher the probability. The sum of the weights for all number types\ndoes not necessarily need to add to 100.  Weight must be a non-negative number, and when equal\nto zero it will remove the number type from the pool.\n"
+          },
+          "skip_unhealthy": {
+            "type": "boolean",
+            "example": true,
+            "description": "If set to true all unhealthy numbers will be automatically removed from the pool.\nHealth metrics  per number are calculated on a regular basis, taking into account the deliverability\nrate and the amount of messages marked as spam by upstream carriers.\nNumbers with a deliverability rate below 25% or spam ratio over 75% will be considered unhealthy.\n"
+          },
+          "sticky_sender": {
+            "type": "boolean",
+            "example": true,
+            "description": "If set to true, Number Pool will try to choose the same sending number for all messages to a particular\nrecipient. If the sending number becomes unhealthy and `skip_unhealthy` is set to `true`, a new\nnumber will be chosen.\n"
+          },
+          "geomatch": {
+            "type": "boolean",
+            "example": true,
+            "description": "If set to true, Number Pool will try to choose a sending number with the same area code as the destination\nnumber. If there are no such numbers available, a nunber with a different area code will be chosen. Currently\nonly NANP numbers are supported.\n"
+          }
+        }
+      },
       "ShortCodeInfo": {
         "description": "This information is attached to messages that are sent from short-codes. It includes carrier information which can influence billing.",
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "short_code_info_blob"
+            "example": "short_code_info_blob",
+            "enum": [
+              "short_code_info_blob"
+            ],
+            "description": "Identifies the type of the resource."
           },
           "om_carrier": {
             "type": "string"
@@ -2584,12 +2644,16 @@
           }
         }
       },
-      "AlphaSenderInfo": {
+      "AlphanumericSenderIdInfo": {
         "description": "This information is attached to messages that are sent from alphanumeric sender IDs.",
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "alpha_sender_info_blob"
+            "example": "alphanumeric_sender_id_info_blob",
+            "enum": [
+              "alphanumeric_sender_id_info_blob"
+            ],
+            "description": "Identifies the type of the resource."
           },
           "hni": {
             "description": "HNI (Home Network Identity) of the recipient's phone.",
@@ -2601,31 +2665,26 @@
         "properties": {
           "name": {
             "type": "string",
-            "format": "string"
-          },
-          "resource_group_id": {
-            "type": "string",
-            "format": "uuid"
+            "description": "A user friendly name for the messaging profile."
           },
           "webhook_url": {
             "type": "string",
             "format": "url",
             "nullable": true,
-            "default": null
+            "default": null,
+            "description": "The URL where webhooks related to this messaging profile will be sent."
           },
           "webhook_failover_url": {
             "type": "string",
             "format": "url",
             "nullable": true,
-            "default": null
+            "default": null,
+            "description": "The failover URL where webhooks related to this messaging profile will be sent if sending to the primary URL fails."
           },
           "enabled": {
             "type": "boolean",
-            "default": true
-          },
-          "simplify_characters": {
-            "type": "boolean",
-            "default": true
+            "default": true,
+            "description": "Whether the messaging profile is enabled or not."
           },
           "webhook_api_version": {
             "type": "string",
@@ -2633,7 +2692,11 @@
               "1",
               "2"
             ],
-            "default": "2"
+            "default": "2",
+            "description": "Determines which webhook format will be used, API V1 or API V2."
+          },
+          "number_pool_settings": {
+            "$ref": "#/components/schemas/NumberPoolSettings"
           }
         }
       },
@@ -2642,45 +2705,50 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "messaging_profile"
+            "example": "messaging_profile",
+            "enum": [
+              "messaging_profile"
+            ],
+            "description": "Identifies the type of the resource."
           },
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Uniquely identifies the resource or object."
           },
           "organization_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Unique identifier for the organization that owns the resource."
           },
           "name": {
+            "description": "A user friendly name for the messaging profile",
             "type": "string",
             "format": "string"
-          },
-          "resource_group_id": {
-            "type": "string",
-            "format": "uuid"
           },
           "webhook_url": {
             "type": "string",
             "format": "url",
-            "nullable": true
+            "nullable": true,
+            "description": "The URL where webhooks related to this messaging profile will be sent."
           },
           "webhook_failover_url": {
             "type": "string",
             "format": "url",
-            "nullable": true
+            "nullable": true,
+            "description": "The failover URL where webhooks related to this messaging profile will be sent if sending to the primary URL fails."
           },
           "enabled": {
-            "type": "boolean"
-          },
-          "simplify_characters": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Specifies whether the messaging profile is enabled or not."
           },
           "whitelisted_destinations": {
+            "description": "Destinations to which the messaging profile is allowed to send.",
             "type": "array",
             "items": {
               "type": "string",
-              "format": "iso3166-alpha2"
+              "format": "iso3166-alpha2",
+              "description": "ISO3166-1 alpha-2 country code."
             }
           },
           "webhook_api_version": {
@@ -2688,15 +2756,21 @@
             "enum": [
               "1",
               "2"
-            ]
+            ],
+            "description": "Determines which webhook format will be used, API V1 or API V2."
           },
           "created_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was created."
           },
           "updated_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was updated."
+          },
+          "number_pool_settings": {
+            "$ref": "#/components/schemas/NumberPoolSettings"
           }
         },
         "example": {
@@ -2704,11 +2778,9 @@
           "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "name": "Profile for Messages",
-          "resource_group_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "webhook_url": null,
           "webhook_failover_url": null,
           "enabled": true,
-          "simplify_characters": true,
           "whitelisted_destinations": [
             "US"
           ],
@@ -2720,34 +2792,33 @@
       "MessagingProfileUpdate": {
         "properties": {
           "name": {
+            "description": "A user friendly name for the messaging profile",
             "type": "string",
             "format": "string"
           },
-          "resource_group_id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "webhook_url": {
+            "description": "The URL where webhooks related to this messaging profile will be sent.",
             "type": "string",
             "format": "url",
             "nullable": true
           },
           "webhook_failover_url": {
+            "description": "The failover URL where webhooks related to this messaging profile will be sent if sending to the primary URL fails.",
             "type": "string",
             "format": "url",
             "nullable": true
           },
           "enabled": {
-            "type": "boolean"
-          },
-          "simplify_characters": {
+            "description": "Specifies whether the messaging profile is enabled or not.",
             "type": "boolean"
           },
           "whitelisted_destinations": {
             "type": "array",
+            "description": "Destinations to which the messaging profile is allowed to send.",
             "items": {
               "type": "string",
-              "format": "iso3166-alpha2"
+              "format": "iso3166-alpha2",
+              "description": "ISO3166-1 alpha-2 country code."
             }
           },
           "webhook_api_version": {
@@ -2755,7 +2826,11 @@
             "enum": [
               "1",
               "2"
-            ]
+            ],
+            "description": "Determines which webhook format will be used, API V1 or API V2."
+          },
+          "number_pool_settings": {
+            "$ref": "#/components/schemas/NumberPoolSettings"
           }
         }
       },
@@ -2763,8 +2838,8 @@
         "type": "object",
         "example": {
           "record_type": "messaging_phone_number",
-          "phone_number": "+13115552368",
-          "id": "+13115552368",
+          "phone_number": "+18005550001",
+          "id": "+18665550001",
           "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "created_at": "2019-01-23T18:10:02.574Z",
@@ -2776,31 +2851,38 @@
             "example": "messaging_phone_number",
             "enum": [
               "messaging_phone_number"
-            ]
+            ],
+            "description": "Identifies the type of the resource."
           },
           "phone_number": {
             "type": "string",
-            "format": "e164"
+            "format": "e164",
+            "description": "+E164 formatted phone number."
           },
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Uniquely identifies the resource or object."
           },
           "organization_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Unique identifier for the organization that owns the resource."
           },
           "messaging_profile_id": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "description": "Unique identifier for a messaging profile."
           },
           "created_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was created."
           },
           "updated_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was updated."
           }
         }
       },
@@ -2810,14 +2892,15 @@
           "messaging_profile_id": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "description": "Unique identifier for a messaging profile."
           }
         }
       },
-      "MessagingShortCode": {
+      "ShortCode": {
         "type": "object",
         "example": {
-          "record_type": "messaging_short_code",
+          "record_type": "short_code",
           "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "short_code": "12345",
           "country_code": "US",
@@ -2829,118 +2912,122 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "messaging_short_code",
+            "example": "short_code",
             "enum": [
-              "messaging_short_code"
-            ]
+              "short_code"
+            ],
+            "description": "Identifies the type of the resource."
           },
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Uniquely identifies the resource or object."
           },
           "short_code": {
-            "type": "string"
+            "type": "string",
+            "description": "Short digit sequence used to address messages."
           },
           "country_code": {
             "type": "string",
-            "format": "iso3166-alpha2"
+            "format": "iso3166-alpha2",
+            "description": "ISO3166-1 alpha-2 country code."
           },
           "organization_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Unique identifier for the organization that owns the resource."
           },
           "messaging_profile_id": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "description": "Unique identifier for a messaging profile."
           },
           "created_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was created."
           },
           "updated_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was updated."
           }
         }
       },
-      "MessagingShortCodeUpdate": {
+      "ShortCodeUpdate": {
         "type": "object",
         "properties": {
           "messaging_profile_id": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "description": "Unique identifier for a messaging profile."
           }
         }
       },
-      "NewMessagingSenderId": {
+      "NewAlphanumericSenderId": {
         "type": "object",
         "properties": {
-          "sender_id": {
+          "alphanumeric_sender_id": {
             "type": "string",
-            "format": "uuid"
+            "description": "Alphanumeric sender identifier."
           },
           "messaging_profile_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Unique identifier for a messaging profile."
           }
         }
       },
-      "MessagingSenderId": {
+      "AlphanumericSenderId": {
         "type": "object",
         "example": {
-          "record_type": "messaging_sender_id",
+          "record_type": "alphanumeric_sender_id",
           "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "sender_id": "TelnyxID",
+          "alphanumeric_sender_id": "TelnyxID",
           "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "approved": true,
           "created_at": "2019-01-23T18:10:02.574Z",
           "updated_at": "2019-01-23T18:10:02.574Z"
         },
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "messaging_sender_id",
+            "example": "alphanumeric_sender_id",
             "enum": [
-              "messaging_sender_id"
-            ]
+              "alphanumeric_sender_id"
+            ],
+            "description": "Identifies the type of the resource."
           },
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Uniquely identifies the resource or object."
           },
-          "sender_id": {
-            "type": "string"
+          "alphanumeric_sender_id": {
+            "type": "string",
+            "description": "Alphanumeric sender identifier."
           },
           "organization_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Unique identifier for the organization that owns the resource."
           },
           "messaging_profile_id": {
             "type": "string",
-            "format": "uuid"
-          },
-          "approved": {
-            "type": "boolean"
+            "format": "uuid",
+            "description": "Unique identifier for a messaging profile."
           },
           "created_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was created."
           },
           "updated_at": {
             "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "MessagingSenderIdUpdate": {
-        "type": "object",
-        "properties": {
-          "messaging_profile_id": {
-            "type": "string",
-            "format": "uuid"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was updated."
           }
         }
       },
@@ -4565,6 +4652,351 @@
           }
         }
       },
+      "ListMessagingProfilesResponse": {
+        "description": "A paginated array of Messaging Profiles",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingProfile"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateMessagingProfileResponse": {
+        "description": "Expected messaging profile response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingProfileResponse": {
+        "description": "Expected messaging profile response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateMessagingProfileResponse": {
+        "description": "Expected messaging profile response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DeleteMessagingProfileResponse": {
+        "description": "Expected messaging profile response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingProfilePhoneNumbersResponse": {
+        "description": "Paginated array of phone numbers associated with the messaging profile",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingPhoneNumber"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingProfileShortCodesResponse": {
+        "description": "Paginated array of short codes associated with the messaging profile",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShortCode"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingProfileAlphanumericSenderIdsResponse": {
+        "description": "Paginated array of alphanumeric sender IDs associated with the messaging profile",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AlphanumericSenderId"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListMessagingPhoneNumbersResponse": {
+        "description": "A paginated array of the phone numbers",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingPhoneNumber"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingPhoneNumberResponse": {
+        "description": "Expected phone number response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingPhoneNumber"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateMessagingPhoneNumberResponse": {
+        "description": "Expected update response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingPhoneNumber"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListShortCodesResponse": {
+        "description": "A paginated array of the short codes",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShortCode"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveShortCodeResponse": {
+        "description": "Expected short code detail response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/ShortCode"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateShortCodeResponse": {
+        "description": "Expected update response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/ShortCode"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateAlphanumericSenderIdResponse": {
+        "description": "The created alphanumeric sender ID",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/AlphanumericSenderId"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListAlphanumericSenderIdsResponse": {
+        "description": "A paginated array of the alphanumeric sender IDs",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AlphanumericSenderId"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveAlphanumericSenderIdResponse": {
+        "description": "The requested alphanumeric sender ID record",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/AlphanumericSenderId"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DeleteAlphanumericSenderIdResponse": {
+        "description": "The deleted alphanumeric sender ID record",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/AlphanumericSenderId"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateMessageResponse": {
+        "description": "Detailed message object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/OutboundMessage"
+                },
+                "statistics": {
+                  "$ref": "#/components/schemas/MessageQueueInfo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessageResponse": {
+        "description": "Detailed message object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/OutboundMessage"
+                }
+              }
+            }
+          }
+        }
+      },
       "NumberOrdersResponse": {
         "description": "",
         "content": {
@@ -4700,366 +5132,6 @@
               "properties": {
                 "data": {
                   "$ref": "#/components/schemas/NumberReservation"
-                }
-              }
-            }
-          }
-        }
-      },
-      "ListMessagingProfilesResponse": {
-        "description": "A paginated array of Messaging Profiles",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MessagingProfile"
-                  }
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/PaginationMeta"
-                }
-              }
-            }
-          }
-        }
-      },
-      "CreateMessagingProfileResponse": {
-        "description": "Expected messaging profile response to a valid request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingProfile"
-                }
-              }
-            }
-          }
-        }
-      },
-      "RetrieveMessagingProfileResponse": {
-        "description": "Expected messaging profile response to a valid request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingProfile"
-                }
-              }
-            }
-          }
-        }
-      },
-      "UpdateMessagingProfileResponse": {
-        "description": "Expected messaging profile response to a valid request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingProfile"
-                }
-              }
-            }
-          }
-        }
-      },
-      "DeleteMessagingProfileResponse": {
-        "description": "Expected messaging profile response to a valid request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingProfile"
-                }
-              }
-            }
-          }
-        }
-      },
-      "RetrieveMessagingProfilePhoneNumbersResponse": {
-        "description": "Paginated array of phone numbers associated with the messaging profile",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MessagingPhoneNumber"
-                  }
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/PaginationMeta"
-                }
-              }
-            }
-          }
-        }
-      },
-      "RetrieveMessagingProfileShortCodesResponse": {
-        "description": "Paginated array of short codes associated with the messaging profile",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MessagingShortCode"
-                  }
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/PaginationMeta"
-                }
-              }
-            }
-          }
-        }
-      },
-      "RetrieveMessagingProfileSenderIdsResponse": {
-        "description": "Paginated array of alphanumeric sender IDs associated with the messaging profile",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MessagingSenderId"
-                  }
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/PaginationMeta"
-                }
-              }
-            }
-          }
-        }
-      },
-      "ListMessagingPhoneNumbersResponse": {
-        "description": "A paginated array of the phone numbers",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MessagingPhoneNumber"
-                  }
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/PaginationMeta"
-                }
-              }
-            }
-          }
-        }
-      },
-      "RetrieveMessagingPhoneNumberResponse": {
-        "description": "Expected phone number response to a valid request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingPhoneNumber"
-                }
-              }
-            }
-          }
-        }
-      },
-      "UpdateMessagingPhoneNumberResponse": {
-        "description": "Expected update response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingPhoneNumber"
-                }
-              }
-            }
-          }
-        }
-      },
-      "ListMessagingShortCodesResponse": {
-        "description": "A paginated array of the short codes",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MessagingShortCode"
-                  }
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/PaginationMeta"
-                }
-              }
-            }
-          }
-        }
-      },
-      "RetrieveMessagingShortCodeResponse": {
-        "description": "Expected short code detail response to a valid request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingShortCode"
-                }
-              }
-            }
-          }
-        }
-      },
-      "UpdateMessagingShortCodeResponse": {
-        "description": "Expected update response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingShortCode"
-                }
-              }
-            }
-          }
-        }
-      },
-      "CreateMessagingSenderIdResponse": {
-        "description": "The created alphanumeric sender ID",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingSenderId"
-                }
-              }
-            }
-          }
-        }
-      },
-      "ListMessagingSenderIdsResponse": {
-        "description": "A paginated array of the alphanumeric sender IDs",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MessagingSenderId"
-                  }
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/PaginationMeta"
-                }
-              }
-            }
-          }
-        }
-      },
-      "RetrieveMessagingSenderIdResponse": {
-        "description": "The requested alphanumeric sender ID record",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingSenderId"
-                }
-              }
-            }
-          }
-        }
-      },
-      "UpdateMessagingSenderIdResponse": {
-        "description": "Expected update response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingSenderId"
-                }
-              }
-            }
-          }
-        }
-      },
-      "DeleteMessagingSenderIdResponse": {
-        "description": "The deleted alphanumeric sender ID record",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/MessagingSenderId"
-                }
-              }
-            }
-          }
-        }
-      },
-      "CreateMessageResponse": {
-        "description": "Detailed message object",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/OutboundMessage"
-                },
-                "statistics": {
-                  "$ref": "#/components/schemas/MessageQueueInfo"
-                }
-              }
-            }
-          }
-        }
-      },
-      "RetrieveMessageResponse": {
-        "description": "Detailed message object",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/OutboundMessage"
                 }
               }
             }
@@ -5232,7 +5304,7 @@
           "type": "string"
         }
       },
-      "SenderId": {
+      "AlphanumericSenderId": {
         "name": "id",
         "in": "path",
         "description": "The unique ID of the alphanumeric sender ID to retrieve",
@@ -5279,7 +5351,7 @@
           "type": "string"
         }
       },
-      "MessagingShortCodeId": {
+      "ShortCodeId": {
         "name": "id",
         "in": "path",
         "description": "The id of the phone number",
