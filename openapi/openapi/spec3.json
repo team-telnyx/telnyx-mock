@@ -3039,43 +3039,50 @@
         "properties": {
           "messaging_profile_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Unique identifier for a messaging profile."
           },
           "from": {
             "type": "string",
-            "format": "address"
+            "format": "address",
+            "description": "Sending address (+E.164 formatted phone number, alphanumeric sender, or short code)"
           },
           "to": {
             "oneOf": [
               {
                 "type": "string",
-                "format": "address"
+                "format": "address",
+                "description": "Receiving address (+E.164 formatted phone number)"
               },
               {
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "format": "address"
+                  "format": "address",
+                  "description": "Receiving address (+E.164 formatted phone number)"
                 }
               }
             ]
           },
           "text": {
-            "type": "string"
+            "type": "string",
+            "description": "Message body (i.e., content) as a non-empty string"
           },
           "media_urls": {
+            "description": "A list of media URLs. The total media size must be less than 1 MB.",
             "type": "array",
-            "description": "An array of media URLs. The total media size must be less than 1 MB.",
             "items": {
               "type": "string",
               "format": "url"
             }
           },
           "webhook_url": {
+            "description": "The URL where webhooks related to this message will be sent.",
             "type": "string",
             "format": "url"
           },
           "webhook_failover_url": {
+            "description": "The failover URL where webhooks related to this message will be sent if sending to the primary URL fails.",
             "type": "string",
             "format": "url"
           },
@@ -3090,7 +3097,71 @@
           },
           "ignore_wire_type": {
             "type": "boolean",
-            "description": "Typically, if the LRN dip (US numbers only(?)) indicates that the phone number is a land-line, the request will be rejected. However, some landlines can receive SMS, so that behavior can be overridden by setting this value to `true`"
+            "description": "Typically, if the LRN dip indicates that the phone number is a land-line, the request will be rejected. However, some landlines can receive SMS, so that behavior can be overridden by setting this value to `true`"
+          }
+        }
+      },
+      "NewAlphanumericSenderIdMessage": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "messaging_profile_id"
+        ],
+        "properties": {
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for a messaging profile."
+          },
+          "from": {
+            "type": "string",
+            "format": "address",
+            "description": "Sending address (+E.164 formatted phone number, alphanumeric sender, or short code)"
+          },
+          "to": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "address",
+                "description": "Receiving address (+E.164 formatted phone number)"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "address",
+                  "description": "Receiving address (+E.164 formatted phone number)"
+                }
+              }
+            ]
+          },
+          "text": {
+            "type": "string",
+            "description": "Message body (i.e., content) as a non-empty string"
+          },
+          "webhook_url": {
+            "description": "The URL where webhooks related to this message will be sent.",
+            "type": "string",
+            "format": "url"
+          },
+          "webhook_failover_url": {
+            "description": "The failover URL where webhooks related to this message will be sent if sending to the primary URL fails.",
+            "type": "string",
+            "format": "url"
+          },
+          "use_profile_webhooks": {
+            "type": "boolean",
+            "description": "If the profile this number is associated with has webhooks, use them for delivery notifications. If webhooks are also specified on the message itself, they will be attempted first, then those on the profile.",
+            "default": true
+          },
+          "validity_period_secs": {
+            "type": "number",
+            "description": "If the message is not pulled off the queue and sending attempted within this amount of time, sending will be aborted and the message will be marked as expired."
+          },
+          "ignore_wire_type": {
+            "type": "boolean",
+            "description": "Typically, if the LRN dip indicates that the phone number is a land-line, the request will be rejected. However, some landlines can receive SMS, so that behavior can be overridden by setting this value to `true`"
           }
         }
       },
@@ -3098,17 +3169,20 @@
         "type": "object",
         "properties": {
           "queue_lengths": {
-            "type": "object",
             "description": "Approximate lengths of the user's queues",
+            "type": "object",
             "properties": {
               "account": {
-                "type": "integer"
+                "type": "integer",
+                "description": "Length of the account queue."
               },
               "messaging_profile": {
-                "type": "integer"
+                "type": "integer",
+                "description": "Length of the messaging profile queue."
               },
               "phone_number": {
-                "type": "integer"
+                "type": "integer",
+                "description": "Length of the phone number queue."
               }
             }
           }
@@ -3119,26 +3193,37 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "message"
+            "example": "outbound_message",
+            "enum": [
+              "outbound_message"
+            ],
+            "description": "Identifies the type of the resource."
           },
           "direction": {
             "type": "string",
-            "example": "outbound"
+            "example": "outbound",
+            "enum": [
+              "outbound"
+            ],
+            "description": "The direction of the message. Inbound messages are sent to you whereas outbound messages are sent from you."
           },
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Uniquely identifies the resource or object."
           },
           "type": {
             "type": "string",
             "enum": [
               "sms",
               "mms"
-            ]
+            ],
+            "description": "The type of message. This value can be either 'sms' or 'mms'."
           },
           "from": {
             "type": "string",
-            "format": "address"
+            "format": "address",
+            "description": "Sending address (+E.164 formatted phone number, alphanumeric sender, or short code)"
           },
           "to": {
             "type": "array",
@@ -3163,13 +3248,15 @@
                 },
                 "updated_at": {
                   "type": "string",
-                  "format": "date-time"
+                  "format": "date-time",
+                  "description": "ISO 8601 formatted date indicating when the resource was updated."
                 }
               }
             }
           },
           "text": {
-            "type": "string"
+            "type": "string",
+            "description": "Message body (i.e., content) as a non-empty string"
           },
           "media": {
             "type": "array",
@@ -3191,16 +3278,19 @@
           "webhook_url": {
             "type": "string",
             "format": "url",
-            "nullable": true
+            "nullable": true,
+            "description": "The URL where webhooks related to this message will be sent."
           },
           "webhook_failover_url": {
             "type": "string",
             "format": "url",
-            "nullable": true
+            "nullable": true,
+            "description": "The failover URL where webhooks related to this message will be sent if sending to the primary URL fails."
           },
           "use_profile_webhooks": {
             "type": "boolean",
-            "default": false
+            "default": false,
+            "description": "If the profile this number is associated with has webhooks, use them for delivery notifications. If webhooks are also specified on the message itself, they will be attempted first, then those on the profile."
           },
           "cost": {
             "type": "object",
@@ -3208,26 +3298,31 @@
             "properties": {
               "amount": {
                 "type": "string",
-                "format": "decimal"
+                "format": "decimal",
+                "description": "The amount deducted from your account."
               },
               "currency": {
                 "type": "string",
-                "format": "iso4217"
+                "format": "iso4217",
+                "description": "The ISO 4217 currency identifier."
               }
             }
           },
           "parts": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 10
+            "maximum": 10,
+            "description": "Number of parts into which the message's body must be split."
           },
           "created_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was created."
           },
           "updated_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was updated."
           },
           "valid_until": {
             "type": "string",
@@ -3241,7 +3336,7 @@
                 "$ref": "#/components/schemas/ShortCodeInfo"
               },
               {
-                "$ref": "#/components/schemas/AlphaSenderInfo"
+                "$ref": "#/components/schemas/AlphanumericSenderIdInfo"
               }
             ]
           },
@@ -3254,12 +3349,11 @@
           },
           "carrier": {
             "type": "string",
-            "description": "The carrier of the receiver.",
-            "nullable": true
+            "nullable": true,
+            "description": "The carrier of the receiver."
           },
           "line_type": {
             "type": "string",
-            "description": "The line-type of the receiver.",
             "enum": [
               "Wireline",
               "Wireless",
@@ -3267,18 +3361,19 @@
               "VoIP",
               "Pre-Paid Wireless"
             ],
-            "nullable": true
+            "nullable": true,
+            "description": "The line-type of the receiver."
           }
         },
         "example": {
-          "record_type": "message",
+          "record_type": "outbound_message",
           "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "direction": "outbound",
           "type": "sms",
-          "from": "+13115554343",
+          "from": "+18445550001",
           "to": [
             {
-              "address": "+13115554343",
+              "address": "+18665550001",
               "status": "queued",
               "updated_at": "2019-01-23T18:10:02.574Z"
             }
@@ -3304,7 +3399,11 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "event"
+            "example": "event",
+            "enum": [
+              "event"
+            ],
+            "description": "Identifies the type of the resource."
           },
           "id": {
             "type": "string",
@@ -3327,34 +3426,44 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "message_inbound"
+            "example": "inbound_message",
+            "enum": [
+              "inbound_message"
+            ],
+            "description": "Identifies the type of the resource."
           },
           "direction": {
             "type": "string",
-            "example": "inbound"
+            "example": "inbound",
+            "description": "The direction of the message. Inbound messages are sent to you whereas outbound messages are sent from you."
           },
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Uniquely identifies the resource or object."
           },
           "type": {
             "type": "string",
             "enum": [
               "sms",
               "mms"
-            ]
+            ],
+            "description": "The type of message. This value can be either 'sms' or 'mms'."
           },
           "messaging_profile_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Unique identifier for a messaging profile."
           },
           "from": {
             "type": "string",
-            "format": "address"
+            "format": "address",
+            "description": "Sending address (+E.164 formatted phone number, alphanumeric sender, or short code)"
           },
           "to": {
             "type": "string",
-            "format": "address"
+            "format": "address",
+            "description": "Receiving address (+E.164 formatted phone number)"
           },
           "cc": {
             "type": "array",
@@ -3364,7 +3473,8 @@
             }
           },
           "text": {
-            "type": "string"
+            "type": "string",
+            "description": "Message body (i.e., content) as a non-empty string"
           },
           "media": {
             "type": "array",
@@ -3395,34 +3505,38 @@
             "properties": {
               "amount": {
                 "type": "string",
-                "format": "decimal"
+                "format": "decimal",
+                "description": "The amount deducted from your account."
               },
               "currency": {
                 "type": "string",
-                "format": "iso4217"
+                "format": "iso4217",
+                "description": "The ISO 4217 currency identifier."
               }
             }
           },
           "parts": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "description": "The ISO 4217 currency identifier."
           },
           "created_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was created."
           },
           "updated_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was updated."
           },
           "carrier": {
             "type": "string",
-            "description": "The carrier of the sender.",
-            "nullable": true
+            "nullable": true,
+            "description": "The carrier of the sender."
           },
           "line_type": {
             "type": "string",
-            "description": "The line-type of the sender.",
             "enum": [
               "Wireline",
               "Wireless",
@@ -3430,27 +3544,39 @@
               "VoIP",
               "Pre-Paid Wireless"
             ],
-            "nullable": true
+            "nullable": true,
+            "description": "The line-type of the sender."
           }
         }
       },
       "InboundMessageEvent": {
+        "type": "object",
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "event"
+            "example": "event",
+            "enum": [
+              "event"
+            ],
+            "description": "Identifies the type of the resource."
           },
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Uniquely identifies the resource or object."
           },
           "event_type": {
             "type": "string",
-            "example": "message.received"
+            "example": "message.received",
+            "enum": [
+              "message.received"
+            ],
+            "description": "The type of event being delivered."
           },
           "created_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was created."
           },
           "payload": {
             "$ref": "#/components/schemas/InboundMessage"
