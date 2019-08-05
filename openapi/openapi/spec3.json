@@ -3193,9 +3193,9 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "outbound_message",
+            "example": "message",
             "enum": [
-              "outbound_message"
+              "message"
             ],
             "description": "Identifies the type of the resource."
           },
@@ -3366,7 +3366,7 @@
           }
         },
         "example": {
-          "record_type": "outbound_message",
+          "record_type": "message",
           "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "direction": "outbound",
           "type": "sms",
@@ -3426,15 +3426,18 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "inbound_message",
+            "example": "message",
             "enum": [
-              "inbound_message"
+              "message"
             ],
             "description": "Identifies the type of the resource."
           },
           "direction": {
             "type": "string",
             "example": "inbound",
+            "enum": [
+              "inbound"
+            ],
             "description": "The direction of the message. Inbound messages are sent to you whereas outbound messages are sent from you."
           },
           "id": {
