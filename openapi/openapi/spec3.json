@@ -3085,6 +3085,12 @@
             "format": "uuid",
             "nullable": true,
             "description": "Unique identifier for a messaging profile."
+          },
+          "messaging_product": {
+            "type": "string",
+            "description": "The requested messaging product the number should be on",
+            "nullable": true,
+            "example": "P2P"
           }
         }
       },
