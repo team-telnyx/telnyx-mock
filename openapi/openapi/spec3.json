@@ -2642,20 +2642,15 @@
         "nullable": true,
         "default": null,
         "required": [
-          "domestic_inbound",
-          "domestic_outbound",
+          "domestic_two_way",
           "international_inbound",
           "international_outbound"
         ],
         "description": "The set of features available for a specific messaging use case (SMS or MMS). Features\ncan vary depending on the characteristics the phone number, as well as its current\nproduct configuration.\n",
         "properties": {
-          "domestic_inbound": {
+          "domestic_two_way": {
             "type": "boolean",
-            "description": "Receive messages from numbers in the same country."
-          },
-          "domestic_outbound": {
-            "type": "boolean",
-            "description": "Send messages to numbers in the same country."
+            "description": "Send messages to and receive messages from numbers in the same country."
           },
           "international_inbound": {
             "type": "boolean",
