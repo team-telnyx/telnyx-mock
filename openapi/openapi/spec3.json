@@ -2919,7 +2919,7 @@
           "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "created_at": "2019-01-23T18:10:02.574Z",
           "updated_at": "2019-01-23T18:10:02.574Z",
-          "type": "tollfree",
+          "type": "toll-free",
           "country_code": "US",
           "traffic_type": "P2P",
           "messaging_product": "P2P"
@@ -2967,9 +2967,9 @@
             "type": "string",
             "description": "The type of the phone number",
             "enum": [
-              "longcode",
-              "tollfree",
-              "shortcode"
+              "long-code",
+              "toll-free",
+              "short-code"
             ]
           },
           "country_code": {
@@ -3018,7 +3018,7 @@
           "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "created_at": "2019-01-23T18:10:02.574Z",
           "updated_at": "2019-01-23T18:10:02.574Z",
-          "type": "tollfree",
+          "type": "toll-free",
           "country_code": "US"
         },
         "properties": {
@@ -3064,9 +3064,9 @@
             "type": "string",
             "description": "The type of the phone number",
             "enum": [
-              "longcode",
-              "tollfree",
-              "shortcode"
+              "long-code",
+              "toll-free",
+              "short-code"
             ]
           },
           "country_code": {
