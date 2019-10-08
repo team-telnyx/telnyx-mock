@@ -48,8 +48,8 @@
       "description": "Messages"
     },
     {
-      "name": "Alphanumeric Sender IDs",
-      "description": "Alphanumeric sender ids"
+      "name": "Messaging URL Domains",
+      "description": "Messaging URL Domains"
     },
     {
       "name": "Short Codes",
@@ -528,7 +528,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MessagingProfileUpdate"
+                "$ref": "#/components/schemas/MessagingProfile"
               }
             }
           }
@@ -625,30 +625,16 @@
         }
       }
     },
-    "/messaging_profiles/{id}/alphanumeric_sender_ids": {
+    "/messaging_url_domains": {
       "get": {
-        "summary": "List all alphanumeric sender IDs associated with a messaging profile",
-        "operationId": "listMessagingProfileAlphanumericSenderIds",
+        "summary": "List all available messaging URL domains",
+        "operationId": "getAllMessagingUrlDomains",
         "tags": [
-          "Messaging Profiles"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/PageNumber"
-          },
-          {
-            "$ref": "#/components/parameters/PageSize"
-          },
-          {
-            "$ref": "#/components/parameters/PageToken"
-          },
-          {
-            "$ref": "#/components/parameters/MessagingProfileId"
-          }
+          "Messaging URL Domains"
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/RetrieveMessagingProfileAlphanumericSenderIdsResponse"
+            "$ref": "#/components/responses/ListMessagingUrlDomains"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -844,114 +830,10 @@
         }
       }
     },
-    "/alphanumeric_sender_ids": {
-      "post": {
-        "summary": "Create an alphanumeric sender ID",
-        "operationId": "createAlphanumericSenderId",
-        "tags": [
-          "Alphanumeric Sender IDs"
-        ],
-        "requestBody": {
-          "description": "New alphanumeric sender ID",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewAlphanumericSenderId"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "$ref": "#/components/responses/CreateAlphanumericSenderIdResponse"
-          },
-          "default": {
-            "$ref": "#/components/responses/GenericErrorResponse"
-          }
-        }
-      },
-      "get": {
-        "summary": "List all alphanumeric sender IDs",
-        "operationId": "listAlphanumericSenderIds",
-        "tags": [
-          "Alphanumeric Sender IDs"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/PageNumber"
-          },
-          {
-            "$ref": "#/components/parameters/PageSize"
-          },
-          {
-            "$ref": "#/components/parameters/PageToken"
-          },
-          {
-            "name": "filter[messaging_profile_id]",
-            "in": "query",
-            "description": "Filter by Messaging Profile ID. Use the string `null` for phone numbers without assigned profiles. A synonym for the `/messaging_profiles/{id}/alphanumeric_sender_ids` endpoint when querying about an extant profile.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/ListAlphanumericSenderIdsResponse"
-          },
-          "default": {
-            "$ref": "#/components/responses/GenericErrorResponse"
-          }
-        }
-      }
-    },
-    "/alphanumeric_sender_ids/{id}": {
-      "get": {
-        "summary": "Retrieve an alphanumeric sender ID",
-        "operationId": "retrieveAlphanumericSenderId",
-        "tags": [
-          "Alphanumeric Sender IDs"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/AlphanumericSenderId"
-          }
-        ],
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/RetrieveAlphanumericSenderIdResponse"
-          },
-          "default": {
-            "$ref": "#/components/responses/GenericErrorResponse"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete an alphanumeric sender ID",
-        "operationId": "deleteAlphanumericSenderId",
-        "description": "Delete a specific alphanumeric sender ID.",
-        "tags": [
-          "Alphanumeric Sender IDs"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/AlphanumericSenderId"
-          }
-        ],
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DeleteAlphanumericSenderIdResponse"
-          },
-          "default": {
-            "$ref": "#/components/responses/GenericErrorResponse"
-          }
-        }
-      }
-    },
     "/messages": {
       "post": {
         "summary": "Send a message",
+        "description": "Send a message with a Phone Number, Alphanumeric Sender ID, Short Code or Number Pool.\n\nThis endpoint allows you to send a message with any messaging resource.\nCurrent messaging resources include: long-code, short-code, number-pool, and\nalphanumeric-sender-id.\n",
         "operationId": "createMessage",
         "tags": [
           "Messages"
@@ -999,10 +881,10 @@
         }
       }
     },
-    "/messages/alphanumeric_sender_id": {
+    "/messages/long_code": {
       "post": {
-        "summary": "Send a message using an alphanumeric sender ID",
-        "operationId": "createAlphanumericSenderIdMessage",
+        "summary": "Send a Long Code message",
+        "operationId": "createLongCodeMessage",
         "tags": [
           "Messages"
         ],
@@ -1011,7 +893,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewAlphanumericSenderIdMessage"
+                "$ref": "#/components/schemas/NewLongCodeMessage"
               }
             }
           }
@@ -1062,6 +944,56 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/NewNumberPoolMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateMessageResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        },
+        "callbacks": {
+          "deliveryUpdate": {
+            "{$request.body#/webhook_url}": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/OutboundMessage"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "The server must return an HTTP 200, otherwise we will reattempt delivery at the failover webhook URL."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messages/short_code": {
+      "post": {
+        "summary": "Send a Short Code message",
+        "operationId": "createShortCodeMessage",
+        "tags": [
+          "Messages"
+        ],
+        "requestBody": {
+          "description": "Message payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewShortCodeMessage"
               }
             }
           }
@@ -2664,39 +2596,60 @@
       },
       "NumberPoolSettings": {
         "type": "object",
+        "nullable": true,
         "default": null,
         "required": [
           "toll_free_weight",
           "long_code_weight",
-          "skip_unhealthy",
-          "geomatch"
+          "skip_unhealthy"
         ],
-        "description": "Number Pool allows you to send messages from a pool of numbers of different types, assigning\nweights to each type.\nThe pool consists of all the Long Code and Toll Free numbers assigned\nto the Messaging profile.\n",
+        "description": "Number Pool allows you to send messages from a pool of numbers of different types, assigning\nweights to each type. The pool consists of all the long code and toll free numbers\nassigned to the messaging profile.\n\nTo disable this feature, set the object field to `null`.\n",
         "properties": {
           "toll_free_weight": {
             "type": "number",
-            "example": 10.0,
+            "example": 10,
             "description": "Defines the probability weight for a Toll Free number to be selected when sending a message.\nThe higher the weight the higher the probability. The sum of the weights for all number types\ndoes not necessarily need to add to 100. Weight must be a non-negative number, and when equal\nto zero it will remove the number type from the pool.\n"
           },
           "long_code_weight": {
             "type": "number",
-            "example": 1.0,
+            "example": 1,
             "description": "Defines the probability weight for a Long Code number to be selected when sending a message.\nThe higher the weight the higher the probability. The sum of the weights for all number types\ndoes not necessarily need to add to 100.  Weight must be a non-negative number, and when equal\nto zero it will remove the number type from the pool.\n"
           },
           "skip_unhealthy": {
             "type": "boolean",
             "example": true,
-            "description": "If set to true all unhealthy numbers will be automatically removed from the pool.\nHealth metrics  per number are calculated on a regular basis, taking into account the deliverability\nrate and the amount of messages marked as spam by upstream carriers.\nNumbers with a deliverability rate below 25% or spam ratio over 75% will be considered unhealthy.\n"
+            "description": "If set to true all unhealthy numbers will be automatically excluded from the pool.\nHealth metrics per number are calculated on a regular basis, taking into account the deliverability\nrate and the amount of messages marked as spam by upstream carriers.\nNumbers with a deliverability rate below 25% or spam ratio over 75% will be considered unhealthy.\n"
           },
           "sticky_sender": {
             "type": "boolean",
-            "example": true,
-            "description": "If set to true, Number Pool will try to choose the same sending number for all messages to a particular\nrecipient. If the sending number becomes unhealthy and `skip_unhealthy` is set to `true`, a new\nnumber will be chosen.\n"
+            "default": false,
+            "description": "If set to true, Number Pool will try to choose the same sending number for all messages to a particular\nrecipient. If the sending number becomes unhealthy and `skip_unhealthy` is set to true, a new\nnumber will be chosen.\n"
           },
           "geomatch": {
             "type": "boolean",
-            "example": true,
+            "default": false,
             "description": "If set to true, Number Pool will try to choose a sending number with the same area code as the destination\nnumber. If there are no such numbers available, a nunber with a different area code will be chosen. Currently\nonly NANP numbers are supported.\n"
+          }
+        }
+      },
+      "UrlShortenerSettings": {
+        "type": "object",
+        "nullable": true,
+        "default": null,
+        "required": [
+          "domain"
+        ],
+        "description": "The URL shortener feature allows automatic replacement of URLs that were generated using\na public URL shortener service. Some examples include bit.do, bit.ly, goo.gl, ht.ly,\nis.gd, ow.ly, rebrand.ly, t.co, tiny.cc, and tinyurl.com. Such URLs are replaced with\nwith links generated by Telnyx. The use of custom links can improve branding and message\ndeliverability.\n\nTo disable this feature, set the object field to `null`.\n",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "example": "acct.fyi",
+            "description": "One of the domains provided by the Telnyx URL shortener service.\n"
+          },
+          "prefix": {
+            "type": "string",
+            "example": "",
+            "description": "Optional prefix that can be used to identify your brand, and will appear in the Telnyx generated URLs after the domain name.\n"
           }
         }
       },
@@ -2719,59 +2672,62 @@
           }
         }
       },
-      "AlphanumericSenderIdInfo": {
-        "description": "This information is attached to messages that are sent from alphanumeric sender IDs.",
-        "properties": {
-          "record_type": {
-            "type": "string",
-            "example": "alphanumeric_sender_id_info_blob",
-            "enum": [
-              "alphanumeric_sender_id_info_blob"
-            ],
-            "description": "Identifies the type of the resource."
-          },
-          "hni": {
-            "description": "HNI (Home Network Identity) of the recipient's phone.",
-            "type": "string"
-          }
+      "ToNumber": {
+        "type": "string",
+        "format": "address",
+        "description": "Receiving address (+E.164 formatted phone number or short code)"
+      },
+      "ToNumberArray": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "format": "address",
+          "description": "Receiving address (+E.164 formatted phone number or short code)"
         }
       },
       "NewMessagingProfile": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
-            "type": "string",
-            "description": "A user friendly name for the messaging profile."
-          },
-          "webhook_url": {
-            "type": "string",
-            "format": "url",
-            "nullable": true,
-            "default": null,
-            "description": "The URL where webhooks related to this messaging profile will be sent."
-          },
-          "webhook_failover_url": {
-            "type": "string",
-            "format": "url",
-            "nullable": true,
-            "default": null,
-            "description": "The failover URL where webhooks related to this messaging profile will be sent if sending to the primary URL fails."
+            "description": "A user friendly name for the messaging profile",
+            "type": "string"
           },
           "enabled": {
+            "description": "Specifies whether the messaging profile is enabled or not.",
             "type": "boolean",
-            "default": true,
-            "description": "Whether the messaging profile is enabled or not."
+            "default": true
+          },
+          "webhook_url": {
+            "description": "The URL where webhooks related to this messaging profile will be sent.",
+            "type": "string",
+            "format": "url",
+            "default": "",
+            "nullable": true
+          },
+          "webhook_failover_url": {
+            "description": "The failover URL where webhooks related to this messaging profile will be sent if sending to the primary URL fails.",
+            "type": "string",
+            "format": "url",
+            "default": "",
+            "nullable": true
           },
           "webhook_api_version": {
+            "description": "Determines which webhook format will be used, API v1 or API v2.",
             "type": "string",
             "enum": [
               "1",
               "2"
             ],
-            "default": "2",
-            "description": "Determines which webhook format will be used, API V1 or API V2."
+            "default": "2"
           },
           "number_pool_settings": {
             "$ref": "#/components/schemas/NumberPoolSettings"
+          },
+          "url_shortener_settings": {
+            "$ref": "#/components/schemas/UrlShortenerSettings"
           }
         }
       },
@@ -2779,97 +2735,30 @@
         "type": "object",
         "properties": {
           "record_type": {
+            "description": "Identifies the type of the resource.",
             "type": "string",
             "example": "messaging_profile",
             "enum": [
               "messaging_profile"
-            ],
-            "description": "Identifies the type of the resource."
+            ]
           },
           "id": {
+            "description": "Uniquely identifies the resource or object.",
             "type": "string",
-            "format": "uuid",
-            "description": "Uniquely identifies the resource or object."
+            "format": "uuid"
           },
           "organization_id": {
+            "description": "Unique identifier for the organization that owns the resource.",
             "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the organization that owns the resource."
+            "format": "uuid"
           },
           "name": {
             "description": "A user friendly name for the messaging profile",
-            "type": "string",
-            "format": "string"
-          },
-          "webhook_url": {
-            "type": "string",
-            "format": "url",
-            "nullable": true,
-            "description": "The URL where webhooks related to this messaging profile will be sent."
-          },
-          "webhook_failover_url": {
-            "type": "string",
-            "format": "url",
-            "nullable": true,
-            "description": "The failover URL where webhooks related to this messaging profile will be sent if sending to the primary URL fails."
+            "type": "string"
           },
           "enabled": {
-            "type": "boolean",
-            "description": "Specifies whether the messaging profile is enabled or not."
-          },
-          "whitelisted_destinations": {
-            "type": "array",
-            "description": "Destinations to which the messaging profile is allowed to send.",
-            "items": {
-              "type": "string",
-              "description": "ISO 3166-1 alpha-2 country code.",
-              "pattern": "^(([A-Z]{2}))$"
-            }
-          },
-          "webhook_api_version": {
-            "type": "string",
-            "enum": [
-              "1",
-              "2"
-            ],
-            "description": "Determines which webhook format will be used, API V1 or API V2."
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "ISO 8601 formatted date indicating when the resource was created."
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "ISO 8601 formatted date indicating when the resource was updated."
-          },
-          "number_pool_settings": {
-            "$ref": "#/components/schemas/NumberPoolSettings"
-          }
-        },
-        "example": {
-          "record_type": "messaging_profile",
-          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "name": "Profile for Messages",
-          "webhook_url": null,
-          "webhook_failover_url": null,
-          "enabled": true,
-          "whitelisted_destinations": [
-            "US"
-          ],
-          "webhook_api_version": "2",
-          "created_at": "2019-01-23T18:10:02.574Z",
-          "updated_at": "2019-01-23T18:10:02.574Z"
-        }
-      },
-      "MessagingProfileUpdate": {
-        "properties": {
-          "name": {
-            "description": "A user friendly name for the messaging profile",
-            "type": "string",
-            "format": "string"
+            "description": "Specifies whether the messaging profile is enabled or not.",
+            "type": "boolean"
           },
           "webhook_url": {
             "description": "The URL where webhooks related to this messaging profile will be sent.",
@@ -2883,46 +2772,121 @@
             "format": "url",
             "nullable": true
           },
-          "enabled": {
-            "description": "Specifies whether the messaging profile is enabled or not.",
-            "type": "boolean"
-          },
-          "whitelisted_destinations": {
-            "type": "array",
-            "description": "Destinations to which the messaging profile is allowed to send.",
-            "items": {
-              "type": "string",
-              "description": "ISO 3166-1 alpha-2 country code.",
-              "pattern": "^(([A-Z]{2}))$"
-            }
-          },
           "webhook_api_version": {
+            "description": "Determines which webhook format will be used, API v1 or API v2.",
             "type": "string",
             "enum": [
               "1",
               "2"
-            ],
-            "description": "Determines which webhook format will be used, API V1 or API V2."
+            ]
+          },
+          "whitelisted_destinations": {
+            "description": "Destinations to which the messaging profile is allowed to send. If set to `null`, all destinations will be allowed. Setting a value of `[\"*\"]` has the equivalent effect. The elements in the list must be valid ISO 3166-1 alpha-2 country codes.",
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "description": "ISO 3166-1 alpha-2 country code.",
+              "type": "string",
+              "pattern": "^[A-Z]{2}$"
+            }
+          },
+          "created_at": {
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "type": "string",
+            "format": "date-time"
           },
           "number_pool_settings": {
             "$ref": "#/components/schemas/NumberPoolSettings"
+          },
+          "url_shortener_settings": {
+            "$ref": "#/components/schemas/UrlShortenerSettings"
           }
+        },
+        "example": {
+          "record_type": "messaging_profile",
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "name": "New Messaging Profile",
+          "webhook_url": null,
+          "webhook_failover_url": null,
+          "enabled": true,
+          "whitelisted_destinations": [
+            "*"
+          ],
+          "webhook_api_version": "2",
+          "created_at": "2019-01-23T18:10:02.574Z",
+          "updated_at": "2019-01-23T18:10:02.574Z",
+          "number_pool_settings": {
+            "toll_free_weight": 1,
+            "long_code_weight": 4,
+            "skip_unhealthy": false,
+            "sticky_sender": true,
+            "geomatch": false
+          },
+          "url_shortener_settings": {
+            "domain": "example.org",
+            "prefix": "test",
+            "prevent_additional_segments": false
+          },
+          "v1_secret": "tCjVabxjkP0xjU3UtydqdM66"
+        }
+      },
+      "MessagingUrlDomain": {
+        "type": "object",
+        "properties": {
+          "record_type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "url_domain": {
+            "type": "string"
+          },
+          "use_case": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "record_type": "messaging_url_domain",
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "url_domain": "example.org",
+          "use_case": "Example use case"
         }
       },
       "MessagingPhoneNumber": {
         "type": "object",
         "example": {
           "record_type": "messaging_phone_number",
+          "id": "1094278277513043240",
           "phone_number": "+18005550001",
-          "id": "+18665550001",
           "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           "created_at": "2019-01-23T18:10:02.574Z",
           "updated_at": "2019-01-23T18:10:02.574Z",
-          "type": "toll-free",
           "country_code": "US",
+          "type": "toll-free",
+          "health": {
+            "message_count": 140,
+            "inbound_outbound_ratio": 0.34,
+            "success_ratio": 0.96,
+            "spam_ratio": 0.04
+          },
           "traffic_type": "P2P",
-          "messaging_product": "P2P"
+          "messaging_product": "P2P",
+          "features": {
+            "sms": {
+              "domestic_two_way": true,
+              "international_inbound": true,
+              "international_outbound": true
+            },
+            "mms": null
+          }
         },
         "properties": {
           "record_type": {
@@ -2975,7 +2939,7 @@
           "country_code": {
             "type": "string",
             "description": "ISO 3166-1 alpha-2 country code.",
-            "pattern": "^(([A-Z]{2}))$",
+            "pattern": "^[A-Z]{2}$",
             "example": "US"
           },
           "traffic_type": {
@@ -3008,75 +2972,6 @@
           }
         }
       },
-      "MessagingPhoneNumberListElement": {
-        "type": "object",
-        "example": {
-          "record_type": "messaging_phone_number",
-          "phone_number": "+18005550001",
-          "id": "+18665550001",
-          "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "created_at": "2019-01-23T18:10:02.574Z",
-          "updated_at": "2019-01-23T18:10:02.574Z",
-          "type": "toll-free",
-          "country_code": "US"
-        },
-        "properties": {
-          "record_type": {
-            "type": "string",
-            "example": "messaging_phone_number",
-            "enum": [
-              "messaging_phone_number"
-            ],
-            "description": "Identifies the type of the resource."
-          },
-          "phone_number": {
-            "type": "string",
-            "format": "e164",
-            "description": "+E.164 formatted phone number."
-          },
-          "id": {
-            "type": "string",
-            "description": "Uniquely identifies the resource or object."
-          },
-          "organization_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the organization that owns the resource."
-          },
-          "messaging_profile_id": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true,
-            "description": "Unique identifier for a messaging profile."
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "ISO 8601 formatted date indicating when the resource was created."
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "ISO 8601 formatted date indicating when the resource was updated."
-          },
-          "type": {
-            "type": "string",
-            "description": "The type of the phone number",
-            "enum": [
-              "long-code",
-              "toll-free",
-              "short-code"
-            ]
-          },
-          "country_code": {
-            "type": "string",
-            "description": "ISO 3166-1 alpha-2 country code.",
-            "pattern": "^(([A-Z]{2}))$",
-            "example": "US"
-          }
-        }
-      },
       "MessagingPhoneNumberUpdate": {
         "type": "object",
         "properties": {
@@ -3096,6 +2991,9 @@
       },
       "ShortCode": {
         "type": "object",
+        "required": [
+          "messaging_profile_id"
+        ],
         "example": {
           "record_type": "short_code",
           "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -3127,7 +3025,7 @@
           "country_code": {
             "type": "string",
             "description": "ISO 3166-1 alpha-2 country code.",
-            "pattern": "^(([A-Z]{2}))$",
+            "pattern": "^[A-Z]{2}$",
             "example": "US"
           },
           "organization_id": {
@@ -3155,6 +3053,9 @@
       },
       "ShortCodeUpdate": {
         "type": "object",
+        "required": [
+          "messaging_profile_id"
+        ],
         "properties": {
           "messaging_profile_id": {
             "type": "string",
@@ -3164,114 +3065,39 @@
           }
         }
       },
-      "NewAlphanumericSenderId": {
-        "type": "object",
-        "properties": {
-          "alphanumeric_sender_id": {
-            "type": "string",
-            "description": "Alphanumeric sender ID."
-          },
-          "messaging_profile_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for a messaging profile."
-          }
-        }
-      },
-      "AlphanumericSenderId": {
-        "type": "object",
-        "example": {
-          "record_type": "alphanumeric_sender_id",
-          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "alphanumeric_sender_id": "TelnyxID",
-          "organization_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "created_at": "2019-01-23T18:10:02.574Z",
-          "updated_at": "2019-01-23T18:10:02.574Z"
-        },
-        "properties": {
-          "record_type": {
-            "type": "string",
-            "example": "alphanumeric_sender_id",
-            "enum": [
-              "alphanumeric_sender_id"
-            ],
-            "description": "Identifies the type of the resource."
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Uniquely identifies the resource or object."
-          },
-          "alphanumeric_sender_id": {
-            "type": "string",
-            "description": "Alphanumeric sender ID."
-          },
-          "organization_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the organization that owns the resource."
-          },
-          "messaging_profile_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for a messaging profile."
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "ISO 8601 formatted date indicating when the resource was created."
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "ISO 8601 formatted date indicating when the resource was updated."
-          }
-        }
-      },
       "NewMessage": {
         "type": "object",
         "required": [
           "to"
         ],
         "properties": {
-          "messaging_profile_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for a messaging profile."
-          },
           "from": {
             "type": "string",
             "format": "address",
-            "description": "Sending address (+E.164 formatted phone number, alphanumeric sender ID, or short code)"
+            "description": "Sending address (+E.164 formatted phone number, alphanumeric sender ID, or short code).\n\n**Required if sending with a phone number, short code, or alphanumeric sender ID.**\n"
+          },
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for a messaging profile.\n\n**Required if sending via number pool or with an alphanumeric sender ID.**\n"
           },
           "to": {
             "oneOf": [
               {
-                "type": "string",
-                "format": "address",
-                "description": "Receiving address (+E.164 formatted phone number)"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "address",
-                  "description": "Receiving address (+E.164 formatted phone number)"
-                }
+                "$ref": "#/components/schemas/ToNumber"
               }
             ]
           },
           "text": {
             "type": "string",
-            "description": "Message body (i.e., content) as a non-empty string"
+            "description": "Message body (i.e., content) as a non-empty string.\n\n**Required for SMS**"
           },
           "subject": {
             "type": "string",
             "description": "Subject of multimedia message"
           },
           "media_urls": {
-            "description": "A list of media URLs. The total media size must be less than 1 MB.",
+            "description": "A list of media URLs. The total media size must be less than 1 MB.\n\n**Required for MMS**",
             "type": "array",
             "items": {
               "type": "string",
@@ -3292,23 +3118,14 @@
             "type": "boolean",
             "description": "If the profile this number is associated with has webhooks, use them for delivery notifications. If webhooks are also specified on the message itself, they will be attempted first, then those on the profile.",
             "default": true
-          },
-          "validity_period_secs": {
-            "type": "number",
-            "description": "If the message is not pulled off the queue and sending attempted within this amount of time, sending will be aborted and the message will be marked as expired."
-          },
-          "ignore_wire_type": {
-            "type": "boolean",
-            "description": "Typically, if the LRN dip indicates that the phone number is a land-line, the request will be rejected. However, some landlines can receive SMS, so that behavior can be overridden by setting this value to `true`"
           }
         }
       },
-      "NewAlphanumericSenderIdMessage": {
+      "NewLongCodeMessage": {
         "type": "object",
         "required": [
           "from",
-          "to",
-          "messaging_profile_id"
+          "to"
         ],
         "properties": {
           "messaging_profile_id": {
@@ -3319,28 +3136,40 @@
           "from": {
             "type": "string",
             "format": "address",
-            "description": "Sending address (+E.164 formatted phone number, alphanumeric sender ID, or short code)"
+            "description": "Phone number, in +E.164 format, used to send the message"
           },
           "to": {
             "oneOf": [
               {
                 "type": "string",
                 "format": "address",
-                "description": "Receiving address (+E.164 formatted phone number)"
+                "description": "Receiving address (+E.164 formatted phone number or short code)"
               },
               {
                 "type": "array",
                 "items": {
                   "type": "string",
                   "format": "address",
-                  "description": "Receiving address (+E.164 formatted phone number)"
+                  "description": "Receiving address (+E.164 formatted phone number or short code)"
                 }
               }
             ]
           },
           "text": {
             "type": "string",
-            "description": "Message body (i.e., content) as a non-empty string"
+            "description": "Message body (i.e., content) as a non-empty string.\n\n**Required for SMS**"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject of multimedia message"
+          },
+          "media_urls": {
+            "description": "A list of media URLs. The total media size must be less than 1 MB.\n\n**Required for MMS**",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "url"
+            }
           },
           "webhook_url": {
             "description": "The URL where webhooks related to this message will be sent.",
@@ -3370,6 +3199,7 @@
       "NewNumberPoolMessage": {
         "type": "object",
         "required": [
+          "from",
           "to",
           "messaging_profile_id"
         ],
@@ -3398,14 +3228,14 @@
           },
           "text": {
             "type": "string",
-            "description": "Message body (i.e., content) as a non-empty string"
+            "description": "Message body (i.e., content) as a non-empty string.\n\n**Required for SMS**"
           },
           "subject": {
             "type": "string",
             "description": "Subject of multimedia message"
           },
           "media_urls": {
-            "description": "A list of media URLs. The total media size must be less than 1 MB.",
+            "description": "A list of media URLs. The total media size must be less than 1 MB.\n\n**Required for MMS**",
             "type": "array",
             "items": {
               "type": "string",
@@ -3421,6 +3251,78 @@
             "description": "The failover URL where webhooks related to this message will be sent if sending to the primary URL fails.",
             "type": "string",
             "format": "url"
+          },
+          "use_profile_webhooks": {
+            "type": "boolean",
+            "description": "If the profile this number is associated with has webhooks, use them for delivery notifications. If webhooks are also specified on the message itself, they will be attempted first, then those on the profile.",
+            "default": true
+          },
+          "validity_period_secs": {
+            "type": "number",
+            "description": "If the message is not pulled off the queue and sending attempted within this amount of time, sending will be aborted and the message will be marked as expired."
+          },
+          "ignore_wire_type": {
+            "type": "boolean",
+            "description": "Typically, if the LRN dip indicates that the phone number is a land-line, the request will be rejected. However, some landlines can receive SMS, so that behavior can be overridden by setting this value to `true`"
+          }
+        }
+      },
+      "NewShortCodeMessage": {
+        "type": "object",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "address",
+            "description": "Phone number, in +E.164 format, used to send the message"
+          },
+          "to": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "address",
+                "description": "Receiving address (+E.164 formatted phone number)"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "address",
+                  "description": "translation missing: en.api.desc.message.to.short_code"
+                }
+              }
+            ]
+          },
+          "text": {
+            "type": "string",
+            "description": "Message body (i.e., content) as a non-empty string.\n\n**Required for SMS**"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject of multimedia message"
+          },
+          "media_urls": {
+            "description": "A list of media URLs. The total media size must be less than 1 MB.\n\n**Required for MMS**",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "url"
+            }
+          },
+          "webhook_url": {
+            "description": "The URL where webhooks related to this message will be sent.",
+            "type": "string",
+            "format": "url",
+            "default": ""
+          },
+          "webhook_failover_url": {
+            "description": "The failover URL where webhooks related to this message will be sent if sending to the primary URL fails.",
+            "type": "string",
+            "format": "url",
+            "default": ""
           },
           "use_profile_webhooks": {
             "type": "boolean",
@@ -3504,7 +3406,8 @@
               "properties": {
                 "address": {
                   "type": "string",
-                  "format": "address"
+                  "format": "address",
+                  "description": "Receiving address (+E.164 formatted phone number or short code)"
                 },
                 "status": {
                   "type": "string",
@@ -3528,7 +3431,7 @@
           },
           "text": {
             "type": "string",
-            "description": "Message body (i.e., content) as a non-empty string"
+            "description": "Message body (i.e., content) as a non-empty string.\n\n**Required for SMS**"
           },
           "media": {
             "type": "array",
@@ -3601,16 +3504,6 @@
             "description": "Message must be out of the queue by this time or else it will be discarded and marked as 'sending_failed'. Once the message moves out of the queue, this field will be nulled",
             "format": "date-time",
             "nullable": true
-          },
-          "info_blob_fieldname": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ShortCodeInfo"
-              },
-              {
-                "$ref": "#/components/schemas/AlphanumericSenderIdInfo"
-              }
-            ]
           },
           "errors": {
             "type": "array",
@@ -3738,7 +3631,7 @@
           "to": {
             "type": "string",
             "format": "address",
-            "description": "Receiving address (+E.164 formatted phone number)"
+            "description": "Receiving address (+E.164 formatted phone number or short code)"
           },
           "cc": {
             "type": "array",
@@ -3749,7 +3642,7 @@
           },
           "text": {
             "type": "string",
-            "description": "Message body (i.e., content) as a non-empty string"
+            "description": "Message body (i.e., content) as a non-empty string.\n\n**Required for SMS**"
           },
           "media": {
             "type": "array",
@@ -5176,8 +5069,8 @@
           }
         }
       },
-      "RetrieveMessagingProfileAlphanumericSenderIdsResponse": {
-        "description": "Paginated array of alphanumeric sender IDs associated with the messaging profile",
+      "ListMessagingUrlDomains": {
+        "description": "Returns a list of all available messaging URL shortener domains.",
         "content": {
           "application/json": {
             "schema": {
@@ -5186,7 +5079,7 @@
                 "data": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AlphanumericSenderId"
+                    "$ref": "#/components/schemas/MessagingUrlDomain"
                   }
                 },
                 "meta": {
@@ -5207,7 +5100,7 @@
                 "data": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/MessagingPhoneNumberListElement"
+                    "$ref": "#/components/schemas/MessagingPhoneNumber"
                   }
                 },
                 "meta": {
@@ -5293,72 +5186,6 @@
               "properties": {
                 "data": {
                   "$ref": "#/components/schemas/ShortCode"
-                }
-              }
-            }
-          }
-        }
-      },
-      "CreateAlphanumericSenderIdResponse": {
-        "description": "The created alphanumeric sender ID",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/AlphanumericSenderId"
-                }
-              }
-            }
-          }
-        }
-      },
-      "ListAlphanumericSenderIdsResponse": {
-        "description": "A paginated array of the alphanumeric sender IDs",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AlphanumericSenderId"
-                  }
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/PaginationMeta"
-                }
-              }
-            }
-          }
-        }
-      },
-      "RetrieveAlphanumericSenderIdResponse": {
-        "description": "The requested alphanumeric sender ID record",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/AlphanumericSenderId"
-                }
-              }
-            }
-          }
-        }
-      },
-      "DeleteAlphanumericSenderIdResponse": {
-        "description": "The deleted alphanumeric sender ID record",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "$ref": "#/components/schemas/AlphanumericSenderId"
                 }
               }
             }
@@ -5703,16 +5530,6 @@
         "description": "Token to receive the next page. For guaranteed pagination that will not skip elements, use the token provided in a previous request.\n",
         "schema": {
           "type": "string"
-        }
-      },
-      "AlphanumericSenderId": {
-        "name": "id",
-        "in": "path",
-        "description": "The unique ID of the alphanumeric sender ID to retrieve",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
         }
       },
       "MessagingProfileId": {
