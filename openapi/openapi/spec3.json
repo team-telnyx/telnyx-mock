@@ -74,6 +74,14 @@
     {
       "name": "Debugging",
       "description": "Call control debugging"
+    },
+    {
+      "name": "SIM Cards",
+      "description": "SIM Cards operations"
+    },
+    {
+      "name": "Phone Numbers",
+      "description": "Phone numbers"
     }
   ],
   "paths": {
@@ -2445,7 +2453,9 @@
             "$ref": "#/components/responses/GenericErrorResponse"
           }
         }
-      },
+      }
+    },
+    "/phone_numbers/{id}": {
       "patch": {
         "summary": "Update the settings for a phone number",
         "operationId": "updatePhoneNumber",
@@ -5979,6 +5989,115 @@
           },
           "call_recording": {
             "$ref": "#/components/schemas/CallRecording"
+          }
+        }
+      },
+      "CallForwarding": {
+        "description": "The call forwarding settings for a phone number.",
+        "type": "object",
+        "properties": {
+          "forwards_to": {
+            "type": "string",
+            "description": "The phone number to which inbound calls to this number are forwarded. Inbound calls will not be forwarded if this field is left blank. If set, must be a +E.164-formatted phone number."
+          },
+          "forwarding_type": {
+            "type": "string",
+            "description": "Call forwarding type. 'forwards_to' must be set for this to have an effect.",
+            "enum": [
+              "always",
+              "on_failure",
+              "never"
+            ],
+            "example": "always"
+          }
+        }
+      },
+      "CNAMListing": {
+        "description": "The CNAM listing settings for a phone number.",
+        "type": "object",
+        "properties": {
+          "cnam_listing_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enables CNAM listings for this number. Requires cnam_listing_details to also be set."
+          },
+          "cnam_listing_details": {
+            "type": "string",
+            "description": "The CNAM listing details for this number. Must be alphanumeric characters or spaces with a maximum length of 15. Requires cnam_listing_enabled to also be set to true."
+          }
+        }
+      },
+      "Emergency": {
+        "description": "The emergency services settings for a phone number.",
+        "type": "object",
+        "properties": {
+          "emergency_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Allows you to enable or disable emergency services on the phone number. In order to enable emergency services, you must also set an emergency_address_id."
+          },
+          "emergency_address_id": {
+            "type": "string",
+            "description": "Identifies the address to be used with emergency services."
+          }
+        }
+      },
+      "MediaFeatures": {
+        "description": "The media features settings for a phone number.",
+        "type": "object",
+        "properties": {
+          "rtp_auto_adjust_enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "When RTP Auto-Adjust is enabled, the destination RTP address port will be automatically changed to match the source of the incoming RTP packets."
+          },
+          "media_handling_mode": {
+            "type": "string",
+            "default": "default",
+            "enum": [
+              "default",
+              "proxy"
+            ],
+            "description": "Controls how media is handled for the phone number. default: media routed through Telnyx with transcode support. proxy: media routed through Telnyx with no transcode support."
+          },
+          "accept_any_rtp_packets_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "When enabled, Telnyx will accept RTP packets from any customer-side IP address and port, not just those to which Telnyx is sending RTP."
+          },
+          "t38_fax_gateway_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Controls whether Telnyx will accept a T.38 re-INVITE for this phone number. Note that Telnyx will not send a T.38 re-INVITE; this option only controls whether one will be accepted."
+          }
+        }
+      },
+      "CallRecording": {
+        "description": "The call recording settings for a phone number.",
+        "type": "object",
+        "properties": {
+          "inbound_call_recording_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "When enabled, any inbound call to this number will be recorded."
+          },
+          "inbound_call_recording_format": {
+            "type": "string",
+            "enum": [
+              "wav",
+              "mp3"
+            ],
+            "default": "wav",
+            "description": "The audio file format for calls being recorded."
+          },
+          "inbound_call_recording_channels": {
+            "type": "string",
+            "enum": [
+              "single",
+              "dual"
+            ],
+            "default": "single",
+            "description": "When using 'dual' channels, final audio file will be stereo recorded with the first leg on channel A, and the rest on channel B."
           }
         }
       }
