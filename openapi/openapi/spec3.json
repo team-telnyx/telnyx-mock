@@ -5900,6 +5900,58 @@
           }
         }
       },
+      "MessagingResponse": {
+        "type": "object",
+        "properties": {
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Unique identifier for a messaging profile."
+          },
+          "messaging_profile_name": {
+            "type": "string",
+            "description": "Messaging profile name.",
+            "example": "Test Name"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the phone number.",
+            "enum": [
+              "long-code",
+              "toll-free",
+              "short-code"
+            ]
+          },
+          "country_code": {
+            "type": "string",
+            "description": "ISO 3166-1 alpha-2 country code.",
+            "pattern": "^(([A-Z]{2}))$",
+            "example": "US"
+          },
+          "traffic_type": {
+            "type": "string",
+            "description": "The messaging traffic or use case for which the number is currently configured.",
+            "example": "P2P"
+          },
+          "messaging_product": {
+            "type": "string",
+            "description": "The messaging product that the number is registered to use.",
+            "example": "P2P"
+          },
+          "features": {
+            "type": "object",
+            "properties": {
+              "sms": {
+                "$ref": "#/components/schemas/MessagingFeatureSet"
+              },
+              "mms": {
+                "$ref": "#/components/schemas/MessagingFeatureSet"
+              }
+            }
+          }
+        }
+      },
       "PhoneNumberVoice": {
         "type": "object",
         "properties": {
@@ -7007,6 +7059,17 @@
         "required": true,
         "schema": {
           "type": "string"
+        }
+      },
+      "WirelessId": {
+        "name": "id",
+        "description": "Uniquely identifies the resource or object.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "format": "uuid",
+          "type": "string",
+          "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
         }
       }
     },
