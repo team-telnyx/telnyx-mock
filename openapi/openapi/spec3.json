@@ -5767,19 +5767,16 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Identifies the phone number.",
-            "readOnly": true
+            "description": "Identifies the phone number."
           },
           "record_type": {
             "type": "string",
             "example": "phone_number",
-            "description": "Identifies the type of the resource.",
-            "readOnly": true
+            "description": "Identifies the type of the resource."
           },
           "phone_number": {
             "type": "string",
-            "description": "The +E.164-formatted phone number associated with this record",
-            "readOnly": true
+            "description": "The +E.164-formatted phone number associated with this record"
           },
           "status": {
             "type": "string",
@@ -5794,8 +5791,7 @@
               "emergency-only",
               "ported-out",
               "port-out-pending"
-            ],
-            "readOnly": true
+            ]
           },
           "tags": {
             "type": "array",
@@ -5806,8 +5802,7 @@
           },
           "address_id": {
             "type": "string",
-            "description": "Identifies the address associated with the phone number.",
-            "readOnly": true
+            "description": "Identifies the address associated with the phone number."
           },
           "external_pin": {
             "type": "string",
@@ -5815,8 +5810,7 @@
           },
           "connection_name": {
             "type": "string",
-            "description": "The user-assigned name of the connection to be associated with this phone number.",
-            "readOnly": true
+            "description": "The user-assigned name of the connection to be associated with this phone number."
           },
           "connection_id": {
             "type": "string",
@@ -5824,8 +5818,7 @@
           },
           "messaging_enabled": {
             "type": "boolean",
-            "description": "Indicates whether messaging services are enabled for this number.",
-            "readOnly": true
+            "description": "Indicates whether messaging services are enabled for this number."
           },
           "messaging_profile_id": {
             "type": "string",
@@ -5837,38 +5830,31 @@
           },
           "emergency_enabled": {
             "type": "boolean",
-            "description": "Indicates whether emergency services are enabled for this number.",
-            "readOnly": true
+            "description": "Indicates whether emergency services are enabled for this number."
           },
           "call_forwarding_enabled": {
             "type": "boolean",
-            "description": "Indicates whether call forwarding is enabled for this number.",
-            "readOnly": true
+            "description": "Indicates whether call forwarding is enabled for this number."
           },
           "cnam_listing_enabled": {
             "type": "boolean",
-            "description": "Indicates whether a CNAM listing is enabled for this number.",
-            "readOnly": true
+            "description": "Indicates whether a CNAM listing is enabled for this number."
           },
           "caller_id_name_enabled": {
             "type": "boolean",
-            "description": "Indicates whether caller ID is enabled for this number.",
-            "readOnly": true
+            "description": "Indicates whether caller ID is enabled for this number."
           },
           "call_recording_enabled": {
             "type": "boolean",
-            "description": "Indicates whether call recording is enabled for this number.",
-            "readOnly": true
+            "description": "Indicates whether call recording is enabled for this number."
           },
           "created_at": {
             "type": "string",
-            "description": "ISO 8601 formatted date indicating when the resource was created.",
-            "readOnly": true
+            "description": "ISO 8601 formatted date indicating when the resource was created."
           },
           "updated_at": {
             "type": "string",
-            "description": "ISO 8601 formatted date indicating when the resource was updated.",
-            "readOnly": true
+            "description": "ISO 8601 formatted date indicating when the resource was updated."
           }
         }
       },
@@ -5877,8 +5863,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Uniquely identifies the resource or object.",
-            "readOnly": true
+            "description": "Uniquely identifies the resource or object."
           },
           "tags": {
             "type": "array",
@@ -5911,14 +5896,12 @@
           "id": {
             "type": "string",
             "example": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
-            "description": "Uniquely identifies the resource or object.",
-            "readOnly": true
+            "description": "Uniquely identifies the resource or object."
           },
           "record_type": {
             "type": "string",
             "example": "voice_settings",
-            "description": "Identifies the type of the resource.",
-            "readOnly": true
+            "description": "Identifies the type of the resource."
           },
           "connection_id": {
             "type": "string",
