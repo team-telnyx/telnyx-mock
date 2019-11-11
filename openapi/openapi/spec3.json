@@ -2087,6 +2087,549 @@
           }
         }
       }
+    },
+    "/sim_cards": {
+      "get": {
+        "summary": "Get all SIM cards",
+        "description": "Get all SIM cards belonging to the user that match the given filters.",
+        "operationId": "SimCardsGet",
+        "tags": [
+          "SIM Cards"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          },
+          {
+            "name": "filter[tags]",
+            "description": "A list of SIM card tags to filter on.<br/><br/>\nIf the SIM card contains <b><i>all</i></b> of the given <code>tags</code> they will be found.<br/><br/>\nFor example, if the SIM cards have the following tags: <ul>\n  <li><code>['customers', 'staff', 'test']</code>\n  <li><code>['test']</code></li>\n  <li><code>['customers']</code></li>\n</ul>\nSearching for <code>['customers', 'test']</code> returns only the first because it's the only one with both tags.<br/> Searching for <code>test</code> returns the first two SIMs, because both of them have such tag.<br/> Searching for <code>customers</code> returns the first and last SIMs.<br/>\n",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "personal",
+                "customers",
+                "active-customers"
+              ]
+            }
+          },
+          {
+            "name": "filter[iccid]",
+            "description": "A search string to partially match for the SIM card's ICCID.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "89310410106543789301"
+            }
+          },
+          {
+            "name": "filter[sim_card_group_id]",
+            "description": "A valid SIM card group ID.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SearchSimCardsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/sim_cards/{id}": {
+      "get": {
+        "summary": "Get SIM card",
+        "description": "Returns the details regarding a specific SIM card.",
+        "operationId": "SimCardGet",
+        "tags": [
+          "SIM Cards"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WirelessId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetSimCardResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a SIM card",
+        "description": "Updates a SIM card's group and tags",
+        "operationId": "SimCardUpdate",
+        "tags": [
+          "SIM Cards"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WirelessId"
+          },
+          {
+            "name": "tags",
+            "description": "The list of tags for the given SIM card.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "personal",
+                "customers",
+                "active-customers"
+              ]
+            }
+          },
+          {
+            "name": "sim_card_group_id",
+            "description": "The SIM card group associated with the SIM card.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UpdateSimCardResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/sim_cards/{id}/actions/activate": {
+      "post": {
+        "summary": "Request a SIM card activation",
+        "description": "The SIM card will be able to connect to the network once the activation is complete, thus making it possible to consume data with it.<br/>\nIn order for a SIM card to be activated, it must be be associated with a SIM card group that has a data plan.<br/>\nTransitioning to the active state may take a period of time. Until the transition is completed, the SIM card status will be <code>activating</code>.\n",
+        "operationId": "SimCardActivate",
+        "tags": [
+          "SIM Cards"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WirelessId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "$ref": "#/components/responses/ActivateSimCardResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnprocessableEntity"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/sim_cards/{id}/actions/deactivate": {
+      "post": {
+        "summary": "Request a SIM card deactivation",
+        "description": "The SIM card won't be able to connect to the network after the deactivation is completed, thus making it impossible consume data with it.<br/>\nTransitioning to the inactive state may take a period of time. Until the transition is completed, the SIM card status will be <code>inactivating</code>.\n",
+        "operationId": "SimCardDeactivate",
+        "tags": [
+          "SIM Cards"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WirelessId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "$ref": "#/components/responses/DeactivateSimCardResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/phone_numbers": {
+      "get": {
+        "summary": "List all phone numbers",
+        "operationId": "findPhoneNumbers",
+        "tags": [
+          "Phone Numbers"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          },
+          {
+            "name": "filter[tag]",
+            "in": "query",
+            "description": "Filter by phone number tags",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[phone_number]",
+            "in": "query",
+            "description": "Filter by phone number. Requires at least three digits.\n             Non-numerical characters will result in no values being returned.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[status]",
+            "in": "query",
+            "description": "Filter by phone number status",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "purchase_pending",
+                "purchase_failed",
+                "port_pending",
+                "active",
+                "deleted",
+                "port_failed",
+                "emergency_only",
+                "ported_out",
+                "port_out_pending"
+              ],
+              "example": "active"
+            }
+          },
+          {
+            "name": "filter[voice.connection_name][contains]",
+            "in": "query",
+            "description": "Filter contains connection name. Requires at least three characters",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "test"
+            }
+          },
+          {
+            "name": "filter[voice.connection_name][starts_with]",
+            "in": "query",
+            "description": "Filter starts with connection name. Requires at least three characters",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "test"
+            }
+          },
+          {
+            "name": "filter[voice.connection_name][ends_with]",
+            "in": "query",
+            "description": "Filter ends with connection name. Requires at least three characters",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "test"
+            }
+          },
+          {
+            "name": "filter[voice.connection_name][eq]",
+            "in": "query",
+            "description": "Filter by connection name",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "test"
+            }
+          },
+          {
+            "name": "filter[usage_payment_method]",
+            "in": "query",
+            "description": "Filter by usage_payment_method.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pay-per-minute",
+                "channel"
+              ],
+              "example": "channel"
+            }
+          },
+          {
+            "name": "filter[messaging.messaging_profile_name][contains]",
+            "in": "query",
+            "description": "Filter contains messaging profile name. Requires at least three characters",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "test"
+            }
+          },
+          {
+            "name": "filter[messaging.messaging_profile_name][starts_with]",
+            "in": "query",
+            "description": "Filter starts with messaging profile name. Requires at least three characters",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "test"
+            }
+          },
+          {
+            "name": "filter[messaging.messaging_profile_name][ends_with]",
+            "in": "query",
+            "description": "Filter ends with messaging profile name. Requires at least three characters",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "test"
+            }
+          },
+          {
+            "name": "filter[voice.messaging_profile_name][eq]",
+            "in": "query",
+            "description": "Filter by messaging profile name",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "test"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Specifies the sort order for results. If not given, results are sorted by created_at in descending order",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "purchased_at",
+                "phone_number",
+                "connection_name",
+                "usage_payment_method"
+              ],
+              "example": "connection-name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListPhoneNumbersResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update the settings for a phone number",
+        "operationId": "updatePhoneNumber",
+        "tags": [
+          "Phone Numbers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uniquely identifies the resource or object.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated settings for the phone number",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneNumberUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrievePhoneNumberResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/phone_numbers/{id}/voice": {
+      "get": {
+        "summary": "Retrieve the voice settings for a phone number",
+        "operationId": "retrievePhoneNumberVoice",
+        "tags": [
+          "Phone Numbers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uniquely identifies the resource or object.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrievePhoneNumberVoiceResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update the voice settings for a phone number",
+        "operationId": "updatePhoneNumberVoice",
+        "tags": [
+          "Phone Numbers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uniquely identifies the resource or object.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated voice settings for the phone number",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoiceUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrievePhoneNumberVoiceResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/phone_numbers/{id}/messaging": {
+      "get": {
+        "summary": "Retrieve the messaging settings for a phone number",
+        "operationId": "retrievePhoneNumberMessagingSettings",
+        "tags": [
+          "Phone Numbers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uniquely identifies the resource or object.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveMessagingSettingsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update the messaging settings for a phone number",
+        "operationId": "updatePhoneNumberMessagingSettings",
+        "tags": [
+          "Phone Numbers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uniquely identifies the resource or object.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated messaging settings for the phone number",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessagingPhoneNumberUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveMessagingSettingsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/phone_numbers/messaging": {
+      "get": {
+        "summary": "List all phone numbers' messaging settings",
+        "operationId": "listPhoneNumberMessagingSettings",
+        "tags": [
+          "Phone Numbers"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListMessagingSettingsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -5040,6 +5583,421 @@
         "example": {
           "result": "ok"
         }
+      },
+      "SIMCard": {
+        "type": "object",
+        "title": "SIMCard",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Uniquely identifies the resource or object.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "record_type": {
+            "type": "string",
+            "description": "Identifies the type of the resource.",
+            "example": "sim_card"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "activating",
+              "active",
+              "inactivating",
+              "inactive",
+              "data_limit_exceeded"
+            ],
+            "description": "The current status of the SIM card. It will be one of: <br/>\n<ul>\n  <li><code>activating</code> - the card is being activated</li>\n  <li><code>active</code> - the card is active and ready for use</li>\n  <li><code>inactivating</code> - the card is being inactivated</li>\n  <li><code>inactive</code> - the card has been inactivated and cannot be used</li>\n  <li><code>data_limit_exceeded</code> - the card has exceeded its data consumption limit</li>\n</ul>\nTransitioning between the active and inactive states may take a period of time.\n",
+            "example": "active"
+          },
+          "iccid": {
+            "type": "string",
+            "description": "The ICCID is the identifier of the specific SIM card/chip. Each SIM is internationally identified by its integrated circuit card identifier (ICCID). ICCIDs are stored in the SIM card's memory and are also engraved or printed on the SIM card body during a process called personalization.\n",
+            "example": "89310410106543789301"
+          },
+          "imsi": {
+            "type": "string",
+            "description": "SIM cards are identified on their individual operator networks by a unique International Mobile Subscriber Identity (IMSI). <br/>\nMobile network operators connect mobile phone calls and communicate with their market SIM cards using their IMSIs. The IMSI is stored in the Subscriber Identity Module (SIM) inside the phone and is sent by the phone to the appropriate network. It is used to acquire the details of the mobile in the Home Location Register (HLR) or the Visitor Location Register (VLR).\n",
+            "example": "081932214823362973"
+          },
+          "msisdn": {
+            "type": "string",
+            "description": "Mobile Station International Subscriber Directory Number (MSISDN) is a number used to identify a mobile phone number internationally. <br/>\nMSISDN is defined by the E.164 numbering plan. It includes a country code and a National Destination Code which identifies the subscriber's operator.\n",
+            "example": "+13109976224"
+          },
+          "ipv4": {
+            "type": "string",
+            "description": "The SIM's address in the currently connected network. This IPv4 address is usually obtained dynamically so it may vary according to the location or new connections.\n",
+            "example": "192.168.0.0"
+          },
+          "ipv6": {
+            "type": "string",
+            "description": "The SIM's address in the currently connected network. This IPv6 address is usually obtained dynamically so it may vary according to the location or new connections.\n",
+            "example": "2001:cdba:0000:0000:0000:0000:3257:9652"
+          },
+          "sim_card_group_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The group SIMCardGroup identification. This attribute can be <code>null</code> when it's present in an associated resource.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Searchable tags associated with the SIM card",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "personal",
+              "customers",
+              "active-customers"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:2520:27.521Z"
+          }
+        }
+      },
+      "SimpleSIMCard": {
+        "type": "object",
+        "title": "SIMCard",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Uniquely identifies the resource or object.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "record_type": {
+            "type": "string",
+            "description": "Identifies the type of the resource.",
+            "example": "sim_card"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "activating",
+              "active",
+              "inactivating",
+              "inactive",
+              "data_limit_exceeded"
+            ],
+            "description": "The current status of the SIM card. It will be one of: <br/>\n<ul>\n  <li><code>activating</code> - the card is being activated</li>\n  <li><code>active</code> - the card is active and ready for use</li>\n  <li><code>inactivating</code> - the card is being inactivated</li>\n  <li><code>inactive</code> - the card has been inactivated and cannot be used</li>\n  <li><code>data_limit_exceeded</code> - the card has exceeded its data consumption limit</li>\n</ul>\nTransitioning between the active and inactive states may take a period of time.\n",
+            "example": "active"
+          },
+          "iccid": {
+            "type": "string",
+            "description": "The ICCID is the identifier of the specific SIM card/chip. Each SIM is internationally identified by its integrated circuit card identifier (ICCID). ICCIDs are stored in the SIM card's memory and are also engraved or printed on the SIM card body during a process called personalization.\n",
+            "example": "89310410106543789301"
+          },
+          "imsi": {
+            "type": "string",
+            "description": "SIM cards are identified on their individual operator networks by a unique International Mobile Subscriber Identity (IMSI). <br/>\nMobile network operators connect mobile phone calls and communicate with their market SIM cards using their IMSIs. The IMSI is stored in the Subscriber Identity Module (SIM) inside the phone and is sent by the phone to the appropriate network. It is used to acquire the details of the mobile in the Home Location Register (HLR) or the Visitor Location Register (VLR).\n",
+            "example": "081932214823362973"
+          },
+          "msisdn": {
+            "type": "string",
+            "description": "Mobile Station International Subscriber Directory Number (MSISDN) is a number used to identify a mobile phone number internationally. <br/>\nMSISDN is defined by the E.164 numbering plan. It includes a country code and a National Destination Code which identifies the subscriber's operator.\n",
+            "example": "+13109976224"
+          },
+          "sim_card_group_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The group SIMCardGroup identification. This attribute can be <code>null</code> when it's present in an associated resource.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Searchable tags associated with the SIM card",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "personal",
+              "customers",
+              "active-customers"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:2520:27.521Z"
+          }
+        }
+      },
+      "PhoneNumberResponse": {
+        "type": "object",
+        "example": {
+          "id": "86f58db9-0fe3-4adc-9d1f-46e66e6e9323",
+          "record_type": "phone_number",
+          "phone_number": "+19705555098",
+          "status": "active",
+          "tags": [
+            "tag_1",
+            "tag_2"
+          ],
+          "address_id": "dc8f39ac-953d-4520-b93b-786ae87db0da",
+          "external_pin": "1234",
+          "connection_id": "44f82b2f-2eb2-443d-95dd-370d7e826f2c",
+          "connection_name": "connection-name",
+          "messaging_enabled": true,
+          "messaging_profile_id": "abc85f64-5717-4562-b3fc-2c9600000000",
+          "billing_group_id": "86f58db9-0fe3-4adc-9d1f-46e66e6e9323",
+          "emergency_enabled": true,
+          "call_forwarding_enabled": true,
+          "cnam_listing_enabled": true,
+          "caller_id_name_enabled": true,
+          "call_recording_enabled": true,
+          "created_at": "2019-10-23T18:10:00.000Z",
+          "updated_at": "2019-10-24T18:10:00.000Z"
+        },
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identifies the phone number.",
+            "readOnly": true
+          },
+          "record_type": {
+            "type": "string",
+            "example": "phone_number",
+            "description": "Identifies the type of the resource.",
+            "readOnly": true
+          },
+          "phone_number": {
+            "type": "string",
+            "description": "The +E.164-formatted phone number associated with this record",
+            "readOnly": true
+          },
+          "status": {
+            "type": "string",
+            "description": "The phone number's current status",
+            "enum": [
+              "purchase-pending",
+              "purchase-failed",
+              "port-pending",
+              "port-failed",
+              "active",
+              "deleted",
+              "emergency-only",
+              "ported-out",
+              "port-out-pending"
+            ],
+            "readOnly": true
+          },
+          "tags": {
+            "type": "array",
+            "description": "A list of user-assigned tags to help manage the phone number.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "address_id": {
+            "type": "string",
+            "description": "Identifies the address associated with the phone number.",
+            "readOnly": true
+          },
+          "external_pin": {
+            "type": "string",
+            "description": "If someone attempts to port your phone number away from Telnyx and\n            your phone number has an external PIN set, Telnyx will attempt to verify that you provided\n            the correct external PIN to the winning carrier. Note that not all carriers\n            cooperate with this security mechanism."
+          },
+          "connection_name": {
+            "type": "string",
+            "description": "The user-assigned name of the connection to be associated with this phone number.",
+            "readOnly": true
+          },
+          "connection_id": {
+            "type": "string",
+            "description": "Identifies the connection associated with the phone number."
+          },
+          "messaging_enabled": {
+            "type": "boolean",
+            "description": "Indicates whether messaging services are enabled for this number.",
+            "readOnly": true
+          },
+          "messaging_profile_id": {
+            "type": "string",
+            "description": "Identifies the messaging profile associated with the phone number."
+          },
+          "billing_group_id": {
+            "type": "string",
+            "description": "Identifies the billing group associated with the phone number."
+          },
+          "emergency_enabled": {
+            "type": "boolean",
+            "description": "Indicates whether emergency services are enabled for this number.",
+            "readOnly": true
+          },
+          "call_forwarding_enabled": {
+            "type": "boolean",
+            "description": "Indicates whether call forwarding is enabled for this number.",
+            "readOnly": true
+          },
+          "cnam_listing_enabled": {
+            "type": "boolean",
+            "description": "Indicates whether a CNAM listing is enabled for this number.",
+            "readOnly": true
+          },
+          "caller_id_name_enabled": {
+            "type": "boolean",
+            "description": "Indicates whether caller ID is enabled for this number.",
+            "readOnly": true
+          },
+          "call_recording_enabled": {
+            "type": "boolean",
+            "description": "Indicates whether call recording is enabled for this number.",
+            "readOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "readOnly": true
+          }
+        }
+      },
+      "PhoneNumberUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Uniquely identifies the resource or object.",
+            "readOnly": true
+          },
+          "tags": {
+            "type": "array",
+            "description": "A list of user-assigned tags to help organize phone numbers.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "address_id": {
+            "type": "string",
+            "description": "Specifies the address to associate with the phone number."
+          },
+          "external_pin": {
+            "type": "string",
+            "description": "If someone attempts to port your phone number away from Telnyx and\n              your phone number has an external PIN set, we will attempt to verify that you provided\n              the correct external PIN to the winning carrier. Note that not all carriers\n              cooperate with this security mechanism."
+          },
+          "connection_id": {
+            "type": "string",
+            "description": "Identifies the connection associated with the phone number."
+          },
+          "billing_group_id": {
+            "type": "string",
+            "description": "Identifies the billing group associated with the phone number."
+          }
+        }
+      },
+      "PhoneNumberVoice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+            "description": "Uniquely identifies the resource or object.",
+            "readOnly": true
+          },
+          "record_type": {
+            "type": "string",
+            "example": "voice_settings",
+            "description": "Identifies the type of the resource.",
+            "readOnly": true
+          },
+          "connection_id": {
+            "type": "string",
+            "example": "1d0e6cb8-8668-462e-94c6-49ae0f0ed48b",
+            "description": "Identifies the connection associated with this phone number."
+          },
+          "tech_prefix_enabled": {
+            "type": "boolean",
+            "default": false,
+            "example": false,
+            "description": "Controls whether a tech prefix is enabled for this phone number."
+          },
+          "translated_number": {
+            "type": "string",
+            "example": "+13035559999",
+            "default": "",
+            "description": "This field allows you to rewrite the destination number of an inbound call before the call is routed to you. The value of this field may be any alphanumeric value, and the value will replace the number originally dialed."
+          },
+          "call_forwarding": {
+            "$ref": "#/components/schemas/CallForwarding"
+          },
+          "cnam_listing": {
+            "$ref": "#/components/schemas/CNAMListing"
+          },
+          "emergency": {
+            "$ref": "#/components/schemas/Emergency"
+          },
+          "usage_payment_method": {
+            "type": "string",
+            "enum": [
+              "pay-per-minute",
+              "channel"
+            ],
+            "default": "pay-per-minute",
+            "example": "pay-per-minute",
+            "description": "Controls whether a number is billed per minute or uses your concurrent channels."
+          },
+          "media_features": {
+            "$ref": "#/components/schemas/MediaFeatures"
+          },
+          "call_recording": {
+            "$ref": "#/components/schemas/CallRecording"
+          }
+        }
+      },
+      "VoiceUpdate": {
+        "type": "object",
+        "properties": {
+          "tech_prefix_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Controls whether a tech prefix is enabled for this phone number."
+          },
+          "translated_number": {
+            "type": "string",
+            "description": "This field allows you to rewrite the destination number of an inbound call before the call is routed to you. The value of this field may be any alphanumeric value, and the value will replace the number originally dialed."
+          },
+          "call_forwarding": {
+            "$ref": "#/components/schemas/CallForwarding"
+          },
+          "cnam_listing": {
+            "$ref": "#/components/schemas/CNAMListing"
+          },
+          "usage_payment_method": {
+            "type": "string",
+            "enum": [
+              "pay-per-minute",
+              "channel"
+            ],
+            "default": "pay-per-minute",
+            "description": "Controls whether a number is billed per minute or uses your concurrent channels."
+          },
+          "media_features": {
+            "$ref": "#/components/schemas/MediaFeatures"
+          },
+          "call_recording": {
+            "$ref": "#/components/schemas/CallRecording"
+          }
+        }
       }
     },
     "responses": {
@@ -5668,6 +6626,175 @@
               "properties": {
                 "data": {
                   "$ref": "#/components/schemas/ConferenceCommandResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SearchSimCardsResponse": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimpleSIMCard"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetSimCardResponse": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/SIMCard"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateSimCardResponse": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/SIMCard"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DeactivateSimCardResponse": {
+        "description": "Successful response"
+      },
+      "UnprocessableEntity": {
+        "description": "Unprocessable entity. Check the 'detail' field in response for details."
+      },
+      "ActivateSimCardResponse": {
+        "description": "Successful response"
+      },
+      "RegisterSimCardsResponse": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "description": "Successfully registered SIM cards.",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimpleSIMCard"
+                  }
+                },
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListPhoneNumbersResponse": {
+        "description": "A paginated array of PhoneNumbers.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PhoneNumberResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrievePhoneNumberResponse": {
+        "description": "The details for a single phone number.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/PhoneNumberResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrievePhoneNumberVoiceResponse": {
+        "description": "The voice attributes and information for a phone number.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/PhoneNumberVoice"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListMessagingSettingsResponse": {
+        "description": "A paginated array of the phone numbers",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessagingSettings"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveMessagingSettingsResponse": {
+        "description": "Expected phone number response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/MessagingSettings"
                 }
               }
             }
