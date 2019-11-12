@@ -2218,6 +2218,17 @@
             }
           }
         ],
+        "requestBody": {
+          "description": "Updated sim card",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SIMCardUpdate"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "$ref": "#/components/responses/UpdateSimCardResponse"
@@ -2241,6 +2252,16 @@
             "$ref": "#/components/parameters/WirelessId"
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
         "responses": {
           "202": {
             "$ref": "#/components/responses/ActivateSimCardResponse"
@@ -2267,12 +2288,93 @@
             "$ref": "#/components/parameters/WirelessId"
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
         "responses": {
           "202": {
             "$ref": "#/components/responses/DeactivateSimCardResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/actions/register/sim_cards": {
+      "post": {
+        "summary": "Register SIM cards",
+        "description": "Register the SIM cards associated with the provided registration codes to the current user's account.<br/><br/>\nIf <code>sim_card_group_id</code> is provided, the SIM cards will be associated with that group. Otherwise, the default group for the current user, which is associated with the default free data plan, will be used.<br/><br/>\n",
+        "operationId": "SimCardRegister",
+        "tags": [
+          "SIM Cards"
+        ],
+        "parameters": [
+          {
+            "name": "registration_codes",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "0000000001",
+                "0000000002",
+                "0000000003"
+              ]
+            }
+          },
+          {
+            "name": "sim_card_group_id",
+            "description": "The ID of the SIM card group to which attach the SIM cards.",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+            }
+          },
+          {
+            "name": "tags",
+            "description": "The list of tags for SIM cards.",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "personal",
+                "customers",
+                "active-customers"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RegisterSimCardsResponse"
           }
         }
       }
@@ -3186,6 +3288,10 @@
           }
         }
       },
+      "Empty": {
+        "type": "string",
+        "example": ""
+      },
       "MessagingFeatureSet": {
         "type": "object",
         "nullable": true,
@@ -3637,9 +3743,9 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "messaging_phone_number",
+            "example": "messaging_settings",
             "enum": [
-              "messaging_phone_number"
+              "messaging_settings"
             ],
             "description": "Identifies the type of the resource."
           },
@@ -5829,6 +5935,103 @@
             "description": "ISO 8601 formatted date indicating when the resource was updated.",
             "example": "2018-02-02T22:2520:27.521Z"
           }
+        },
+        "example": {
+          "id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
+          "record_type": "sim_card",
+          "status": "active",
+          "iccid": "89310410106543789301",
+          "imsi": "081932214823362973",
+          "msisdn": "+13109976224",
+          "ipv4": "192.168.0.0",
+          "ipv6": "2001:cdba:0000:0000:0000:0000:3257:9652",
+          "sim_card_group_id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
+          "tags": [
+            "personal"
+          ],
+          "created_at": "2018-02-02T22:25:27.521Z",
+          "updated_at": "2018-02-02T22:2520:27.521Z"
+        }
+      },
+      "SIMCardUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Uniquely identifies the resource or object.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "record_type": {
+            "type": "string",
+            "description": "Identifies the type of the resource.",
+            "example": "sim_card"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "activating",
+              "active",
+              "inactivating",
+              "inactive",
+              "data_limit_exceeded"
+            ],
+            "description": "The current status of the SIM card. It will be one of: <br/>\n<ul>\n  <li><code>activating</code> - the card is being activated</li>\n  <li><code>active</code> - the card is active and ready for use</li>\n  <li><code>inactivating</code> - the card is being inactivated</li>\n  <li><code>inactive</code> - the card has been inactivated and cannot be used</li>\n  <li><code>data_limit_exceeded</code> - the card has exceeded its data consumption limit</li>\n</ul>\nTransitioning between the active and inactive states may take a period of time.\n",
+            "example": "active"
+          },
+          "iccid": {
+            "type": "string",
+            "description": "The ICCID is the identifier of the specific SIM card/chip. Each SIM is internationally identified by its integrated circuit card identifier (ICCID). ICCIDs are stored in the SIM card's memory and are also engraved or printed on the SIM card body during a process called personalization.\n",
+            "example": "89310410106543789301"
+          },
+          "imsi": {
+            "type": "string",
+            "description": "SIM cards are identified on their individual operator networks by a unique International Mobile Subscriber Identity (IMSI). <br/>\nMobile network operators connect mobile phone calls and communicate with their market SIM cards using their IMSIs. The IMSI is stored in the Subscriber Identity Module (SIM) inside the phone and is sent by the phone to the appropriate network. It is used to acquire the details of the mobile in the Home Location Register (HLR) or the Visitor Location Register (VLR).\n",
+            "example": "081932214823362973"
+          },
+          "msisdn": {
+            "type": "string",
+            "description": "Mobile Station International Subscriber Directory Number (MSISDN) is a number used to identify a mobile phone number internationally. <br/>\nMSISDN is defined by the E.164 numbering plan. It includes a country code and a National Destination Code which identifies the subscriber's operator.\n",
+            "example": "+13109976224"
+          },
+          "ipv4": {
+            "type": "string",
+            "description": "The SIM's address in the currently connected network. This IPv4 address is usually obtained dynamically so it may vary according to the location or new connections.\n",
+            "example": "192.168.0.0"
+          },
+          "ipv6": {
+            "type": "string",
+            "description": "The SIM's address in the currently connected network. This IPv6 address is usually obtained dynamically so it may vary according to the location or new connections.\n",
+            "example": "2001:cdba:0000:0000:0000:0000:3257:9652"
+          },
+          "sim_card_group_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The group SIMCardGroup identification. This attribute can be <code>null</code> when it's present in an associated resource.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Searchable tags associated with the SIM card",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "personal",
+              "customers",
+              "active-customers"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:2520:27.521Z"
+          }
         }
       },
       "SimpleSIMCard": {
@@ -5901,6 +6104,20 @@
             "description": "ISO 8601 formatted date indicating when the resource was updated.",
             "example": "2018-02-02T22:2520:27.521Z"
           }
+        },
+        "example": {
+          "id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
+          "record_type": "sim_card",
+          "status": "active",
+          "iccid": "89310410106543789301",
+          "imsi": "081932214823362973",
+          "msisdn": "+13109976224",
+          "sim_card_group_id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
+          "tags": [
+            "recent"
+          ],
+          "created_at": "2018-02-02T22:25:27.521Z",
+          "updated_at": "2018-02-02T22:2520:27.521Z"
         }
       },
       "PhoneNumberResponse": {
@@ -7036,13 +7253,49 @@
         }
       },
       "DeactivateSimCardResponse": {
-        "description": "Successful response"
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
       },
       "UnprocessableEntity": {
-        "description": "Unprocessable entity. Check the 'detail' field in response for details."
+        "description": "Unprocessable entity. Check the 'detail' field in response for details.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            }
+          }
+        }
       },
       "ActivateSimCardResponse": {
-        "description": "Successful response"
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
       },
       "RegisterSimCardsResponse": {
         "description": "Successful response",
