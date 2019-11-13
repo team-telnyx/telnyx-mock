@@ -153,18 +153,23 @@ func (s *StubServer) HandleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, ok := route.operation.Responses["200"]
-
-	if !ok {
-		response201, ok := route.operation.Responses["201"]
-		if !ok {
-			fmt.Printf("Couldn't find 200 response in spec\n")
-			writeResponse(w, r, start, http.StatusInternalServerError,
-				createInternalServerError())
-			return
+	var (
+		response spec.Response
+		ok       bool
+	)
+	for _, code := range []spec.StatusCode{"200", "201", "202"} {
+		response, ok = route.operation.Responses[code]
+		if ok {
+			break
 		}
-		response = response201
 	}
+	if !ok {
+		fmt.Printf("Couldn't find 200 response in spec\n")
+		writeResponse(w, r, start, http.StatusInternalServerError,
+			createInternalServerError())
+		return
+	}
+
 	responseName := strings.SplitAfterN(response.Ref, "#/components/responses/", 2)
 	responseObject, ok := s.spec.Components.Responses[responseName[1]]
 	responseContent, ok := responseObject.Content["application/json"]
