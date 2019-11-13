@@ -383,9 +383,11 @@ func TestValidFixtures(t *testing.T) {
 func TestResourcesCanBeGenerated(t *testing.T) {
 	for url, operations := range realSpec.Paths {
 		for method, operation := range operations {
-			ref := operation.Responses[spec.StatusCode("200")].Ref
-			if ref == "" {
-				ref = operation.Responses[spec.StatusCode("201")].Ref
+			ref := ""
+			for _, code := range []spec.StatusCode{"200", "201", "202"} {
+				if ref = operation.Responses[code].Ref; ref != "" {
+					break
+				}
 			}
 			responseName := strings.SplitAfterN(ref, "#/components/responses/", 2)
 			responseObject, _ := realSpec.Components.Responses[responseName[1]]
