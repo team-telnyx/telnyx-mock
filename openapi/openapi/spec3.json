@@ -2590,6 +2590,32 @@
             "$ref": "#/components/responses/GenericErrorResponse"
           }
         }
+      },
+      "delete": {
+        "summary": "Delete a phone number",
+        "operationId": "deletePhoneNumber",
+        "tags": [
+          "Phone Numbers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifies the type of resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DeletePhoneNumberResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
       }
     },
     "/phone_numbers/{id}/voice": {
@@ -2732,6 +2758,80 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/ListMessagingSettingsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/phone_numbers/voice": {
+      "get": {
+        "summary": "List voice settings for multiple phone numbers",
+        "operationId": "findPhoneNumberVoices",
+        "tags": [
+          "Phone Numbers"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          },
+          {
+            "name": "filter[phone_number]",
+            "in": "query",
+            "description": "Filter by phone number. Requires at least three digits.\n             Non-numerical characters will result in no values being returned.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[connection_name][contains]",
+            "in": "query",
+            "description": "Filter contains connection name. Requires at least three characters",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "test"
+            }
+          },
+          {
+            "name": "filter[usage_payment_method]",
+            "in": "query",
+            "description": "Filter by usage_payment_method.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pay-per-minute",
+                "channel"
+              ],
+              "example": "channel"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Specifies the sort order for results. If not given, results are sorted by created_at in descending order",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "purchased_at",
+                "phone_number",
+                "connection_name",
+                "usage_payment_method"
+              ],
+              "example": "connection_name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListPhoneNumberVoicesResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -7355,6 +7455,21 @@
           }
         }
       },
+      "DeletePhoneNumberResponse": {
+        "description": "The details for the phone number that was just deleted.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/PhoneNumberResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "RetrievePhoneNumberVoiceResponse": {
         "description": "The voice attributes and information for a phone number.",
         "content": {
@@ -7364,6 +7479,24 @@
               "properties": {
                 "data": {
                   "$ref": "#/components/schemas/PhoneNumberVoice"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListPhoneNumberVoicesResponse": {
+        "description": "A paginated array of phone number voice information.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PhoneNumberVoice"
+                  }
                 }
               }
             }
