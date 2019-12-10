@@ -6835,6 +6835,7 @@
           "deleted_at": {
             "type": "string",
             "format": "date-time",
+            "nullable": true,
             "description": "ISO 8601 formatted date indicating when the resource was removed."
           }
         },
