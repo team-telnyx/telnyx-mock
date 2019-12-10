@@ -78,6 +78,10 @@
     {
       "name": "SIM Cards",
       "description": "SIM Cards operations"
+    },
+    {
+      "name": "Billing Groups",
+      "description": "Billing groups operations"
     }
   ],
   "paths": {
@@ -2832,6 +2836,130 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/ListPhoneNumberVoicesResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/billing_groups": {
+      "get": {
+        "summary": "List all billing groups",
+        "operationId": "listBillingGroups",
+        "tags": [
+          "Billing Groups"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListBillingGroupsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a billing group",
+        "operationId": "createBillingGroup",
+        "tags": [
+          "Billing Groups"
+        ],
+        "requestBody": {
+          "description": "New billing group object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewBillingGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateBillingGroupResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/billing_groups/{id}": {
+      "get": {
+        "summary": "Retrieve a billing group",
+        "operationId": "retrieveBillingGroup",
+        "tags": [
+          "Billing Groups"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BillingGroupId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveBillingGroupResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a billing group",
+        "operationId": "updateBillingGroup",
+        "tags": [
+          "Billing Groups"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BillingGroupId"
+          }
+        ],
+        "requestBody": {
+          "description": "Update billing group object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBillingGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UpdateBillingGroupResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a billing group",
+        "operationId": "deleteBillingGroup",
+        "tags": [
+          "Billing Groups"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BillingGroupId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DeleteBillingGroupResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -6667,6 +6795,75 @@
             "example": "single"
           }
         }
+      },
+      "BillingGroup": {
+        "type": "object",
+        "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "billing_group",
+            "enum": [
+              "billing_group"
+            ],
+            "description": "Identifies the type of the resource."
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifies the type of resource."
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the organization that owns the resource."
+          },
+          "name": {
+            "type": "string",
+            "format": "string",
+            "description": "A name for the billing group"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was created."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 formatted date indicating when the resource was updated."
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "ISO 8601 formatted date indicating when the resource was removed."
+          }
+        },
+        "example": {
+          "record_type": "billing_group",
+          "id": "f5586561-8ff0-4291-a0ac-84fe544797bd",
+          "organization_id": "f1486bae-f067-460c-ad43-73a92848f902",
+          "name": "My billing group name",
+          "created_at": "2019-10-15T10:07:15.527Z",
+          "updated_at": "2019-10-15T10:07:15.527Z",
+          "deleted_at": null
+        }
+      },
+      "NewBillingGroup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A name for the billing group"
+          }
+        }
+      },
+      "UpdateBillingGroup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A name for the billing group"
+          }
+        }
       }
     },
     "responses": {
@@ -7538,6 +7735,87 @@
             }
           }
         }
+      },
+      "ListBillingGroupsResponse": {
+        "description": "A paginated array of billing groups",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BillingGroup"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateBillingGroupResponse": {
+        "description": "Expected billing group response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/BillingGroup"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateBillingGroupResponse": {
+        "description": "Expected billing group response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/BillingGroup"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DeleteBillingGroupResponse": {
+        "description": "Expected billing group response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/BillingGroup"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveBillingGroupResponse": {
+        "description": "Expected billing group response to a valid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/BillingGroup"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "parameters": {
@@ -7654,6 +7932,16 @@
           "format": "uuid",
           "type": "string",
           "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+        }
+      },
+      "BillingGroupId": {
+        "name": "id",
+        "in": "path",
+        "description": "The id of the billing group",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
