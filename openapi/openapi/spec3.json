@@ -82,6 +82,22 @@
     {
       "name": "Billing Groups",
       "description": "Billing groups operations"
+    },
+    {
+      "name": "IP Connections",
+      "description": "IP connection operations"
+    },
+    {
+      "name": "Credential Connections",
+      "description": "Credential connection operations"
+    },
+    {
+      "name": "IPs",
+      "description": "IP operations"
+    },
+    {
+      "name": "FQDN Connections",
+      "description": "FQDN connection operations"
     }
   ],
   "paths": {
@@ -2966,6 +2982,709 @@
           }
         }
       }
+    },
+    "/ip_connections": {
+      "get": {
+        "description": "Returns a list of your connections.",
+        "summary": "List all connections",
+        "operationId": "findConnections",
+        "tags": [
+          "IP Connections"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          },
+          {
+            "$ref": "#/components/parameters/FilterConnectionName"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetAllIPConnectionResponse"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      },
+      "post": {
+        "description": "Creates an IP connection.",
+        "summary": "Creates an IP connection",
+        "operationId": "CreateIPConnection",
+        "tags": [
+          "IP Connections"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "description": "Parameters that can be defined during IP connection creation",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IPConnectionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IPConnectionResponse"
+          },
+          "422": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/ip_connections/{id}": {
+      "get": {
+        "description": "Retrieves the details of an existing ip connection.",
+        "summary": "Retrieve a connection",
+        "operationId": "getIPConnection",
+        "tags": [
+          "IP Connections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "IP Connection ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IPConnectionResponse"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "422": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "patch": {
+        "description": "Updates settings of an existing IP connection.",
+        "summary": "Updates an IP connection",
+        "operationId": "UpdateIPConnection",
+        "tags": [
+          "IP Connections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifies the type of resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Parameters that can be updated in a IP connection",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IPConnectionUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IPConnectionResponse"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "422": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes an existing IP connection.",
+        "summary": "Deletes an IP connection",
+        "operationId": "DeleteIPConnection",
+        "tags": [
+          "IP Connections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifies the type of resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IPConnectionResponse"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "422": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/credential_connections/{id}": {
+      "get": {
+        "description": "Retrieves the details of an existing credential connection.",
+        "summary": "Retrieve a connection",
+        "operationId": "getCredentialConnection",
+        "tags": [
+          "Credential Connections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifies the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CredentialConnectionResponse"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      },
+      "patch": {
+        "description": "Updates settings of an existing credential connection.",
+        "summary": "Updates a credential connection",
+        "operationId": "UpdateCredentialConnection",
+        "tags": [
+          "Credential Connections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifies the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Parameters that can be updated in a credential connection",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CredentialConnectionUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CredentialConnectionResponse"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "422": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes an existing credential connection.",
+        "summary": "Deletes a credential connection",
+        "operationId": "DeleteCredentialConnection",
+        "tags": [
+          "Credential Connections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifies the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CredentialConnectionResponse"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "422": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/credential_connections": {
+      "get": {
+        "description": "Returns a list of your credential connections.",
+        "summary": "List all credential connections",
+        "operationId": "findCredentialConnections",
+        "tags": [
+          "Credential Connections"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          },
+          {
+            "$ref": "#/components/parameters/FilterConnectionName"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetAllCredentialConnectionResponse"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a credential connection.",
+        "summary": "Creates a credential connection",
+        "operationId": "CreateCredentialConnection",
+        "tags": [
+          "Credential Connections"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "description": "Parameters that can be defined during credential connection creation",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CredentialConnectionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CredentialConnectionResponse"
+          },
+          "422": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/ips": {
+      "get": {
+        "summary": "Get all IPs",
+        "description": "Get all IPs belonging to the user that match the given filters.",
+        "operationId": "IPsGet",
+        "tags": [
+          "IPs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          },
+          {
+            "name": "filter[connection_id]",
+            "description": "ID of the IPConnection to which this IP should be attached.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[ip_address]",
+            "description": "IP adddress represented by this resource.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "192.168.0.0"
+            }
+          },
+          {
+            "name": "filter[port]",
+            "description": "Port to use when connecting to this IP.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 5060
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IPSearchSuccessfulResponse"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new IP object.",
+        "summary": "Create an IP",
+        "operationId": "addIP",
+        "tags": [
+          "IPs"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IPWritableSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IPSuccessfulResponse"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/ips/{id}": {
+      "get": {
+        "description": "Return the details regarding a specific IP.",
+        "summary": "Get IP",
+        "operationId": "getIPDetails",
+        "tags": [
+          "IPs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IPId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IPSuccessfulResponse"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "patch": {
+        "description": "Update the details of a specific IP.",
+        "summary": "Update IP",
+        "operationId": "updateIP",
+        "tags": [
+          "IPs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IPId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IPWritableSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IPSuccessfulResponse"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete an IP.",
+        "summary": "Delete an IP",
+        "operationId": "deleteIP",
+        "tags": [
+          "IPs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IPId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IPSuccessfulResponse"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/fqdn_connections": {
+      "get": {
+        "description": "Returns a list of your FQDN connections.",
+        "summary": "List all FQDN connections",
+        "operationId": "findFQDNConnections",
+        "tags": [
+          "FQDN Connections"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          },
+          {
+            "$ref": "#/components/parameters/FilterConnectionName"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetAllFQDNConnectionResponse"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a FQDN connection.",
+        "summary": "Creates an FQDN connection",
+        "operationId": "CreateFQDNConnection",
+        "tags": [
+          "FQDN Connections"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "description": "Parameters that can be defined during FQDN connection creation",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FQDNConnectionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FQDNConnectionResponse"
+          },
+          "422": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/fqdn_connections/{id}": {
+      "get": {
+        "description": "Retrieves the details of an existing FQDN connection.",
+        "summary": "Retrieve a connection",
+        "operationId": "getFQDNConnection",
+        "tags": [
+          "FQDN Connections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "FQDN Connection ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FQDNConnectionResponse"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "422": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "patch": {
+        "description": "Updates settings of an existing FQDN connection.",
+        "summary": "Update a FQDN connection",
+        "operationId": "UpdateFQDNConnection",
+        "tags": [
+          "FQDN Connections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "FQDN Connection ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Parameters that can be updated in a FQDN connection",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FQDNConnectionUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FQDNConnectionResponse"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "422": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "delete": {
+              "description": "Deletes an FQDN connection.",
+              "summary": "Deletes an FQDN connection",
+              "operationId": "DeleteFQDNConnection",
+              "tags": [
+                  "FQDN Connections"
+              ],
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "path",
+                      "description": "FQDN Connection ID",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "$ref": "#/components/responses/FQDNConnectionResponse"
+                  },
+                  "401": {
+                      "description": "Unauthorized"
+                  },
+                  "404": {
+                      "description": "Resource not found"
+                  },
+                  "422": {
+                      "description": "Bad request"
+                  }
+              }
+       }
     }
   },
   "components": {
@@ -6864,6 +7583,2089 @@
             "description": "A name for the billing group"
           }
         }
+      },
+      "PaginationMetaSimple": {
+        "type": "object",
+        "properties": {
+          "page_number": {
+            "type": "integer",
+            "example": 2
+          },
+          "page_size": {
+            "type": "integer",
+            "example": 25
+          },
+          "total_pages": {
+            "type": "integer",
+            "example": 3
+          },
+          "total_results": {
+            "type": "integer",
+            "example": 55
+          }
+        }
+      },
+      "IPConnection": {
+        "type": "object",
+        "title": "IP Connection",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifies the type of resource.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "record_type": {
+            "type": "string",
+            "description": "Identifies the type of the resource.",
+            "example": "ip_connection"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Defaults to true"
+          },
+          "anchorsite_override": {
+            "type": "string",
+            "enum": [
+              "Latency",
+              "Chicago, IL",
+              "Ashburn, VA",
+              "San Jose, CA",
+              "Sydney, Australia",
+              "Amsterdam, Netherlands",
+              "London, UK",
+              "Toronto, Canada",
+              "Vancouver, Canada"
+            ],
+            "description": "`Latency` directs Telnyx to route media through the site with the lowest round-trip time to the user's connection. Telnyx calculates this time using ICMP ping messages. This can be disabled by specifying a site to handle all media.\n"
+          },
+          "connection_name": {
+            "type": "string"
+          },
+          "sip_uri_calling_preference": {
+            "type": "string",
+            "default": "disabled",
+            "description": "This feature enables inbound SIP URI calls to your Credential Auth Connection. If enabled for all (unrestricted) then anyone who calls the SIP URI <your-username>@telnyx.com will be connected to your Connection. You can also choose to allow only calls that are originated on any Connections under your account (internal).\n",
+            "enum": [
+              "disabled",
+              "unrestricted",
+              "internal"
+            ]
+          },
+          "transport_protocol": {
+            "type": "string",
+            "description": "One of UDP, TLS, or TCP. Applies only to connections with IP authentication or FQDN authentication.\n",
+            "default": "UDP",
+            "enum": [
+              "UDP",
+              "TCP",
+              "TLS"
+            ]
+          },
+          "default_on_hold_comfort_noise_enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "When enabled, Telnyx will generate comfort noise when you place the call on hold. If disabled, you will need to generate comfort noise or on hold music to avoid RTP timeout.\n"
+          },
+          "dtmf_type": {
+            "type": "string",
+            "enum": [
+              "RFC 2833",
+              "Inband",
+              "SIP INFO"
+            ],
+            "default": "RFC 2833",
+            "description": "Sets the type of DTMF digits sent from Telnyx to this Connection. Note that DTMF digits sent to Telnyx will be accepted in all formats.\n"
+          },
+          "encode_contact_header_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Encode the SIP contact header sent by Telnyx to avoid issues for NAT or ALG scenarios.\n"
+          },
+          "encrypted_media": {
+            "type": "string",
+            "enum": [
+              "SRTP",
+              "ZRTP"
+            ],
+            "description": "Enable use of SRTP or ZRTP for encryption. Valid values are those listed or null. Cannot be set to non-null if the transport_portocol is TLS.\n"
+          },
+          "onnet_t38_passthrough_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable on-net T38 if you prefer the sender and receiver negotiating T38 directly if both are on the Telnyx network. If this is disabled, Telnyx will be able to use T38 on just one leg of the call depending on each leg's settings.\n"
+          },
+          "rtcp_settings": {
+            "$ref": "#/components/schemas/ConnectionRTCPSettings"
+          },
+          "last_registered_ip": {
+            "type": "string",
+            "description": "IP from the last successful registration attempt.",
+            "example": "192.0.2.1"
+          },
+          "sip_reply_code": {
+            "type": "integer"
+          },
+          "sip_reply_reason": {
+            "type": "string"
+          },
+          "registration_status": {
+            "type": "integer",
+            "description": "0 = Not Applicable<br/> 1 = Not Registered<br/> 2 = Failed<br/> 3 = Expired<br/> 4 = Success<br/> 5 = Unregistered\n",
+            "default": 0
+          },
+          "registration_status_updated_at": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "inbound": {
+            "$ref": "#/components/schemas/IPInbound"
+          },
+          "outbound": {
+            "$ref": "#/components/schemas/IPOutbound"
+          }
+        },
+        "example": {
+          "id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
+          "record_type": "ip_connection",
+          "active": "boolean",
+          "anchorsite_override": "Latency",
+          "connection_name": "string",
+          "sip_uri_calling_preference": "disabled",
+          "transport_protocol": "UDP",
+          "default_on_hold_comfort_noise_enabled": "boolean",
+          "dtmf_type": "RFC 2833",
+          "encode_contact_header_enabled": true,
+          "encrypted_media": "SRTP",
+          "onnet_t38_passthrough_enabled": "boolean",
+          "rtcp_settings": {
+            "port": "rtcp-mux",
+            "report_enabled": "boolean",
+            "report_frequency_secs": "integer"
+          },
+          "last_registered_ip": "192.0.2.1",
+          "sip_reply_code": "integer",
+          "sip_reply_reason": "string",
+          "registration_status": "integer",
+          "registration_status_updated_at": "string",
+          "created_at": "2018-02-02T22:25:27.521Z",
+          "updated_at": "2018-02-02T22:25:27.521Z",
+          "inbound": {
+            "ani_number_format": "+E.164",
+            "dnis_number_format": "integer",
+            "codecs": [
+              {}
+            ],
+            "default_primary_ip_id": "string",
+            "default_secondary_ip_id": "string",
+            "default_tertiary_ip_id": "string",
+            "default_routing_method": "sequential",
+            "channel_limit": "integer",
+            "generate_ringback_tone": true,
+            "isup_headers_enabled": true,
+            "prack_enabled": "boolean",
+            "privacy_zone_enabled": "boolean",
+            "sip_compact_headers_enabled": "boolean",
+            "sip_region": "US",
+            "sip_subdomain": "string",
+            "sip_subdomain_receive_settings": "only_my_connections",
+            "timeout_1xx_secs": "integer",
+            "timeout_2xx_secs": "integer"
+          },
+          "outbound": {
+            "call_parking_enabled": "boolean",
+            "ani_override": "string",
+            "ani_override_type": "always",
+            "channel_limit": "integer",
+            "instant_ringback_enabled": "boolean",
+            "generate_ringback_tone": true,
+            "localization": "string",
+            "t38_reinvite_source": "telnyx",
+            "tech_prefix": "string",
+            "ip_authentication_method": "tech-prefix",
+            "ip_authentication_token": "string"
+          }
+        }
+      },
+      "IPConnectionCreate": {
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "description": "Defaults to true"
+          },
+          "anchorsite_override": {
+            "type": "string",
+            "enum": [
+              "Latency",
+              "Chicago, IL",
+              "Ashburn, VA",
+              "San Jose, CA",
+              "Sydney, Australia",
+              "Amsterdam, Netherlands",
+              "London, UK",
+              "Toronto, Canada",
+              "Vancouver, Canada"
+            ],
+            "description": "`Latency` directs Telnyx to route media through the site with the lowest round-trip time to the user's connection. Telnyx calculates this time using ICMP ping messages. This can be disabled by specifying a site to handle all media.\n"
+          },
+          "connection_name": {
+            "type": "string"
+          },
+          "sip_uri_calling_preference": {
+            "type": "string",
+            "default": "disabled",
+            "description": "This feature enables inbound SIP URI calls to your Credential Auth Connection. If enabled for all (unrestricted) then anyone who calls the SIP URI <your-username>@telnyx.com will be connected to your Connection. You can also choose to allow only calls that are originated on any Connections under your account (internal).\n",
+            "enum": [
+              "disabled",
+              "unrestricted",
+              "internal"
+            ]
+          },
+          "transport_protocol": {
+            "type": "string",
+            "description": "One of UDP, TLS, or TCP. Applies only to connections with IP authentication or FQDN authentication.\n",
+            "default": "UDP",
+            "enum": [
+              "UDP",
+              "TCP",
+              "TLS"
+            ]
+          },
+          "default_on_hold_comfort_noise_enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "When enabled, Telnyx will generate comfort noise when you place the call on hold. If disabled, you will need to generate comfort noise or on hold music to avoid RTP timeout.\n"
+          },
+          "dtmf_type": {
+            "type": "string",
+            "enum": [
+              "RFC 2833",
+              "Inband",
+              "SIP INFO"
+            ],
+            "default": "RFC 2833",
+            "description": "Sets the type of DTMF digits sent from Telnyx to this Connection. Note that DTMF digits sent to Telnyx will be accepted in all formats.\n"
+          },
+          "encode_contact_header_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Encode the SIP contact header sent by Telnyx to avoid issues for NAT or ALG scenarios.\n"
+          },
+          "encrypted_media": {
+            "type": "string",
+            "enum": [
+              "SRTP",
+              "ZRTP"
+            ],
+            "description": "Enable use of SRTP or ZRTP for encryption. Valid values are those listed or null. Cannot be set to non-null if the transport_portocol is TLS.\n"
+          },
+          "onnet_t38_passthrough_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable on-net T38 if you prefer the sender and receiver negotiating T38 directly if both are on the Telnyx network. If this is disabled, Telnyx will be able to use T38 on just one leg of the call depending on each leg's settings.\n"
+          },
+          "rtcp_settings": {
+            "$ref": "#/components/schemas/ConnectionRTCPSettings"
+          },
+          "sip_reply_code": {
+            "type": "integer"
+          },
+          "sip_reply_reason": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "inbound": {
+            "$ref": "#/components/schemas/IPInboundCreate"
+          },
+          "outbound": {
+            "$ref": "#/components/schemas/IPOutbound"
+          }
+        }
+      },
+      "IPConnectionUpdate": {
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "description": "Defaults to true"
+          },
+          "anchorsite_override": {
+            "type": "string",
+            "enum": [
+              "Latency",
+              "Chicago, IL",
+              "Ashburn, VA",
+              "San Jose, CA",
+              "Sydney, Australia",
+              "Amsterdam, Netherlands",
+              "London, UK",
+              "Toronto, Canada",
+              "Vancouver, Canada"
+            ],
+            "description": "`Latency` directs Telnyx to route media through the site with the lowest round-trip time to the user's connection. Telnyx calculates this time using ICMP ping messages. This can be disabled by specifying a site to handle all media.\n"
+          },
+          "connection_name": {
+            "type": "string"
+          },
+          "sip_uri_calling_preference": {
+            "type": "string",
+            "default": "disabled",
+            "description": "This feature enables inbound SIP URI calls to your Credential Auth Connection. If enabled for all (unrestricted) then anyone who calls the SIP URI <your-username>@telnyx.com will be connected to your Connection. You can also choose to allow only calls that are originated on any Connections under your account (internal).\n",
+            "enum": [
+              "disabled",
+              "unrestricted",
+              "internal"
+            ]
+          },
+          "transport_protocol": {
+            "type": "string",
+            "description": "One of UDP, TLS, or TCP. Applies only to connections with IP authentication or FQDN authentication.\n",
+            "default": "UDP",
+            "enum": [
+              "UDP",
+              "TCP",
+              "TLS"
+            ]
+          },
+          "default_on_hold_comfort_noise_enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "When enabled, Telnyx will generate comfort noise when you place the call on hold. If disabled, you will need to generate comfort noise or on hold music to avoid RTP timeout.\n"
+          },
+          "dtmf_type": {
+            "type": "string",
+            "enum": [
+              "RFC 2833",
+              "Inband",
+              "SIP INFO"
+            ],
+            "default": "RFC 2833",
+            "description": "Sets the type of DTMF digits sent from Telnyx to this Connection. Note that DTMF digits sent to Telnyx will be accepted in all formats.\n"
+          },
+          "encode_contact_header_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Encode the SIP contact header sent by Telnyx to avoid issues for NAT or ALG scenarios.\n"
+          },
+          "encrypted_media": {
+            "type": "string",
+            "enum": [
+              "SRTP",
+              "ZRTP"
+            ],
+            "description": "Enable use of SRTP or ZRTP for encryption. Valid values are those listed or null. Cannot be set to non-null if the transport_portocol is TLS.\n"
+          },
+          "onnet_t38_passthrough_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable on-net T38 if you prefer the sender and receiver negotiating T38 directly if both are on the Telnyx network. If this is disabled, Telnyx will be able to use T38 on just one leg of the call depending on each leg's settings.\n"
+          },
+          "rtcp_settings": {
+            "$ref": "#/components/schemas/ConnectionRTCPSettings"
+          },
+          "sip_reply_code": {
+            "type": "integer"
+          },
+          "sip_reply_reason": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "inbound": {
+            "$ref": "#/components/schemas/IPInbound"
+          },
+          "outbound": {
+            "$ref": "#/components/schemas/IPOutbound"
+          }
+        }
+      },
+      "IPInbound": {
+        "type": "object",
+        "title": "Inbound configuration",
+        "properties": {
+          "ani_number_format": {
+            "type": "string",
+            "enum": [
+              "+E.164",
+              "E.164",
+              "+E.164-national",
+              "E.164-national"
+            ],
+            "default": "E.164-national",
+            "description": "This setting allows you to set the format with which the caller's number (ANI) is sent for inbound phone calls.\n"
+          },
+          "dnis_number_format": {
+            "type": "integer",
+            "description": "0 = E.164<br/> 1 = Strip-1<br/> 2 = Strip-2\n",
+            "default": 1
+          },
+          "codecs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Defines the list of codecs that Telnyx will send for inbound calls to a specific number on your portal account, in priority order. This only works when the Connection the number is assigned to uses Media Handling mode: default. OPUS and H.264 codecs are available only when using TCP or TLS transport for SIP.\n",
+            "default": [
+              "G722",
+              "G711U",
+              "G711A",
+              "G729",
+              "OPUS",
+              "H.264"
+            ]
+          },
+          "default_primary_ip_id": {
+            "type": "string",
+            "description": "The default primary IP to use for the number. Only settable if the connection is\n              of IP authentication type. Value must be the ID of an authorized IP set on the connection."
+          },
+          "default_secondary_ip_id": {
+            "type": "string",
+            "description": "The default secondary IP to use for the number. Only settable if the connection is\n              of IP authentication type. Value must be the ID of an authorized IP set on the connection."
+          },
+          "default_tertiary_ip_id": {
+            "type": "string",
+            "description": "The default tertiary IP to use for the number. Only settable if the connection is\n              of IP authentication type. Value must be the ID of an authorized IP set on the connection."
+          },
+          "default_routing_method": {
+            "type": "string",
+            "enum": [
+              "sequential",
+              "round-robin"
+            ],
+            "description": "Default routing method to be used when a number is associated with the connection. Must be one of the routing method types or left blank, other values are not allowed.\n"
+          },
+          "channel_limit": {
+            "type": "integer",
+            "default": null,
+            "description": "When set, this will limit the total number of inbound calls to phone numbers associated with this connection.\n"
+          },
+          "generate_ringback_tone": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Generate ringback tone through 183 session progress message with early media.\n"
+          },
+          "isup_headers_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "When set, inbound phone calls will receive ISUP parameters via SIP headers. (Only when available and only when using TCP or TLS transport.)\n"
+          },
+          "prack_enabled": {
+            "type": "boolean",
+            "description": "Enable PRACK messages as defined in RFC3262.",
+            "default": false
+          },
+          "privacy_zone_enabled": {
+            "type": "boolean",
+            "description": "By default, Telnyx does not send caller-id information when the caller has chosen to hide this information. When this option is enabled, Telnyx will send the SIP header Privacy:id plus the caller-id information so that the receiver side can choose when to hide it.\n",
+            "default": false
+          },
+          "sip_compact_headers_enabled": {
+            "type": "boolean",
+            "description": "Defaults to true.",
+            "default": true
+          },
+          "sip_region": {
+            "type": "string",
+            "default": "US",
+            "description": "Selects which `sip_region` to receive inbound calls from. If null, the default region (US) will be used.\n",
+            "enum": [
+              "US",
+              "Europe",
+              "Australia"
+            ]
+          },
+          "sip_subdomain": {
+            "type": "string",
+            "description": "Specifies a subdomain that can be used to receive Inbound calls to a Connection, in the same way a phone number is used, from a SIP endpoint. Example: the subdomain \"example.sip.telnyx.com\" can be called from any SIP endpoint by using the SIP URI \"sip:@example.sip.telnyx.com\" where the user part can be any alphanumeric value. Please note TLS encrypted calls are not allowed for subdomain calls.\n"
+          },
+          "sip_subdomain_receive_settings": {
+            "type": "string",
+            "description": "This option can be enabled to receive calls from: \"Anyone\" (any SIP endpoint in the public Internet) or \"Only my connections\" (any connection assigned to the same Telnyx user).\n",
+            "enum": [
+              "only_my_connections",
+              "from_anyone"
+            ]
+          },
+          "timeout_1xx_secs": {
+            "type": "integer",
+            "description": "Time(sec) before aborting if connection is not made (min: 1, max: 20).\n",
+            "default": 3
+          },
+          "timeout_2xx_secs": {
+            "type": "integer",
+            "description": "Time(sec) before aborting if call is unanswered (min: 1, max: 600).\n",
+            "default": 90
+          }
+        }
+      },
+      "IPInboundCreate": {
+        "type": "object",
+        "title": "Inbound configuration",
+        "properties": {
+          "ani_number_format": {
+            "type": "string",
+            "enum": [
+              "+E.164",
+              "E.164",
+              "+E.164-national",
+              "E.164-national"
+            ],
+            "default": "E.164-national",
+            "description": "This setting allows you to set the format with which the caller's number (ANI) is sent for inbound phone calls.\n"
+          },
+          "dnis_number_format": {
+            "type": "integer",
+            "description": "0 = E.164<br/> 1 = Strip-1<br/> 2 = Strip-2\n",
+            "default": 1
+          },
+          "codecs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Defines the list of codecs that Telnyx will send for inbound calls to a specific number on your portal account, in priority order. This only works when the Connection the number is assigned to uses Media Handling mode: default. OPUS and H.264 codecs are available only when using TCP or TLS transport for SIP.\n",
+            "default": [
+              "G722",
+              "G711U",
+              "G711A",
+              "G729",
+              "OPUS",
+              "H.264"
+            ]
+          },
+          "default_routing_method": {
+            "type": "string",
+            "enum": [
+              "sequential",
+              "round-robin"
+            ],
+            "description": "Default routing method to be used when a number is associated with the connection. Must be one of the routing method types or left blank, other values are not allowed.\n"
+          },
+          "channel_limit": {
+            "type": "integer",
+            "default": null,
+            "description": "When set, this will limit the total number of inbound calls to phone numbers associated with this connection.\n"
+          },
+          "generate_ringback_tone": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Generate ringback tone through 183 session progress message with early media.\n"
+          },
+          "isup_headers_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "When set, inbound phone calls will receive ISUP parameters via SIP headers. (Only when available and only when using TCP or TLS transport.)\n"
+          },
+          "prack_enabled": {
+            "type": "boolean",
+            "description": "Enable PRACK messages as defined in RFC3262.",
+            "default": false
+          },
+          "privacy_zone_enabled": {
+            "type": "boolean",
+            "description": "By default, Telnyx does not send caller-id information when the caller has chosen to hide this information. When this option is enabled, Telnyx will send the SIP header Privacy:id plus the caller-id information so that the receiver side can choose when to hide it.\n",
+            "default": false
+          },
+          "sip_compact_headers_enabled": {
+            "type": "boolean",
+            "description": "Defaults to true.",
+            "default": true
+          },
+          "sip_region": {
+            "type": "string",
+            "default": "US",
+            "description": "Selects which `sip_region` to receive inbound calls from. If null, the default region (US) will be used.\n",
+            "enum": [
+              "US",
+              "Europe",
+              "Australia"
+            ]
+          },
+          "sip_subdomain": {
+            "type": "string",
+            "description": "Specifies a subdomain that can be used to receive Inbound calls to a Connection, in the same way a phone number is used, from a SIP endpoint. Example: the subdomain \"example.sip.telnyx.com\" can be called from any SIP endpoint by using the SIP URI \"sip:@example.sip.telnyx.com\" where the user part can be any alphanumeric value. Please note TLS encrypted calls are not allowed for subdomain calls.\n"
+          },
+          "sip_subdomain_receive_settings": {
+            "type": "string",
+            "description": "This option can be enabled to receive calls from: \"Anyone\" (any SIP endpoint in the public Internet) or \"Only my connections\" (any connection assigned to the same Telnyx user).\n",
+            "enum": [
+              "only_my_connections",
+              "from_anyone"
+            ]
+          },
+          "timeout_1xx_secs": {
+            "type": "integer",
+            "description": "Time(sec) before aborting if connection is not made (min: 1, max: 20).\n",
+            "default": 3
+          },
+          "timeout_2xx_secs": {
+            "type": "integer",
+            "description": "Time(sec) before aborting if call is unanswered (min: 1, max: 600).\n",
+            "default": 90
+          }
+        }
+      },
+      "IPOutbound": {
+        "type": "object",
+        "title": "Outbound configuration",
+        "properties": {
+          "call_parking_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Forces all SIP calls originated on this connection to be \"parked\" instead of \"bridged\" to the destination specified on the URI. Parked calls will return ringback to the caller and will await for a Call Control command to define which action will be taken next.\n"
+          },
+          "ani_override": {
+            "type": "string",
+            "description": "Set a phone number as the ani_override value to override caller id number on outbound calls.\n",
+            "default": ""
+          },
+          "ani_override_type": {
+            "type": "string",
+            "enum": [
+              "always",
+              "normal",
+              "emergency"
+            ],
+            "description": "Specifies when we apply your ani_override setting. Only applies when ani_override is not blank.\n",
+            "default": "always"
+          },
+          "channel_limit": {
+            "type": "integer",
+            "default": null,
+            "description": "When set, this will limit the total number of outbound calls to phone numbers associated with this connection.\n"
+          },
+          "instant_ringback_enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "When set, ringback will not wait for indication before sending ringback tone to calling party.\n"
+          },
+          "generate_ringback_tone": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Generate ringback tone through 183 session progress message with early media.\n"
+          },
+          "localization": {
+            "type": "string",
+            "default": null,
+            "description": "A 2-character country code specifying the country whose national dialing rules should be used. For example, if set to `US` then any US number can be dialed without preprending +1 to the number. When left blank, Telnyx will try US and GB dialing rules, in that order, by default.\n"
+          },
+          "t38_reinvite_source": {
+            "type": "string",
+            "enum": [
+              "telnyx",
+              "customer",
+              "disabled",
+              "passthru",
+              "caller-passthru",
+              "callee-passthru"
+            ],
+            "description": "This setting only affects connections with Fax-type Outbound Profiles. The setting dictates whether or not Telnyx sends a t.38 reinvite.<br/><br/> By default, Telnyx will send the re-invite. If set to `customer`, the caller is expected to send the t.38 reinvite.\n",
+            "default": "telnyx"
+          },
+          "tech_prefix": {
+            "type": "string",
+            "description": "Numerical chars only, exactly 4 characters.",
+            "default": ""
+          },
+          "ip_authentication_method": {
+            "type": "string",
+            "default": "tech-prefix",
+            "example": "tech-prefix",
+            "enum": [
+              "tech-prefixp-charge-info",
+              "token"
+            ]
+          },
+          "ip_authentication_token": {
+            "type": "string",
+            "default": null
+          }
+        }
+      },
+      "ConnectionRTCPSettings": {
+        "type": "object",
+        "properties": {
+          "port": {
+            "type": "string",
+            "enum": [
+              "rtcp-mux",
+              "rtp+1"
+            ],
+            "default": "rtp+1",
+            "description": "RTCP port by default is rtp+1, it can also be set to rtcp-mux"
+          },
+          "report_enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "DEPRECATED - RTCP reports are always sent to customers/vendors. For backwards compatibility, the value is always true.\n"
+          },
+          "report_frequency_secs": {
+            "type": "integer",
+            "default": 10,
+            "description": "RTCP reports are sent to customers based on the frequency set. Frequency is in seconds and it can be set to values from 5 to 3000 seconds.\n"
+          }
+        }
+      },
+      "CredentialConnection": {
+        "type": "object",
+        "title": "Credential Connection",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifies the type of resource.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "record_type": {
+            "type": "string",
+            "description": "Identifies the type of the resource.",
+            "example": "credential_connection"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Defaults to true"
+          },
+          "user_name": {
+            "type": "string",
+            "description": "The user name to be used as part of the credentials. Must be 4-32 characters long and alphanumeric values only (no spaces or special characters).",
+            "example": "myusername123"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password to be used as part of the credentials. Must be 8 to 128 characters long.",
+            "example": "my123secure456password789"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO-8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO-8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "anchorsite_override": {
+            "type": "string",
+            "enum": [
+              "Latency",
+              "Chicago, IL",
+              "Ashburn, VA",
+              "San Jose, CA",
+              "Sydney, Australia",
+              "Amsterdam, Netherlands",
+              "London, UK",
+              "Toronto, Canada",
+              "Vancouver, Canada"
+            ],
+            "description": "`Latency` directs Telnyx to route media through the site with the lowest round-trip time to the user's connection. Telnyx calculates this time using ICMP ping messages. This can be disabled by specifying a site to handle all media.\n"
+          },
+          "connection_name": {
+            "type": "string"
+          },
+          "sip_uri_calling_preference": {
+            "type": "string",
+            "default": "disabled",
+            "description": "This feature enables inbound SIP URI calls to your Credential Auth Connection. If enabled for all (unrestricted) then anyone who calls the SIP URI <your-username>@telnyx.com will be connected to your Connection. You can also choose to allow only calls that are originated on any Connections under your account (internal).\n",
+            "enum": [
+              "disabled",
+              "unrestricted",
+              "internal"
+            ]
+          },
+          "transport_protocol": {
+            "type": "string",
+            "description": "One of UDP, TLS, or TCP. Applies only to connections with IP authentication or FQDN authentication.\n",
+            "default": "UDP"
+          },
+          "default_on_hold_comfort_noise_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "When enabled, Telnyx will generate comfort noise when you place the call on hold. If disabled, you will need to generate comfort noise or on hold music to avoid RTP timeout.\n"
+          },
+          "dtmf_type": {
+            "type": "string",
+            "enum": [
+              "RFC 2833",
+              "Inband",
+              "SIP INFO"
+            ],
+            "default": "RFC 2833",
+            "description": "Sets the type of DTMF digits sent from Telnyx to this Connection. Note that DTMF digits sent to Telnyx will be accepted in all formats.\n"
+          },
+          "encode_contact_header_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Encode the SIP contact header sent by Telnyx to avoid issues for NAT or ALG scenarios.\n"
+          },
+          "encrypted_media": {
+            "type": "string",
+            "enum": [
+              "SRTP",
+              "ZRTP"
+            ],
+            "description": "Enable use of SRTP or ZRTP for encryption. Valid values are those listed or null. Cannot be set to non-null if the transport_portocol is TLS.\n"
+          },
+          "onnet_t38_passthrough_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable on-net T38 if you prefer the sender and receiver negotiating T38 directly if both are on the Telnyx network. If this is disabled, Telnyx will be able to use T38 on just one leg of the call depending on each leg's settings.\n"
+          },
+          "rtcp_settings": {
+            "type": "object",
+            "properties": {
+              "port": {
+                "type": "string",
+                "enum": [
+                  "rtcp-mux",
+                  "rtp+1"
+                ],
+                "default": "rtp+1",
+                "description": "RTCP port by default is rtp+1, it can also be set to rtcp-mux"
+              },
+              "report_enabled": {
+                "type": "boolean",
+                "default": true,
+                "description": "DEPRECATED - RTCP reports are always sent to customers/vendors. For backwards compatibility, the value is always true.\n"
+              },
+              "report_frequency_seconds": {
+                "type": "integer",
+                "default": 10,
+                "description": "RTCP reports are sent to customers based on the frequency set. Frequency is in seconds and it can be set to values from 5 to 3000 seconds.\n"
+              }
+            }
+          },
+          "sip_reply_code": {
+            "type": "integer"
+          },
+          "sip_reply_reason": {
+            "type": "string"
+          },
+          "inbound": {
+            "$ref": "#/components/schemas/CredentialInbound"
+          },
+          "outbound": {
+            "$ref": "#/components/schemas/CredentialOutbound"
+          }
+        },
+        "example": {
+          "id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
+          "record_type": "credential_connection",
+          "active": "boolean",
+          "user_name": "myusername123",
+          "password": "my123secure456password789",
+          "created_at": "2018-02-02T22:25:27.521Z",
+          "updated_at": "2018-02-02T22:25:27.521Z",
+          "anchorsite_override": "Latency",
+          "connection_name": "string",
+          "sip_uri_calling_preference": "disabled",
+          "transport_protocol": "string",
+          "default_on_hold_comfort_noise_enabled": "boolean",
+          "dtmf_type": "RFC 2833",
+          "encode_contact_header_enabled": true,
+          "encrypted_media": "SRTP",
+          "onnet_t38_passthrough_enabled": "boolean",
+          "rtcp_settings": {
+            "port": "rtcp-mux",
+            "report_enabled": "boolean",
+            "report_frequency_seconds": "integer"
+          },
+          "sip_reply_code": "integer",
+          "sip_reply_reason": "string",
+          "inbound": {
+            "ani_number_format": "+E.164",
+            "dnis_number_format": "integer",
+            "codecs": [
+              {}
+            ],
+            "channel_limit": "integer",
+            "generate_ringback_tone": true,
+            "isup_headers_enabled": true,
+            "prack_enabled": "boolean",
+            "privacy_zone_enabled": "boolean",
+            "sip_compact_headers_enabled": "boolean",
+            "sip_region": "US",
+            "timeout_1xx_secs": "string",
+            "timeout_2xx_secs": "string"
+          },
+          "outbound": {
+            "call_parking_enabled": "boolean",
+            "ani_override": "string",
+            "ani_override_type": "always",
+            "channel_limit": "integer",
+            "instant_ringback_enabled": "boolean",
+            "generate_ringback_tone": true,
+            "localization": "string",
+            "t38_reinvite_source": "telnyx"
+            }
+        }
+      },
+      "CredentialInbound": {
+        "type": "object",
+        "title": "Inbound configuration",
+        "properties": {
+          "ani_number_format": {
+            "type": "string",
+            "enum": [
+              "+E.164",
+              "E.164",
+              "+E.164-national",
+              "E.164-national"
+            ],
+            "default": "E.164-national",
+            "description": "This setting allows you to set the format with which the caller's number (ANI) is sent for inbound phone calls.\n"
+          },
+          "dnis_number_format": {
+            "type": "integer",
+            "description": "0 = E.164<br/> 1 = Strip-1<br/> 2 = Strip-2\n",
+            "default": 1
+          },
+          "codecs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Defines the list of codecs that Telnyx will send for inbound calls to a specific number on your portal account, in priority order. This only works when the Connection the number is assigned to uses Media Handling mode: default. OPUS and H.264 codecs are available only when using TCP or TLS transport for SIP.\n",
+            "default": [
+              "G722",
+              "G711U",
+              "G711A",
+              "G729",
+              "OPUS",
+              "H.264"
+            ]
+          },
+          "channel_limit": {
+            "type": "integer",
+            "default": null,
+            "description": "When set, this will limit the total number of inbound calls to phone numbers associated with this connection.\n"
+          },
+          "generate_ringback_tone": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Generate ringback tone through 183 session progress message with early media.\n"
+          },
+          "isup_headers_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "When set, inbound phone calls will receive ISUP parameters via SIP headers. (Only when available and only when using TCP or TLS transport.)\n"
+          },
+          "prack_enabled": {
+            "type": "boolean",
+            "description": "Enable PRACK messages as defined in RFC3262.",
+            "default": false
+          },
+          "privacy_zone_enabled": {
+            "type": "boolean",
+            "description": "By default, Telnyx does not send caller-id information when the caller has chosen to hide this information. When this option is enabled, Telnyx will send the SIP header Privacy:id plus the caller-id information so that the receiver side can choose when to hide it.\n",
+            "default": false
+          },
+          "sip_compact_headers_enabled": {
+            "type": "boolean",
+            "description": "Defaults to true.",
+            "default": true
+          },
+          "sip_region": {
+            "type": "string",
+            "default": "US",
+            "description": "Selects which `sip_region` to receive inbound calls from. If null, the default region (US) will be used.\n",
+            "enum": [
+              "US",
+              "Europe",
+              "Australia"
+            ]
+          },
+          "timeout_1xx_secs": {
+            "type": "string",
+            "description": "Time(sec) before aborting if connection is not made (min: 1, max: 20).\n",
+            "default": "3"
+          },
+          "timeout_2xx_secs": {
+            "type": "string",
+            "description": "Time(sec) before aborting if call is unanswered (min: 1, max: 600).\n",
+            "default": "90"
+          }
+        }
+      },
+      "CredentialOutbound": {
+        "type": "object",
+        "title": "Outbound configuration",
+        "properties": {
+          "call_parking_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Forces all SIP calls originated on this connection to be \"parked\" instead of \"bridged\" to the destination specified on the URI. Parked calls will return ringback to the caller and will await for a Call Control command to define which action will be taken next.\n"
+          },
+          "ani_override": {
+            "type": "string",
+            "description": "Set a phone number as the ani_override value to override caller id number on outbound calls.\n",
+            "default": ""
+          },
+          "ani_override_type": {
+            "type": "string",
+            "enum": [
+              "always",
+              "normal",
+              "emergency"
+            ],
+            "description": "Specifies when we apply your ani_override setting. Only applies when ani_override is not blank.\n",
+            "default": "always"
+          },
+          "channel_limit": {
+            "type": "integer",
+            "default": null,
+            "description": "When set, this will limit the total number of outbound calls to phone numbers associated with this connection.\n"
+          },
+          "instant_ringback_enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "When set, ringback will not wait for indication before sending ringback tone to calling party.\n"
+          },
+          "generate_ringback_tone": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Generate ringback tone through 183 session progress message with early media.\n"
+          },
+          "localization": {
+            "type": "string",
+            "default": null,
+            "description": "A 2-character country code specifying the country whose national dialing rules should be used. For example, if set to `US` then any US number can be dialed without preprending +1 to the number. When left blank, Telnyx will try US and GB dialing rules, in that order, by default.\n"
+          },
+          "t38_reinvite_source": {
+            "type": "string",
+            "enum": [
+              "telnyx",
+              "customer",
+              "disabled",
+              "passthru",
+              "caller-passthru",
+              "callee-passthru"
+            ],
+            "description": "This setting only affects connections with Fax-type Outbound Profiles. The setting dictates whether or not Telnyx sends a t.38 reinvite.<br/><br/> By default, Telnyx will send the re-invite. If set to `customer`, the caller is expected to send the t.38 reinvite.\n",
+            "default": "telnyx"
+          }
+        }
+      },
+      "CredentialConnectionUpdate": {
+        "type": "object",
+        "title": "CredentialConnectionUpdate",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifies the resource.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Defaults to true"
+          },
+          "user_name": {
+            "type": "string",
+            "description": "The user name to be used as part of the credentials. Must be 4-32 characters long and alphanumeric values only (no spaces or special characters).",
+            "example": "myusername123"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password to be used as part of the credentials. Must be 8 to 128 characters long.",
+            "example": "my123secure456password789"
+          },
+          "anchorsite_override": {
+            "type": "string",
+            "enum": [
+              "Latency",
+              "Chicago, IL",
+              "Ashburn, VA",
+              "San Jose, CA",
+              "Sydney, Australia",
+              "Amsterdam, Netherlands",
+              "London, UK",
+              "Toronto, Canada",
+              "Vancouver, Canada"
+            ],
+            "description": "`Latency` directs Telnyx to route media through the site with the lowest round-trip time to the user's connection. Telnyx calculates this time using ICMP ping messages. This can be disabled by specifying a site to handle all media.\n"
+          },
+          "connection_name": {
+            "type": "string"
+          },
+          "sip_uri_calling_preference": {
+            "type": "string",
+            "default": "disabled",
+            "description": "This feature enables inbound SIP URI calls to your Credential Auth Connection. If enabled for all (unrestricted) then anyone who calls the SIP URI <your-username>@telnyx.com will be connected to your Connection. You can also choose to allow only calls that are originated on any Connections under your account (internal).\n",
+            "enum": [
+              "disabled",
+              "unrestricted",
+              "internal"
+            ]
+          },
+          "transport_protocol": {
+            "type": "string",
+            "description": "One of UDP, TLS, or TCP. Applies only to connections with IP authentication or FQDN authentication.\n",
+            "default": "UDP"
+          },
+          "default_on_hold_comfort_noise_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "When enabled, Telnyx will generate comfort noise when you place the call on hold. If disabled, you will need to generate comfort noise or on hold music to avoid RTP timeout.\n"
+          },
+          "dtmf_type": {
+            "type": "string",
+            "enum": [
+              "RFC 2833",
+              "Inband",
+              "SIP INFO"
+            ],
+            "default": "RFC 2833",
+            "description": "Sets the type of DTMF digits sent from Telnyx to this Connection. Note that DTMF digits sent to Telnyx will be accepted in all formats.\n"
+          },
+          "encode_contact_header_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Encode the SIP contact header sent by Telnyx to avoid issues for NAT or ALG scenarios.\n"
+          },
+          "encrypted_media": {
+            "type": "string",
+            "enum": [
+              "SRTP",
+              "ZRTP"
+            ],
+            "description": "Enable use of SRTP or ZRTP for encryption. Valid values are those listed or null. Cannot be set to non-null if the transport_portocol is TLS.\n"
+          },
+          "onnet_t38_passthrough_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable on-net T38 if you prefer the sender and receiver negotiating T38 directly if both are on the Telnyx network. If this is disabled, Telnyx will be able to use T38 on just one leg of the call depending on each leg's settings.\n"
+          },
+          "rtcp_settings": {
+            "type": "object",
+            "properties": {
+              "port": {
+                "type": "string",
+                "enum": [
+                  "rtcp-mux",
+                  "rtp+1"
+                ],
+                "default": "rtp+1",
+                "description": "RTCP port by default is rtp+1, it can also be set to rtcp-mux"
+              },
+              "report_enabled": {
+                "type": "boolean",
+                "default": true,
+                "description": "DEPRECATED - RTCP reports are always sent to customers/vendors. For backwards compatibility, the value is always true.\n"
+              },
+              "report_frequency_seconds": {
+                "type": "integer",
+                "default": 10,
+                "description": "RTCP reports are sent to customers based on the frequency set. Frequency is in seconds and it can be set to values from 5 to 3000 seconds.\n"
+              }
+            }
+          },
+          "sip_reply_code": {
+            "type": "integer"
+          },
+          "sip_reply_reason": {
+            "type": "string"
+          },
+          "inbound": {
+            "$ref": "#/components/schemas/CredentialInbound"
+          },
+          "outbound": {
+            "$ref": "#/components/schemas/CredentialOutbound"
+          }
+        }
+      },
+      "CredentialConnectionCreate": {
+        "type": "object",
+        "title": "CredentialConnectionCreate",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "description": "Defaults to true"
+          },
+          "user_name": {
+            "type": "string",
+            "description": "The user name to be used as part of the credentials. Must be 4-32 characters long and alphanumeric values only (no spaces or special characters).",
+            "example": "myusername123"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password to be used as part of the credentials. Must be 8 to 128 characters long.",
+            "example": "my123secure456password789"
+          },
+          "anchorsite_override": {
+            "type": "string",
+            "enum": [
+              "Latency",
+              "Chicago, IL",
+              "Ashburn, VA",
+              "San Jose, CA",
+              "Sydney, Australia",
+              "Amsterdam, Netherlands",
+              "London, UK",
+              "Toronto, Canada",
+              "Vancouver, Canada"
+            ],
+            "description": "`Latency` directs Telnyx to route media through the site with the lowest round-trip time to the user's connection. Telnyx calculates this time using ICMP ping messages. This can be disabled by specifying a site to handle all media.\n"
+          },
+          "connection_name": {
+            "type": "string"
+          },
+          "sip_uri_calling_preference": {
+            "type": "string",
+            "default": "disabled",
+            "description": "This feature enables inbound SIP URI calls to your Credential Auth Connection. If enabled for all (unrestricted) then anyone who calls the SIP URI <your-username>@telnyx.com will be connected to your Connection. You can also choose to allow only calls that are originated on any Connections under your account (internal).\n",
+            "enum": [
+              "disabled",
+              "unrestricted",
+              "internal"
+            ]
+          },
+          "transport_protocol": {
+            "type": "string",
+            "description": "One of UDP, TLS, or TCP. Applies only to connections with IP authentication or FQDN authentication.\n",
+            "default": "UDP"
+          },
+          "default_on_hold_comfort_noise_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "When enabled, Telnyx will generate comfort noise when you place the call on hold. If disabled, you will need to generate comfort noise or on hold music to avoid RTP timeout.\n"
+          },
+          "dtmf_type": {
+            "type": "string",
+            "enum": [
+              "RFC 2833",
+              "Inband",
+              "SIP INFO"
+            ],
+            "default": "RFC 2833",
+            "description": "Sets the type of DTMF digits sent from Telnyx to this Connection. Note that DTMF digits sent to Telnyx will be accepted in all formats.\n"
+          },
+          "encode_contact_header_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Encode the SIP contact header sent by Telnyx to avoid issues for NAT or ALG scenarios.\n"
+          },
+          "encrypted_media": {
+            "type": "string",
+            "enum": [
+              "SRTP",
+              "ZRTP"
+            ],
+            "description": "Enable use of SRTP or ZRTP for encryption. Valid values are those listed or null. Cannot be set to non-null if the transport_portocol is TLS.\n"
+          },
+          "onnet_t38_passthrough_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable on-net T38 if you prefer the sender and receiver negotiating T38 directly if both are on the Telnyx network. If this is disabled, Telnyx will be able to use T38 on just one leg of the call depending on each leg's settings.\n"
+          },
+          "rtcp_settings": {
+            "type": "object",
+            "properties": {
+              "port": {
+                "type": "string",
+                "enum": [
+                  "rtcp-mux",
+                  "rtp+1"
+                ],
+                "default": "rtp+1",
+                "description": "RTCP port by default is rtp+1, it can also be set to rtcp-mux"
+              },
+              "report_enabled": {
+                "type": "boolean",
+                "default": true,
+                "description": "DEPRECATED - RTCP reports are always sent to customers/vendors. For backwards compatibility, the value is always true.\n"
+              },
+              "report_frequency_seconds": {
+                "type": "integer",
+                "default": 10,
+                "description": "RTCP reports are sent to customers based on the frequency set. Frequency is in seconds and it can be set to values from 5 to 3000 seconds.\n"
+              }
+            }
+          },
+          "sip_reply_code": {
+            "type": "integer"
+          },
+          "sip_reply_reason": {
+            "type": "string"
+          },
+          "inbound": {
+            "$ref": "#/components/schemas/CredentialInbound"
+          },
+          "outbound": {
+            "$ref": "#/components/schemas/CredentialOutbound"
+          }
+        }
+      },
+      "IP": {
+        "type": "object",
+        "title": "IP",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifies the type of resource.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "record_type": {
+            "type": "string",
+            "description": "Identifies the type of the resource.",
+            "example": "ip"
+          },
+          "connection_id": {
+            "type": "string",
+            "description": "ID of the IPConnection to which this IP should be attached."
+          },
+          "ip_address": {
+            "type": "string",
+            "description": "IP adddress represented by this resource.",
+            "example": "192.168.0.0"
+          },
+          "port": {
+            "type": "integer",
+            "description": "Port to use when connecting to this IP.",
+            "default": 5060,
+            "example": 5060
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:25:27.521Z"
+          }
+        },
+        "example": {
+          "id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
+          "record_type": "ip",
+          "connection_id": "string",
+          "ip_address": "192.168.0.0",
+          "port": 5060,
+          "created_at": "2018-02-02T22:25:27.521Z",
+          "updated_at": "2018-02-02T22:25:27.521Z"
+        }
+      },
+      "IPWritableSchema": {
+        "type": "object",
+        "required": [
+          "ip_address"
+        ],
+        "properties": {
+          "connection_id": {
+            "type": "string",
+            "description": "ID of the IPConnection to which this IP should be attached."
+          },
+          "ip_address": {
+            "type": "string",
+            "description": "IP adddress represented by this resource.",
+            "example": "192.168.0.0"
+          },
+          "port": {
+            "type": "integer",
+            "description": "Port to use when connecting to this IP.",
+            "default": 5060,
+            "example": 5060
+          }
+        }
+      },
+      "FQDNConnection": {
+        "type": "object",
+        "title": "FQDN Connection",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifies the resource.",
+            "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
+          },
+          "record_type": {
+            "type": "string",
+            "description": "Identifies the type of the resource.",
+            "example": "fqdn_connection"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Defaults to true"
+          },
+          "anchorsite_override": {
+            "type": "string",
+            "enum": [
+              "Latency",
+              "Chicago, IL",
+              "Ashburn, VA",
+              "San Jose, CA",
+              "Sydney, Australia",
+              "Amsterdam, Netherlands",
+              "London, UK",
+              "Toronto, Canada",
+              "Vancouver, Canada"
+            ],
+            "description": "`Latency` directs Telnyx to route media through the site with the lowest round-trip time to the user's connection. Telnyx calculates this time using ICMP ping messages. This can be disabled by specifying a site to handle all media."
+          },
+          "connection_name": {
+            "type": "string"
+          },
+          "sip_uri_calling_preference": {
+            "type": "string",
+            "default": "disabled",
+            "description": "This feature enables inbound SIP URI calls to your Credential Auth Connection. If enabled for all (unrestricted) then anyone who calls the SIP URI <your-username>@telnyx.com will be connected to your Connection. You can also choose to allow only calls that are originated on any Connections under your account (internal).\n",
+            "enum": [
+              "disabled",
+              "unrestricted",
+              "internal"
+            ]
+          },
+          "transport_protocol": {
+            "type": "string",
+            "description": "One of UDP, TLS, or TCP.",
+            "default": "UDP",
+            "enum": [
+              "UDP",
+              "TCP",
+              "TLS"
+            ]
+          },
+          "default_on_hold_comfort_noise_enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "When enabled, Telnyx will generate comfort noise when you place the call on hold. If disabled, you will need to generate comfort noise or on hold music to avoid RTP timeout.\n"
+          },
+          "dtmf_type": {
+            "type": "string",
+            "enum": [
+              "RFC 2833",
+              "Inband",
+              "SIP INFO"
+            ],
+            "default": "RFC 2833",
+            "description": "Sets the type of DTMF digits sent from Telnyx to this Connection. Note that DTMF digits sent to Telnyx will be accepted in all formats.\n"
+          },
+          "encode_contact_header_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Encode the SIP contact header sent by Telnyx to avoid issues for NAT or ALG scenarios.\n"
+          },
+          "encrypted_media": {
+            "type": "string",
+            "enum": [
+              "SRTP",
+              "ZRTP"
+            ],
+            "description": "Enable use of SRTP or ZRTP for encryption. Valid values are those listed or null. Cannot be set to non-null if the transport_portocol is TLS.\n"
+          },
+          "onnet_t38_passthrough_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable on-net T38 if you prefer that the sender and receiver negotiate T38 directly when both are on the Telnyx network. If this is disabled, Telnyx will be able to use T38 on just one leg of the call according to each leg's settings.\n"
+          },
+          "rtcp_settings": {
+            "$ref": "#/components/schemas/ConnectionRTCPSettings"
+          },
+          "last_registered_ip": {
+            "type": "string",
+            "description": "IP from the last successful registration attempt.",
+            "example": "192.0.2.1"
+          },
+          "sip_reply_code": {
+            "type": "integer"
+          },
+          "sip_reply_reason": {
+            "type": "string"
+          },
+          "registration_status": {
+            "type": "integer",
+            "description": "0 = Not Applicable<br/> 1 = Not Registered<br/> 2 = Failed<br/> 3 = Expired<br/> 4 = Success<br/> 5 = Unregistered\n",
+            "default": 0
+          },
+          "registration_status_updated_at": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "inbound": {
+            "$ref": "#/components/schemas/FQDNInbound"
+          }
+        },
+        "example": {
+          "id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
+          "record_type": "fqdn_connection",
+          "active": "boolean",
+          "anchorsite_override": "Latency",
+          "connection_name": "string",
+          "sip_uri_calling_preference": "disabled",
+          "transport_protocol": "UDP",
+          "default_on_hold_comfort_noise_enabled": "boolean",
+          "dtmf_type": "RFC 2833",
+          "encode_contact_header_enabled": true,
+          "encrypted_media": "SRTP",
+          "onnet_t38_passthrough_enabled": "boolean",
+          "rtcp_settings": {
+            "port": "rtcp-mux",
+            "report_enabled": "boolean",
+            "report_frequency_secs": "integer"
+          },
+          "last_registered_ip": "192.0.2.1",
+          "sip_reply_code": "integer",
+          "sip_reply_reason": "string",
+          "registration_status": "integer",
+          "registration_status_updated_at": "string",
+          "created_at": "2018-02-02T22:25:27.521Z",
+          "updated_at": "2018-02-02T22:25:27.521Z",
+          "inbound": {
+            "ani_number_format": "+E.164",
+            "dnis_number_format": "integer",
+            "codecs": [
+              {}
+            ],
+            "default_routing_method": "sequential",
+            "channel_limit": "integer",
+            "generate_ringback_tone": true,
+            "isup_headers_enabled": true,
+            "prack_enabled": "boolean",
+            "privacy_zone_enabled": "boolean",
+            "sip_compact_headers_enabled": "boolean",
+            "sip_region": "US",
+            "sip_subdomain": "string",
+            "sip_subdomain_receive_settings": "only_my_connections",
+            "timeout_1xx_secs": "integer",
+            "timeout_2xx_secs": "integer"
+          }
+        }
+      },
+      "FQDNConnectionCreate": {
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "description": "Defaults to true"
+          },
+          "anchorsite_override": {
+            "type": "string",
+            "enum": [
+              "Latency",
+              "Chicago, IL",
+              "Ashburn, VA",
+              "San Jose, CA",
+              "Sydney, Australia",
+              "Amsterdam, Netherlands",
+              "London, UK",
+              "Toronto, Canada",
+              "Vancouver, Canada"
+            ],
+            "description": "`Latency` directs Telnyx to route media through the site with the lowest round-trip time to the user's connection. Telnyx calculates this time using ICMP ping messages. This can be disabled by specifying a site to handle all media.\n"
+          },
+          "connection_name": {
+            "type": "string"
+          },
+          "sip_uri_calling_preference": {
+            "type": "string",
+            "default": "disabled",
+            "description": "This feature enables inbound SIP URI calls to your Credential Auth Connection. If enabled for all (unrestricted) then anyone who calls the SIP URI <your-username>@telnyx.com will be connected to your Connection. You can also choose to allow only calls that are originated on any Connections under your account (internal).\n",
+            "enum": [
+              "disabled",
+              "unrestricted",
+              "internal"
+            ]
+          },
+          "transport_protocol": {
+            "type": "string",
+            "description": "One of UDP, TLS, or TCP. Applies only to connections with IP authentication or FQDN authentication.\n",
+            "default": "UDP",
+            "enum": [
+              "UDP",
+              "TCP",
+              "TLS"
+            ]
+          },
+          "default_on_hold_comfort_noise_enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "When enabled, Telnyx will generate comfort noise when you place the call on hold. If disabled, you will need to generate comfort noise or on hold music to avoid RTP timeout.\n"
+          },
+          "dtmf_type": {
+            "type": "string",
+            "enum": [
+              "RFC 2833",
+              "Inband",
+              "SIP INFO"
+            ],
+            "default": "RFC 2833",
+            "description": "Sets the type of DTMF digits sent from Telnyx to this Connection. Note that DTMF digits sent to Telnyx will be accepted in all formats.\n"
+          },
+          "encode_contact_header_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Encode the SIP contact header sent by Telnyx to avoid issues for NAT or ALG scenarios.\n"
+          },
+          "encrypted_media": {
+            "type": "string",
+            "enum": [
+              "SRTP",
+              "ZRTP"
+            ],
+            "description": "Enable use of SRTP or ZRTP for encryption. Valid values are those listed or null. Cannot be set to non-null if the transport_portocol is TLS.\n"
+          },
+          "onnet_t38_passthrough_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable on-net T38 if you prefer the sender and receiver negotiating T38 directly if both are on the Telnyx network. If this is disabled, Telnyx will be able to use T38 on just one leg of the call depending on each leg's settings.\n"
+          },
+          "rtcp_settings": {
+            "$ref": "#/components/schemas/ConnectionRTCPSettings"
+          },
+          "sip_reply_code": {
+            "type": "integer"
+          },
+          "sip_reply_reason": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "inbound": {
+            "$ref": "#/components/schemas/FQDNInboundCreate"
+          }
+        }
+      },
+      "FQDNConnectionUpdate": {
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "description": "Defaults to true"
+          },
+          "anchorsite_override": {
+            "type": "string",
+            "enum": [
+              "Latency",
+              "Chicago, IL",
+              "Ashburn, VA",
+              "San Jose, CA",
+              "Sydney, Australia",
+              "Amsterdam, Netherlands",
+              "London, UK",
+              "Toronto, Canada",
+              "Vancouver, Canada"
+            ],
+            "description": "`Latency` directs Telnyx to route media through the site with the lowest round-trip time to the user's connection. Telnyx calculates this time using ICMP ping messages. This can be disabled by specifying a site to handle all media."
+          },
+          "connection_name": {
+            "type": "string"
+          },
+          "sip_uri_calling_preference": {
+            "type": "string",
+            "default": "disabled",
+            "description": "This feature enables inbound SIP URI calls to your Credential Auth Connection. If enabled for all (unrestricted) then anyone who calls the SIP URI <your-username>@telnyx.com will be connected to your Connection. You can also choose to allow only calls that are originated on any Connections under your account (internal).\n",
+            "enum": [
+              "disabled",
+              "unrestricted",
+              "internal"
+            ]
+          },
+          "transport_protocol": {
+            "type": "string",
+            "description": "One of UDP, TLS, or TCP.",
+            "default": "UDP",
+            "enum": [
+              "UDP",
+              "TCP",
+              "TLS"
+            ]
+          },
+          "default_on_hold_comfort_noise_enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "When enabled, Telnyx will generate comfort noise when you place the call on hold. If disabled, you will need to generate comfort noise or on hold music to avoid RTP timeout.\n"
+          },
+          "dtmf_type": {
+            "type": "string",
+            "enum": [
+              "RFC 2833",
+              "Inband",
+              "SIP INFO"
+            ],
+            "default": "RFC 2833",
+            "description": "Sets the type of DTMF digits sent from Telnyx to this Connection. Note that DTMF digits sent to Telnyx will be accepted in all formats.\n"
+          },
+          "encode_contact_header_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Encode the SIP contact header sent by Telnyx to avoid issues for NAT or ALG scenarios.\n"
+          },
+          "encrypted_media": {
+            "type": "string",
+            "enum": [
+              "SRTP",
+              "ZRTP"
+            ],
+            "description": "Enable use of SRTP or ZRTP for encryption. Valid values are those listed or null. Cannot be set to non-null if the transport_portocol is TLS.\n"
+          },
+          "onnet_t38_passthrough_enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable on-net T38 if you prefer that the sender and receiver negotiate T38 directly when both are on the Telnyx network. If this is disabled, Telnyx will be able to use T38 on just one leg of the call according to each leg's settings."
+          },
+          "rtcp_settings": {
+            "$ref": "#/components/schemas/ConnectionRTCPSettings"
+          },
+          "sip_reply_code": {
+            "type": "integer"
+          },
+          "sip_reply_reason": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was created.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "ISO 8601 formatted date indicating when the resource was updated.",
+            "example": "2018-02-02T22:25:27.521Z"
+          },
+          "inbound": {
+            "$ref": "#/components/schemas/FQDNInbound"
+          }
+        }
+      },
+      "FQDNInbound": {
+        "type": "object",
+        "title": "Inbound configuration",
+        "properties": {
+          "ani_number_format": {
+            "type": "string",
+            "enum": [
+              "+E.164",
+              "E.164",
+              "+E.164-national",
+              "E.164-national"
+            ],
+            "default": "E.164-national",
+            "description": "This setting allows you to set the format with which the caller's number (ANI) is sent for inbound phone calls.\n"
+          },
+          "dnis_number_format": {
+            "type": "integer",
+            "description": "0 = E.164<br/> 1 = Strip-1<br/> 2 = Strip-2\n",
+            "default": 1
+          },
+          "codecs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Defines the list of codecs that Telnyx will send for inbound calls to a specific number on your portal account, in priority order. OPUS and H.264 codecs are available only when using TCP or TLS transport for SIP.\n",
+            "default": [
+              "G722",
+              "G711U",
+              "G711A",
+              "G729",
+              "OPUS",
+              "H.264"
+            ]
+          },
+          "default_routing_method": {
+            "type": "string",
+            "enum": [
+              "sequential",
+              "round-robin"
+            ],
+            "description": "Default routing method to be used when a number is associated with the connection. Must be one of the routing method types or left blank, other values are not allowed.\n"
+          },
+          "channel_limit": {
+            "type": "integer",
+            "default": null,
+            "description": "When set, this will limit the total number of inbound calls to phone numbers associated with this connection.\n"
+          },
+          "generate_ringback_tone": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Generate ringback tone through 183 session progress message with early media.\n"
+          },
+          "isup_headers_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "When set, inbound phone calls will receive ISUP parameters via SIP headers. (Only when available and only when using TCP or TLS transport.)\n"
+          },
+          "prack_enabled": {
+            "type": "boolean",
+            "description": "Enable PRACK messages as defined in RFC3262.",
+            "default": false
+          },
+          "privacy_zone_enabled": {
+            "type": "boolean",
+            "description": "By default, Telnyx does not send caller-id information when the caller has chosen to hide this information. When this option is enabled, Telnyx will send the SIP header Privacy:id plus the caller-id information so that the receiver side can choose when to hide it.\n",
+            "default": false
+          },
+          "sip_compact_headers_enabled": {
+            "type": "boolean",
+            "description": "Defaults to true.",
+            "default": true
+          },
+          "sip_region": {
+            "type": "string",
+            "default": "US",
+            "description": "Selects which `sip_region` to receive inbound calls from. If null, the default region (US) will be used.\n",
+            "enum": [
+              "US",
+              "Europe",
+              "Australia"
+            ]
+          },
+          "sip_subdomain": {
+            "type": "string",
+            "description": "Specifies a subdomain that can be used to receive Inbound calls to a Connection, in the same way a phone number is used, from a SIP endpoint. Example: the subdomain \"example.sip.telnyx.com\" can be called from any SIP endpoint by using the SIP URI \"sip:@example.sip.telnyx.com\" where the user part can be any alphanumeric value. Please note TLS encrypted calls are not allowed for subdomain calls.\n"
+          },
+          "sip_subdomain_receive_settings": {
+            "type": "string",
+            "description": "This option can be enabled to receive calls from: \"Anyone\" (any SIP endpoint in the public Internet) or \"Only my connections\" (any connection assigned to the same Telnyx user).\n",
+            "enum": [
+              "only_my_connections",
+              "from_anyone"
+            ]
+          },
+          "timeout_1xx_secs": {
+            "type": "integer",
+            "description": "Time(sec) before aborting if connection is not made (min: 1, max: 20).\n",
+            "default": 3
+          },
+          "timeout_2xx_secs": {
+            "type": "integer",
+            "description": "Time(sec) before aborting if call is unanswered (min: 1, max: 600).\n",
+            "default": 90
+          }
+        }
+      },
+      "FQDNInboundCreate": {
+        "type": "object",
+        "title": "Inbound configuration",
+        "properties": {
+          "ani_number_format": {
+            "type": "string",
+            "enum": [
+              "+E.164",
+              "E.164",
+              "+E.164-national",
+              "E.164-national"
+            ],
+            "default": "E.164-national",
+            "description": "This setting allows you to set the format with which the caller's number (ANI) is sent for inbound phone calls.\n"
+          },
+          "dnis_number_format": {
+            "type": "integer",
+            "description": "0 = E.164<br/> 1 = Strip-1<br/> 2 = Strip-2\n",
+            "default": 1
+          },
+          "codecs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Defines the list of codecs that Telnyx will send for inbound calls to a specific number on your portal account, in priority order. This only works when the Connection the number is assigned to uses Media Handling mode: default. OPUS and H.264 codecs are available only when using TCP or TLS transport for SIP.\n",
+            "default": [
+              "G722",
+              "G711U",
+              "G711A",
+              "G729",
+              "OPUS",
+              "H.264"
+            ]
+          },
+          "default_routing_method": {
+            "type": "string",
+            "enum": [
+              "sequential",
+              "round-robin"
+            ],
+            "description": "Default routing method to be used when a number is associated with the connection. Must be one of the routing method types or left blank, other values are not allowed.\n"
+          },
+          "channel_limit": {
+            "type": "integer",
+            "default": null,
+            "description": "When set, this will limit the total number of inbound calls to phone numbers associated with this connection.\n"
+          },
+          "generate_ringback_tone": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "Generate ringback tone through 183 session progress message with early media.\n"
+          },
+          "isup_headers_enabled": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ],
+            "default": false,
+            "description": "When set, inbound phone calls will receive ISUP parameters via SIP headers. (Only when available and only when using TCP or TLS transport.)\n"
+          },
+          "prack_enabled": {
+            "type": "boolean",
+            "description": "Enable PRACK messages as defined in RFC3262.",
+            "default": false
+          },
+          "privacy_zone_enabled": {
+            "type": "boolean",
+            "description": "By default, Telnyx does not send caller-id information when the caller has chosen to hide this information. When this option is enabled, Telnyx will send the SIP header Privacy:id plus the caller-id information so that the receiver side can choose when to hide it.\n",
+            "default": false
+          },
+          "sip_compact_headers_enabled": {
+            "type": "boolean",
+            "description": "Defaults to true.",
+            "default": true
+          },
+          "sip_region": {
+            "type": "string",
+            "default": "US",
+            "description": "Selects which `sip_region` to receive inbound calls from. If null, the default region (US) will be used.\n",
+            "enum": [
+              "US",
+              "Europe",
+              "Australia"
+            ]
+          },
+          "sip_subdomain": {
+            "type": "string",
+            "description": "Specifies a subdomain that can be used to receive Inbound calls to a Connection, in the same way a phone number is used, from a SIP endpoint. Example: the subdomain \"example.sip.telnyx.com\" can be called from any SIP endpoint by using the SIP URI \"sip:@example.sip.telnyx.com\" where the user part can be any alphanumeric value. Please note TLS encrypted calls are not allowed for subdomain calls.\n"
+          },
+          "sip_subdomain_receive_settings": {
+            "type": "string",
+            "description": "This option can be enabled to receive calls from: \"Anyone\" (any SIP endpoint in the public Internet) or \"Only my connections\" (any connection assigned to the same Telnyx user).\n",
+            "enum": [
+              "only_my_connections",
+              "from_anyone"
+            ]
+          },
+          "timeout_1xx_secs": {
+            "type": "integer",
+            "description": "Time(sec) before aborting if connection is not made (min: 1, max: 20).\n",
+            "default": 3
+          },
+          "timeout_2xx_secs": {
+            "type": "integer",
+            "description": "Time(sec) before aborting if call is unanswered (min: 1, max: 600).\n",
+            "default": 90
+          }
+        }
       }
     },
     "responses": {
@@ -7816,6 +10618,147 @@
             }
           }
         }
+      },
+      "IPConnectionResponse": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/IPConnection"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetAllIPConnectionResponse": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IPConnection"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CredentialConnectionResponse": {
+        "description": "Successful response with details about a credential connection",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/CredentialConnection"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetAllCredentialConnectionResponse": {
+        "description": "Successful response with multiple credential connections",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CredentialConnection"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "IPSuccessfulResponse": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/IP"
+                }
+              }
+            }
+          }
+        }
+      },
+      "IPSearchSuccessfulResponse": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IP"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "FQDNConnectionResponse": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/FQDNConnection"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetAllFQDNConnectionResponse": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FQDNConnection"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "parameters": {
@@ -7942,6 +10885,43 @@
         "schema": {
           "type": "string",
           "format": "uuid"
+        }
+      },
+      "FilterConnectionName": {
+        "name": "filter[connection_name][contains]",
+        "in": "query",
+        "required": false,
+        "description": "If present, connections with <code>connection_name</code> containing the given value will be returned. Matching is not case-sensitive. Requires at least three characters.\n",
+        "schema": {
+          "type": "string",
+          "default": "null"
+        }
+      },
+      "Sort": {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Specifies the sort order for results. By default sorting direction is ascending. To have the results sorterd in descending order add the <code> -</code> prefix.<br/><br/>\nThat is: <ul>\n  <li>\n    <code>connection_name</code>: sorts the result by the\n    <code>connection_name</code> field in ascending order.\n  </li>\n\n  <li>\n    <code>-connection_name</code>: sorts the result by the\n    <code>connection_name</code> field in descending order.\n  </li>\n</ul> <br/> If not given, results are sorted by <code>created_at</code> in descending order.\n",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "created_at",
+            "connection_name",
+            "active"
+          ],
+          "example": "connection_name",
+          "default": "created_at"
+        }
+      },
+      "IPId": {
+        "name": "id",
+        "description": "Identifies the type of resource.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "format": "uuid",
+          "type": "string",
+          "example": "6a09cdc3-8948-47f0-aa62-74ac943d6c58"
         }
       }
     },
