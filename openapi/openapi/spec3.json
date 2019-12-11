@@ -7767,7 +7767,7 @@
             "ani_number_format": "+E.164",
             "dnis_number_format": 10,
             "codecs": [
-              {}
+              "G722"
             ],
             "default_primary_ip_id": "string",
             "default_secondary_ip_id": "string",
@@ -7795,7 +7795,7 @@
             "localization": "string",
             "t38_reinvite_source": "telnyx",
             "tech_prefix": "string",
-            "ip_authentication_method": "tech-prefix",
+            "ip_authentication_method": "token",
             "ip_authentication_token": "string"
           }
         }
@@ -8537,7 +8537,7 @@
             "ani_number_format": "+E.164",
             "dnis_number_format": 10,
             "codecs": [
-              {}
+              "G722"
             ],
             "channel_limit": 10,
             "generate_ringback_tone": true,
@@ -9210,7 +9210,7 @@
             "ani_number_format": "+E.164",
             "dnis_number_format": 10,
             "codecs": [
-              {}
+              "G722"
             ],
             "default_routing_method": "sequential",
             "channel_limit": 10,
