@@ -7754,18 +7754,18 @@
           "rtcp_settings": {
             "port": "rtcp-mux",
             "report_enabled": true,
-            "report_frequency_secs": "integer"
+            "report_frequency_secs": 10
           },
           "last_registered_ip": "192.0.2.1",
-          "sip_reply_code": "integer",
+          "sip_reply_code": 10,
           "sip_reply_reason": "string",
-          "registration_status": "integer",
+          "registration_status": 10,
           "registration_status_updated_at": "string",
           "created_at": "2018-02-02T22:25:27.521Z",
           "updated_at": "2018-02-02T22:25:27.521Z",
           "inbound": {
             "ani_number_format": "+E.164",
-            "dnis_number_format": "integer",
+            "dnis_number_format": 10,
             "codecs": [
               {}
             ],
@@ -7773,7 +7773,7 @@
             "default_secondary_ip_id": "string",
             "default_tertiary_ip_id": "string",
             "default_routing_method": "sequential",
-            "channel_limit": "integer",
+            "channel_limit": 10,
             "generate_ringback_tone": true,
             "isup_headers_enabled": true,
             "prack_enabled": true,
@@ -7782,14 +7782,14 @@
             "sip_region": "US",
             "sip_subdomain": "string",
             "sip_subdomain_receive_settings": "only_my_connections",
-            "timeout_1xx_secs": "integer",
-            "timeout_2xx_secs": "integer"
+            "timeout_1xx_secs": 10,
+            "timeout_2xx_secs": 10
           },
           "outbound": {
             "call_parking_enabled": true,
             "ani_override": "string",
             "ani_override_type": "always",
-            "channel_limit": "integer",
+            "channel_limit": 10,
             "instant_ringback_enabled": true,
             "generate_ringback_tone": true,
             "localization": "string",
@@ -8529,17 +8529,17 @@
           "rtcp_settings": {
             "port": "rtcp-mux",
             "report_enabled": false,
-            "report_frequency_seconds": "integer"
+            "report_frequency_seconds": 10
           },
-          "sip_reply_code": "integer",
+          "sip_reply_code": 10,
           "sip_reply_reason": "string",
           "inbound": {
             "ani_number_format": "+E.164",
-            "dnis_number_format": "integer",
+            "dnis_number_format": 10,
             "codecs": [
               {}
             ],
-            "channel_limit": "integer",
+            "channel_limit": 10,
             "generate_ringback_tone": true,
             "isup_headers_enabled": true,
             "prack_enabled": false,
@@ -8553,7 +8553,7 @@
             "call_parking_enabled": false,
             "ani_override": "string",
             "ani_override_type": "always",
-            "channel_limit": "integer",
+            "channel_limit": 10,
             "instant_ringback_enabled": false,
             "generate_ringback_tone": true,
             "localization": "string",
@@ -9197,23 +9197,23 @@
           "rtcp_settings": {
             "port": "rtcp-mux",
             "report_enabled": false,
-            "report_frequency_secs": "integer"
+            "report_frequency_secs": 10
           },
           "last_registered_ip": "192.0.2.1",
-          "sip_reply_code": "integer",
+          "sip_reply_code": 10,
           "sip_reply_reason": "string",
-          "registration_status": "integer",
+          "registration_status": 10,
           "registration_status_updated_at": "string",
           "created_at": "2018-02-02T22:25:27.521Z",
           "updated_at": "2018-02-02T22:25:27.521Z",
           "inbound": {
             "ani_number_format": "+E.164",
-            "dnis_number_format": "integer",
+            "dnis_number_format": 10,
             "codecs": [
               {}
             ],
             "default_routing_method": "sequential",
-            "channel_limit": "integer",
+            "channel_limit": 10,
             "generate_ringback_tone": true,
             "isup_headers_enabled": true,
             "prack_enabled": false,
@@ -9222,8 +9222,8 @@
             "sip_region": "US",
             "sip_subdomain": "string",
             "sip_subdomain_receive_settings": "only_my_connections",
-            "timeout_1xx_secs": "integer",
-            "timeout_2xx_secs": "integer"
+            "timeout_1xx_secs": 10,
+            "timeout_2xx_secs": 10
           }
         }
       },
