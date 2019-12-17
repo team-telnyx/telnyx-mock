@@ -98,6 +98,14 @@
     {
       "name": "FQDN Connections",
       "description": "FQDN connection operations"
+    },
+    {
+      "name": "Number Order Regulatory Requirements",
+      "description": "Number order regulatory requirements"
+    },
+    {
+      "name": "Number Order Documents",
+      "description": "Number order documents"
     }
   ],
   "paths": {
@@ -3685,6 +3693,246 @@
                   }
               }
        }
+    },
+    "/regulatory_requirements": {
+      "get": {
+        "summary": "Get list of Number Order Regulatory Requirements",
+        "description": "Gets a paginated list of Number Order Regulatory Requirements",
+        "operationId": "listNumberOrderRegulatoryRequirements",
+        "tags": [
+          "Number Order Regulatory Requirements"
+        ],
+        "parameters": [
+          {
+            "name": "filter[requirement_id]",
+            "in": "query",
+            "description": "Filter number order regulatory requirements by requirement_id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[field_type]",
+            "in": "query",
+            "description": "Filter number order regulatory requirements by field_type",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[requirement_type]",
+            "in": "query",
+            "description": "Filter number order regulatory requirements by requirement_type",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListNumberOrderRegulatoryRequirementsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/regulatory_requirements/{requirement_id}": {
+      "get": {
+        "summary": "Get Detailed Number Order Regulatory Requirement",
+        "description": "Gets a single Number Order Regulatory Requirement",
+        "operationId": "retrieveNumberOrderRegulatoryRequirement",
+        "tags": [
+          "Number Order Regulatory Requirements"
+        ],
+        "parameters": [
+          {
+            "name": "requirement_id",
+            "in": "path",
+            "description": "The number order regulatory requirement id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveNumberOrderRegulatoryRequirementResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/phone_number_regulatory_requirements": {
+      "get": {
+        "summary": "Get Regulatory Requirements Per Number",
+        "description": "Gets a paginated list of Phone Number Regulatory Requirements",
+        "operationId": "listPhoneNumberRegulatoryRequirements",
+        "tags": [
+          "Number Order Regulatory Requirements"
+        ],
+        "parameters": [
+          {
+            "name": "filter[phone_number]",
+            "in": "query",
+            "description": "The list of phone numbers to retrieve regulatory requirements for",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListPhoneNumberRegulatoryRequirementsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/number_order_documents": {
+      "get": {
+        "summary": "Get Uploaded Number Order Documents",
+        "description": "Gets a paginated list of Number Order Documents",
+        "operationId": "listNumberOrderDocuments",
+        "tags": [
+          "Number Order Documents"
+        ],
+        "parameters": [
+          {
+            "name": "filter[requirement_id]",
+            "in": "query",
+            "description": "Filter number order documents by requirement_id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[created_at][gt]",
+            "in": "query",
+            "description": "Filter number order documents after this datetime",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[created_at][lt]",
+            "in": "query",
+            "description": "Filter number order documents from before this datetime",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListNumberOrderDocumentsResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "summary": "Upload Number Order Document",
+        "description": "Upload a Phone Number Order Document",
+        "operationId": "createNumberOrderDocument",
+        "tags": [
+          "Number Order Documents"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NumberOrderDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateNumberOrderDocumentResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
+    },
+    "/number_order_documents/{number_order_document_id}": {
+      "patch": {
+        "summary": "Update Number Order Document",
+        "description": "Updates a Number Order Document",
+        "operationId": "updateNumberOrderDocument",
+        "tags": [
+          "Number Order Documents"
+        ],
+        "parameters": [
+          {
+            "name": "number_order_document_id",
+            "in": "path",
+            "description": "The number order document id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NumberOrderDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UpdateNumberOrderDocumentResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      },
+      "get": {
+        "summary": "Retrieve a Single Number Order Document",
+        "description": "Gets a single Number Order Document",
+        "operationId": "retrieveNumberOrderDocument",
+        "tags": [
+          "Number Order Documents"
+        ],
+        "parameters": [
+          {
+            "name": "number_order_document_id",
+            "in": "path",
+            "description": "The number order document id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RetrieveNumberOrderDocumentResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4033,8 +4281,7 @@
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "387d1e31-a218-4375-8151-103f2d5e2d2c",
-            "description": "The id of the number order document"
+            "example": "387d1e31-a218-4375-8151-103f2d5e2d2c"
           },
           "record_type": {
             "type": "string",
@@ -4042,30 +4289,38 @@
           },
           "file_id": {
             "type": "string",
-            "example": "1e3c5822-0362-4702-8e46-5a129f0d3976",
-            "description": "The id of the file to associate as a number order document."
+            "description": "The id of the file to associate as a number order document"
           },
-          "requirement_id": {
+          "requirements_id": {
             "type": "string",
-            "description": "unique id for a requirement."
+            "description": "Unique id for a requirement"
           },
           "customer_reference": {
             "type": "string",
-            "description": "human readable description of the file."
+            "description": "A customer reference string for customer look ups"
           },
           "requirement_type": {
             "type": "string",
             "enum": [
+              "address_proof",
               "identification",
-              "reg_form",
-              "address_proof"
+              "reg_form"
             ]
           },
           "created_at": {
             "type": "string",
             "format": "datetime",
-            "description": "A datetime string denoting when the number order document was uploaded"
+            "description": "An ISO 8901 datetime string denoting when the number order document was uploaded"
           }
+        },
+        "example": {
+          "id": "387d1e31-a218-4375-8151-103f2d5e2d2c",
+          "record_type": "number_order_document",
+          "file_id": "1e3c5822-0362-4702-8e46-5a129f0d3976",
+          "requirements_id": "36aaf27d-986b-493c-bd1b-de16af2e4292",
+          "customer_reference": "MY REF 001",
+          "requirement_type": "address_proof",
+          "created_at": "2018-01-01T00:00:00.000000Z"
         }
       },
       "PhoneNumberRegulatoryRequirement": {
@@ -4078,12 +4333,13 @@
           "requirement_id": {
             "type": "string",
             "format": "uuid",
-            "example": "8ffb3622-7c6b-4ccc-b65f-7a3dc0099576",
-            "description": "unique id for a requirement."
+            "description": "Unique id for a requirement",
+            "example": "8ffb3622-7c6b-4ccc-b65f-7a3dc0099576"
           },
           "field_value": {
             "type": "string",
-            "description": "The value of the requirement, this could be an id to a resource or a string value."
+            "description": "The value of the requirement, this could be an id to a resource or a string value",
+            "example": "45f45a04-b4be-4592-95b1-9306b9db2b21"
           },
           "field_type": {
             "type": "string",
@@ -4100,15 +4356,13 @@
       "RegulatoryRequirement": {
         "type": "object",
         "properties": {
-          "requirement_id": {
+          "requirement_type": {
             "type": "string",
-            "format": "uuid",
-            "example": "8ffb3622-7c6b-4ccc-b65f-7a3dc0099576",
-            "description": "unique id for a requirement."
-          },
-          "record_type": {
-            "type": "string",
-            "example": "regulatory_requirement"
+            "enum": [
+              "end user proof of address",
+              "entity identification",
+              "end user address"
+            ]
           },
           "label": {
             "type": "string",
@@ -4117,17 +4371,22 @@
           "field_type": {
             "type": "string",
             "enum": [
-              "string",
-              "datetime",
-              "address_id",
-              "number_order_document_id"
-            ],
-            "example": "address_id"
+              "file upload",
+              "text field",
+              "address",
+              "datetime"
+            ]
           },
           "description": {
             "type": "string",
-            "example": "A bill or whatever that is less than 6 months old."
+            "example": "Requirement for providing Proof of Address"
           }
+        },
+        "example": {
+          "requirement_type": "end user proof of address",
+          "label": "Proof of Address",
+          "field_type": "file upload",
+          "description": "Requirement for providing Proof of Address"
         }
       },
       "PhoneNumberRegulatoryGroup": {
@@ -4138,7 +4397,9 @@
             "example": "phone_number_regulatory_group"
           },
           "phone_number": {
-            "type": "string"
+            "type": "string",
+            "format": "e164_phone_number",
+            "example": "+19705555098"
           },
           "regulatory_group_id": {
             "type": "string",
@@ -4151,10 +4412,22 @@
               "$ref": "#/components/schemas/RegulatoryRequirement"
             }
           }
+        },
+        "example": {
+          "record_type": "phone_number_regulatory_group",
+          "phone_number": "+19705555098",
+          "regulatory_group_id": "d70873cd-7c98-401a-81b6-b1ae08246995",
+          "regulatory_requirements": [
+            {
+              "requirement_type": "end user proof of address",
+              "label": "Proof of Address",
+              "field_type": "file upload",
+              "description": "Requirement for providing Proof of Address"
+            }
+          ]
         }
       },
       "RegulatoryRequirementCriteria": {
-        "type": "object",
         "properties": {
           "record_type": {
             "type": "string",
@@ -10750,6 +11023,129 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/FQDNConnection"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListNumberOrderDocumentsResponse": {
+        "description": "Returns a list of number order documents",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NumberOrderDocument"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateNumberOrderDocumentResponse": {
+        "description": "Number order document has been uploaded successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/NumberOrderDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateNumberOrderDocumentResponse": {
+        "description": "Number order document has been updated successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/NumberOrderDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveNumberOrderDocumentResponse": {
+        "description": "Number order document was found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/NumberOrderDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListNumberOrderRegulatoryRequirementsResponse": {
+        "description": "Returns a list of number order regulatory requirements",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegulatoryRequirement"
+                  }
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/PaginationMeta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RetrieveNumberOrderRegulatoryRequirementResponse": {
+        "description": "Number order regulatory requirement was found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/RegulatoryRequirement"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListPhoneNumberRegulatoryRequirementsResponse": {
+        "description": "Returns a list of number order regulatory requirements",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PhoneNumberRegulatoryGroup"
                   }
                 },
                 "meta": {
