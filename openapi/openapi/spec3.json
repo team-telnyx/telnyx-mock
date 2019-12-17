@@ -4356,6 +4356,10 @@
       "RegulatoryRequirement": {
         "type": "object",
         "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "regulatory_requirement"
+          },
           "requirement_type": {
             "type": "string",
             "enum": [
@@ -4383,6 +4387,7 @@
           }
         },
         "example": {
+          "record_type": "regulatory_requirement",
           "requirement_type": "end user proof of address",
           "label": "Proof of Address",
           "field_type": "file upload",
@@ -4394,7 +4399,7 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "phone_number_regulatory_group"
+            "example": "phone_number_regulatory_requirement"
           },
           "phone_number": {
             "type": "string",
@@ -4414,11 +4419,12 @@
           }
         },
         "example": {
-          "record_type": "phone_number_regulatory_group",
+          "record_type": "phone_number_regulatory_requirement",
           "phone_number": "+19705555098",
           "regulatory_group_id": "d70873cd-7c98-401a-81b6-b1ae08246995",
           "regulatory_requirements": [
             {
+              "record_type": "regulatory_requirement",
               "requirement_type": "end user proof of address",
               "label": "Proof of Address",
               "field_type": "file upload",
