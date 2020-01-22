@@ -8140,59 +8140,8 @@
           }
         }
       },
-      "MessagingResponse": {
-        "type": "object",
-        "properties": {
-          "messaging_profile_id": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true,
-            "description": "Unique identifier for a messaging profile."
-          },
-          "messaging_profile_name": {
-            "type": "string",
-            "description": "Messaging profile name.",
-            "example": "Test Name"
-          },
-          "type": {
-            "type": "string",
-            "description": "The type of the phone number.",
-            "enum": [
-              "long-code",
-              "toll-free",
-              "short-code"
-            ]
-          },
-          "country_code": {
-            "type": "string",
-            "description": "ISO 3166-1 alpha-2 country code.",
-            "pattern": "^(([A-Z]{2}))$",
-            "example": "US"
-          },
-          "traffic_type": {
-            "type": "string",
-            "description": "The messaging traffic or use case for which the number is currently configured.",
-            "example": "P2P"
-          },
-          "messaging_product": {
-            "type": "string",
-            "description": "The messaging product that the number is registered to use.",
-            "example": "P2P"
-          },
-          "features": {
-            "type": "object",
-            "properties": {
-              "sms": {
-                "$ref": "#/components/schemas/MessagingFeatureSet"
-              },
-              "mms": {
-                "$ref": "#/components/schemas/MessagingFeatureSet"
-              }
-            }
-          }
-        }
-      },
       "NumberReservation": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -8235,9 +8184,29 @@
             "description": "An ISO 8901 datetime string for when the number reservation was updated",
             "example": "2018-01-01T00:00:00.000000Z"
           }
+        },
+        "example": {
+          "id": "12ade33a-21c0-473b-b055-b3c836e1c292",
+          "record_type": "phone_number_reservation",
+          "phone_numbers": [
+            {
+              "id": "12ade33a-21c0-473b-b055-b3c836e1c292",
+              "record_type": "reserved_phone_number",
+              "phone_number": "+19705555098",
+              "status": "pending",
+              "created_at": "2018-01-01T00:00:00.000000Z",
+              "updated_at": "2018-01-01T00:00:00.000000Z",
+              "expired_at": "2018-01-01T00:00:00.000000Z"
+            }
+          ],
+          "status": "pending",
+          "customer_reference": "MY REF 001",
+          "created_at": "2018-01-01T00:00:00.000000Z",
+          "updated_at": "2018-01-01T00:00:00.000000Z"
         }
       },
       "ReservedPhoneNumber": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -8283,6 +8252,80 @@
         }
       },
       "NumberOrder": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "12ade33a-21c0-473b-b055-b3c836e1c292"
+          },
+          "record_type": {
+            "type": "string",
+            "example": "number_order"
+          },
+          "phone_numbers_count": {
+            "type": "integer",
+            "description": "The count of phone numbers in the number order",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "success",
+              "failure"
+            ],
+            "description": "The status of the order"
+          },
+          "customer_reference": {
+            "type": "string",
+            "description": "A customer reference string for customer look ups",
+            "example": "MY REF 001"
+          },
+          "connection_id": {
+            "type": "string",
+            "description": "The connection id to set the number to upon acquiring the number",
+            "example": "442191469269222625"
+          },
+          "messaging_profile_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The messaging profile id to set the number to upon acquiring the number",
+            "example": "730911e3-8488-40a8-a818-dc0a5df8bc03"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "datetime",
+            "description": "An ISO 8901 datetime string denoting when the number order was created",
+            "example": "2018-01-01T00:00:00.000000Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "datetime",
+            "description": "An ISO 8901 datetime string for when the number order was updated",
+            "example": "2018-01-01T00:00:00.000000Z"
+          },
+          "requirements_met": {
+            "type": "boolean",
+            "description": "True if all requirements are met for every phone number, false otherwise",
+            "example": true
+          }
+        },
+        "example": {
+          "id": "12ade33a-21c0-473b-b055-b3c836e1c292",
+          "record_type": "number_order",
+          "phone_numbers_count": 1,
+          "status": "pending",
+          "customer_reference": "MY REF 001",
+          "connection_id": "442191469269222625",
+          "messaging_profile_id": "730911e3-8488-40a8-a818-dc0a5df8bc03",
+          "created_at": "2018-01-01T00:00:00.000000Z",
+          "updated_at": "2018-01-01T00:00:00.000000Z",
+          "requirements_met": true
+        }
+      },
+      "NumberOrderDetailed": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -8346,19 +8389,36 @@
             "description": "True if all requirements are met for every phone number, false otherwise",
             "example": true
           }
-        }
-      },
-      "NumberOrderDetailed": {
-        "properties": {
-          "phone_numbers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PhoneNumber"
-            }
-          }
+        },
+        "example": {
+          "id": "12ade33a-21c0-473b-b055-b3c836e1c292",
+          "record_type": "number_order",
+          "phone_numbers": [{
+            "id": "dc8e4d67-33a0-4cbb-af74-7b58f05bd494",
+            "record_type": "number_order_phone_number",
+            "phone_number": "+19705555098",
+            "regulatory_group_id": "dc8e4d67-33a0-4cbb-af74-7b58f05bd494",
+            "regulatory_requirements": [{
+              "record_type": "phone_number_regulatory_requirement",
+              "requirement_id": "8ffb3622-7c6b-4ccc-b65f-7a3dc0099576",
+              "field_value": "45f45a04-b4be-4592-95b1-9306b9db2b21",
+              "field_type": "address_id"
+            }],
+            "requirements_met": true,
+            "status": "success"
+          }],
+          "phone_numbers_count": 1,
+          "status": "pending",
+          "customer_reference": "MY REF 001",
+          "connection_id": "442191469269222625",
+          "messaging_profile_id": "730911e3-8488-40a8-a818-dc0a5df8bc03",
+          "created_at": "2018-01-01T00:00:00.000000Z",
+          "updated_at": "2018-01-01T00:00:00.000000Z",
+          "requirements_met": true
         }
       },
       "PhoneNumber": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -8398,9 +8458,24 @@
             ],
             "description": "The status of the phone number in the order"
           }
+        },
+        "example": {
+          "id": "dc8e4d67-33a0-4cbb-af74-7b58f05bd494",
+          "record_type": "number_order_phone_number",
+          "phone_number": "+19705555098",
+          "regulatory_group_id": "dc8e4d67-33a0-4cbb-af74-7b58f05bd494",
+          "regulatory_requirements": [{
+            "record_type": "phone_number_regulatory_requirement",
+            "requirement_id": "8ffb3622-7c6b-4ccc-b65f-7a3dc0099576",
+            "field_value": "45f45a04-b4be-4592-95b1-9306b9db2b21",
+            "field_type": "address_id"
+          }],
+          "requirements_met": true,
+          "status": "success"
         }
       },
       "NumberOrderDocument": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -8440,6 +8515,15 @@
             "description": "An ISO 8901 datetime string denoting when the number order document was uploaded",
             "example": "2018-01-01T00:00:00.000000Z"
           }
+        },
+        "example": {
+          "id": "387d1e31-a218-4375-8151-103f2d5e2d2c",
+          "record_type": "number_order_document",
+          "file_id": "1e3c5822-0362-4702-8e46-5a129f0d3976",
+          "requirements_id": "36aaf27d-986b-493c-bd1b-de16af2e4292",
+          "customer_reference": "MY REF 001",
+          "requirement_type": "address_proof",
+          "created_at": "2018-01-01T00:00:00.000000Z"
         }
       },
       "PhoneNumberRegulatoryRequirement": {
@@ -8469,9 +8553,16 @@
             ],
             "example": "address_id"
           }
+        },
+        "example": {
+          "record_type": "phone_number_regulatory_requirement",
+          "requirement_id": "8ffb3622-7c6b-4ccc-b65f-7a3dc0099576",
+          "field_value": "45f45a04-b4be-4592-95b1-9306b9db2b21",
+          "field_type": "address_id"
         }
       },
       "RegulatoryRequirement": {
+        "type": "object",
         "properties": {
           "requirement_type": {
             "type": "string",
@@ -8498,9 +8589,16 @@
             "type": "string",
             "example": "Requirement for providing Proof of Address"
           }
+        },
+        "example": {
+          "requirement_type": "end user proof of address",
+          "label": "Proof of Address",
+          "field_type": "address",
+          "description": "Requirement for providing Proof of Address"
         }
       },
       "PhoneNumberRegulatoryGroup": {
+        "type": "object",
         "properties": {
           "record_type": {
             "type": "string",
@@ -8522,6 +8620,19 @@
               "$ref": "#/components/schemas/RegulatoryRequirement"
             }
           }
+        },
+        "example": {
+          "record_type": "phone_number_regulatory_group",
+          "phone_number": "+19705555098",
+          "regulatory_group_id": "d70873cd-7c98-401a-81b6-b1ae08246995",
+          "regulatory_requirements": [
+            {
+              "requirement_type": "end user proof of address",
+              "label": "Proof of Address",
+              "field_type": "address",
+              "description": "Requirement for providing Proof of Address"
+            }
+          ]
         }
       },
       "RegulatoryRequirementCriteria": {
@@ -8559,6 +8670,10 @@
             "type": "string",
             "example": "US"
           }
+        },
+        "example": {
+          "region_type": "country_code",
+          "region_name": "US"
         }
       },
       "CostInformation": {
@@ -8577,6 +8692,11 @@
             "description": "The ISO 4217 code for the currency",
             "example": "USD"
           }
+        },
+        "example": {
+          "upfront_cost": "3.21",
+          "monthly_cost": "6.54",
+          "currency": "USD"
         }
       },
       "AvailablePhoneNumber": {
@@ -8644,7 +8764,15 @@
             "upfront_cost": "3.21",
             "monthly_cost": "6.54",
             "currency": "USD"
-          }
+          },
+          "regulatory_requirements": [
+            {
+              "requirement_type": "end user proof of address",
+              "label": "Proof of Address",
+              "field_type": "address",
+              "description": "Requirement for providing Proof of Address"
+            }
+          ]
         }
       },
       "AvailablePhoneNumbersMetadata": {
@@ -8719,6 +8847,37 @@
           "call_recording": {
             "$ref": "#/components/schemas/CallRecording"
           }
+        },
+        "example": {
+          "id": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+          "record_type": "voice_settings",
+          "connection_id": "1d0e6cb8-8668-462e-94c6-49ae0f0ed48b",
+          "tech_prefix_enabled": false,
+          "translated_number": "+13035559999",
+          "call_forwarding": {
+            "forwards_to": "string",
+            "forwarding_type": "always"
+          },
+          "cnam_listing": {
+            "cnam_listing_enabled": true,
+            "cnam_listing_details": "string"
+          },
+          "emergency": {
+            "emergency_enabled": true,
+            "emergency_address_id": "string"
+          },
+          "usage_payment_method": "pay-per-minute",
+          "media_features": {
+            "rtp_auto_adjust_enabled": true,
+            "media_handling_mode": "default",
+            "accept_any_rtp_packets_enabled": true,
+            "t38_fax_gateway_enabled": true
+          },
+          "call_recording": {
+            "inbound_call_recording_enabled": true,
+            "inbound_call_recording_format": "wav",
+            "inbound_call_recording_channels": "single"
+          }
         }
       },
       "VoiceUpdate": {
@@ -8774,6 +8933,10 @@
             ],
             "example": "always"
           }
+        },
+        "example": {
+          "forwards_to": "string",
+          "forwarding_type": "always"
         }
       },
       "CNAMListing": {
@@ -8789,6 +8952,10 @@
             "type": "string",
             "description": "The CNAM listing details for this number. Must be alphanumeric characters or spaces with a maximum length of 15. Requires cnam_listing_enabled to also be set to true."
           }
+        },
+        "example": {
+          "cnam_listing_enabled": true,
+          "cnam_listing_details": "string"
         }
       },
       "Emergency": {
@@ -8804,6 +8971,10 @@
             "type": "string",
             "description": "Identifies the address to be used with emergency services."
           }
+        },
+        "example": {
+          "emergency_enabled": "boolean",
+          "emergency_address_id": "string"
         }
       },
       "MediaFeatures": {
@@ -8834,6 +9005,12 @@
             "default": false,
             "description": "Controls whether Telnyx will accept a T.38 re-INVITE for this phone number. Note that Telnyx will not send a T.38 re-INVITE; this option only controls whether one will be accepted."
           }
+        },
+        "example": {
+          "rtp_auto_adjust_enabled": true,
+          "media_handling_mode": "default",
+          "accept_any_rtp_packets_enabled": true,
+          "t38_fax_gateway_enabled": true
         }
       },
       "CallRecording": {
@@ -8863,6 +9040,11 @@
             "default": "single",
             "description": "When using 'dual' channels, final audio file will be stereo recorded with the first leg on channel A, and the rest on channel B."
           }
+        },
+        "example": {
+          "inbound_call_recording_enabled": "boolean",
+          "inbound_call_recording_format": "wav",
+          "inbound_call_recording_channels": "single"
         }
       },
       "MessagingFeatureSet": {
@@ -8926,6 +9108,13 @@
             "default": false,
             "description": "If set to true, Number Pool will try to choose a sending number with the same area code as the destination\nnumber. If there are no such numbers available, a nunber with a different area code will be chosen. Currently\nonly NANP numbers are supported.\n"
           }
+        },
+        "example": {
+          "toll_free_weight": 10,
+          "long_code_weight": 2,
+          "skip_unhealthy": false,
+          "sticky_sender": true,
+          "geomatch": false
         }
       },
       "UrlShortenerSettings": {
@@ -8947,25 +9136,10 @@
             "example": "",
             "description": "Optional prefix that can be used to identify your brand, and will appear in the Telnyx generated URLs after the domain name.\n"
           }
-        }
-      },
-      "ShortCodeInfo": {
-        "description": "This information is attached to messages that are sent from short codes. It includes carrier information, which can influence billing.",
-        "properties": {
-          "record_type": {
-            "type": "string",
-            "example": "short_code_info_blob",
-            "enum": [
-              "short_code_info_blob"
-            ],
-            "description": "Identifies the type of the resource."
-          },
-          "om_carrier": {
-            "type": "string"
-          },
-          "om_normalized_carrier": {
-            "type": "string"
-          }
+        },
+        "example": {
+          "domain": "example.ex",
+          "prefix": "cmpny"
         }
       },
       "NumberHealthMetrics": {
@@ -8998,20 +9172,18 @@
             "format": "float",
             "description": "The ratio of messages blocked for spam to the number of messages attempted."
           }
+        },
+        "example": {
+          "message_count": 122,
+          "inbound_outbound_ratio": 0.43,
+          "success_ratio": 0.94,
+          "spam_ratio": 0.06
         }
       },
       "ToNumber": {
         "type": "string",
         "format": "address",
         "description": "Receiving address (+E.164 formatted phone number or short code)."
-      },
-      "ToNumberArray": {
-        "type": "array",
-        "items": {
-          "type": "string",
-          "format": "address",
-          "description": "Receiving address (+E.164 formatted phone number or short code)."
-        }
       },
       "NewMessagingProfile": {
         "type": "object",
@@ -9153,6 +9325,12 @@
           "use_case": {
             "type": "string"
           }
+        },
+        "example": {
+          "record_type": "string",
+          "id": "string",
+          "url_domain": "string",
+          "use_case": "string"
         }
       },
       "MessagingPhoneNumber": {
@@ -9302,9 +9480,9 @@
         "properties": {
           "record_type": {
             "type": "string",
-            "example": "messaging_phone_number",
+            "example": "messaging_settings",
             "enum": [
-              "messaging_phone_number"
+              "messaging_settings"
             ],
             "description": "Identifies the type of the resource."
           },
@@ -9394,6 +9572,10 @@
             "description": "The requested messaging product the number should be on",
             "example": "P2P"
           }
+        },
+        "example": {
+          "messaging_profile_id": "uuid",
+          "messaging_product": "P2P"
         }
       },
       "ShortCode": {
@@ -9521,68 +9703,6 @@
           }
         }
       },
-      "NewLongCodeMessage": {
-        "type": "object",
-        "required": [
-          "from",
-          "to"
-        ],
-        "properties": {
-          "from": {
-            "type": "string",
-            "format": "address",
-            "description": "Phone number, in +E.164 format, used to send the message."
-          },
-          "to": {
-            "oneOf": [
-              {
-                "type": "string",
-                "format": "address",
-                "description": "Receiving address (+E.164 formatted phone number or short code)."
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "address",
-                  "description": "Receiving address (+E.164 formatted phone number or short code)."
-                }
-              }
-            ]
-          },
-          "text": {
-            "type": "string",
-            "description": "Message body (i.e., content) as a non-empty string.\n\n**Required for SMS**"
-          },
-          "subject": {
-            "type": "string",
-            "description": "Subject of multimedia message"
-          },
-          "media_urls": {
-            "description": "A list of media URLs. The total media size must be less than 1 MB.\n\n**Required for MMS**",
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "url"
-            }
-          },
-          "webhook_url": {
-            "description": "The URL where webhooks related to this message will be sent.",
-            "type": "string",
-            "format": "url"
-          },
-          "webhook_failover_url": {
-            "description": "The failover URL where webhooks related to this message will be sent if sending to the primary URL fails.",
-            "type": "string",
-            "format": "url"
-          },
-          "use_profile_webhooks": {
-            "type": "boolean",
-            "description": "If the profile this number is associated with has webhooks, use them for delivery notifications. If webhooks are also specified on the message itself, they will be attempted first, then those on the profile.",
-            "default": true
-          }
-        }
-      },
       "NewNumberPoolMessage": {
         "type": "object",
         "required": [
@@ -9642,93 +9762,6 @@
             "type": "boolean",
             "description": "If the profile this number is associated with has webhooks, use them for delivery notifications. If webhooks are also specified on the message itself, they will be attempted first, then those on the profile.",
             "default": true
-          }
-        }
-      },
-      "NewShortCodeMessage": {
-        "type": "object",
-        "required": [
-          "from",
-          "to"
-        ],
-        "properties": {
-          "from": {
-            "type": "string",
-            "format": "address",
-            "description": "Phone number, in +E.164 format, used to send the message."
-          },
-          "to": {
-            "oneOf": [
-              {
-                "type": "string",
-                "format": "address",
-                "description": "Receiving address (+E.164 formatted phone number.)"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "address",
-                  "description": "Receiving short code."
-                }
-              }
-            ]
-          },
-          "text": {
-            "type": "string",
-            "description": "Message body (i.e., content) as a non-empty string.\n\n**Required for SMS**"
-          },
-          "subject": {
-            "type": "string",
-            "description": "Subject of multimedia message"
-          },
-          "media_urls": {
-            "description": "A list of media URLs. The total media size must be less than 1 MB.\n\n**Required for MMS**",
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "url"
-            }
-          },
-          "webhook_url": {
-            "description": "The URL where webhooks related to this message will be sent.",
-            "type": "string",
-            "format": "url",
-            "default": ""
-          },
-          "webhook_failover_url": {
-            "description": "The failover URL where webhooks related to this message will be sent if sending to the primary URL fails.",
-            "type": "string",
-            "format": "url",
-            "default": ""
-          },
-          "use_profile_webhooks": {
-            "type": "boolean",
-            "description": "If the profile this number is associated with has webhooks, use them for delivery notifications. If webhooks are also specified on the message itself, they will be attempted first, then those on the profile.",
-            "default": true
-          }
-        }
-      },
-      "MessageQueueInfo": {
-        "type": "object",
-        "properties": {
-          "queue_lengths": {
-            "description": "Approximate lengths of the user's queues",
-            "type": "object",
-            "properties": {
-              "account": {
-                "type": "integer",
-                "description": "Length of the account queue."
-              },
-              "messaging_profile": {
-                "type": "integer",
-                "description": "Length of the messaging profile queue."
-              },
-              "phone_number": {
-                "type": "integer",
-                "description": "Length of the phone number queue."
-              }
-            }
           }
         }
       },
@@ -9952,10 +9985,13 @@
           "tags": [
             "Greetings"
           ],
-          "cost": null,
+          "cost": {
+            "amount": "34.3",
+            "currency": "USD"
+          },
           "received_at": "2019-01-23T18:10:02.574Z",
-          "sent_at": null,
-          "completed_at": null,
+          "sent_at": "",
+          "completed_at": "",
           "valid_until": null,
           "errors": []
         }
@@ -9991,6 +10027,51 @@
           },
           "payload": {
             "$ref": "#/components/schemas/OutboundMessage"
+          }
+        },
+        "example": {
+          "record_type": "event",
+          "id": "uuid",
+          "event_type": "message.sent",
+          "occurred_at": "date-time",
+          "payload": {
+            "record_type": "message",
+            "direction": "outbound",
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "type": "MMS",
+            "messaging_profile_id": "dd50eba1-a0c0-4563-9925-b25e842a7cb6",
+            "from": "+18445550001",
+            "to": [
+              {
+                "phone_number": "+18665550001",
+                "status": "queued",
+                "carrier": "T-MOBILE USA, INC.",
+                "line_type": "Wireless"
+              }
+            ],
+            "text": "Hello, World!",
+            "subject": "From Telnyx!",
+            "media": [
+              {
+                "url": "https://pbs.twimg.com/profile_images/1142168442042118144/AW3F4fFD_400x400.png",
+                "content_type": null,
+                "sha256": null,
+                "size": null
+              }
+            ],
+            "webhook_url": "https://www.example.com/hooks",
+            "webhook_failover_url": "https://www.example.com/callbacks",
+            "encoding": "GSM-7",
+            "parts": 1,
+            "tags": [
+              "Greetings"
+            ],
+            "cost": null,
+            "received_at": "2019-01-23T18:10:02.574Z",
+            "sent_at": "",
+            "completed_at": "",
+            "valid_until": null,
+            "errors": []
           }
         }
       },
@@ -10200,8 +10281,8 @@
           ],
           "cost": null,
           "received_at": "2019-01-23T18:10:02.574Z",
-          "sent_at": null,
-          "completed_at": null,
+          "sent_at": "",
+          "completed_at": "",
           "valid_until": null,
           "errors": []
         }
@@ -10270,6 +10351,12 @@
             "example": "pending",
             "description": "Indicates the completion level of the CSV report. Only complete CSV download requests will be able to be retrieved."
           }
+        },
+        "example": {
+          "id": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+          "record_type": "csv_download",
+          "url": "https://www.telnyx.com/sample/42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+          "status": "pending"
         }
       }
     },
