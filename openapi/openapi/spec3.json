@@ -3052,9 +3052,19 @@
             }
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/RetrieveNumberReservationResponse"
+            "$ref": "#/components/responses/NumberReservationActionsExtendResponse"
           },
           "default": {
             "$ref": "#/components/responses/GenericErrorResponse"
@@ -4143,31 +4153,6 @@
           "next_page_token": {
             "type": "string"
           }
-        }
-      },
-      "NumberReservationDetailed": {
-        "type": "array",
-        "$ref": "#/components/schemas/NumberReservation",
-        "example": {
-          "id": "122644a6-aa12-4832-b353-7a88e89722fd",
-          "created_at": "2019-06-06T22:32:45.075437Z",
-          "customer_reference": "CUSTOMER_REF_1",
-          "updated_at": "2019-06-06T22:32:51.299616Z",
-          "status": "success",
-          "phone_numbers": [
-            {
-              "expired_at": "2019-06-11T22:32:45.056436Z",
-              "id": "e39ba25a-1fb2-44e2-8b07-543853ac9c29",
-              "created_at": "2019-06-06T22:32:45.075437Z",
-              "updated_at": "2019-06-06T22:32:51.303978Z",
-              "expired": false,
-              "phone_number": "+13122708609",
-              "status": "success",
-              "record_type": "reserved_phone_number"
-            }
-          ],
-          "user_id": "22083c08-4e1f-4e25-be08-3e0f51f581dc",
-          "record_type": "number_reservation"
         }
       },
       "Metadata": {
@@ -8249,6 +8234,15 @@
             "description": "An ISO 8901 datetime string for when the individual number reservation is going to expire",
             "example": "2018-01-01T00:00:00.000000Z"
           }
+        },
+        "example": {
+          "id": "12ade33a-21c0-473b-b055-b3c836e1c292",
+          "record_type": "reserved_phone_number",
+          "phone_number": "+19705555098",
+          "status": "pending",
+          "created_at": "2018-01-01T00:00:00.000000Z",
+          "updated_at": "2018-01-01T00:00:00.000000Z",
+          "expired_at": "2018-01-01T00:00:00.000000Z"
         }
       },
       "NumberOrder": {
@@ -10536,27 +10530,6 @@
               "properties": {
                 "data": {
                   "$ref": "#/components/schemas/NumberReservation"
-                }
-              }
-            }
-          }
-        }
-      },
-      "NumberReservationsDetailedResponse": {
-        "description": "",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NumberReservationDetailed"
-                  }
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/PaginationMeta"
                 }
               }
             }
