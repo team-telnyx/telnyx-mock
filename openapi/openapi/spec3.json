@@ -8558,6 +8558,10 @@
       "RegulatoryRequirement": {
         "type": "object",
         "properties": {
+          "record_type": {
+            "type": "string",
+            "example": "regulatory_requirement"
+          },
           "requirement_type": {
             "type": "string",
             "enum": [
@@ -8585,6 +8589,7 @@
           }
         },
         "example": {
+          "record_type": "regulatory_requirement",
           "requirement_type": "end user proof of address",
           "label": "Proof of Address",
           "field_type": "address",
@@ -8621,6 +8626,7 @@
           "regulatory_group_id": "d70873cd-7c98-401a-81b6-b1ae08246995",
           "regulatory_requirements": [
             {
+              "record_type": "regulatory_requirement",
               "requirement_type": "end user proof of address",
               "label": "Proof of Address",
               "field_type": "address",
