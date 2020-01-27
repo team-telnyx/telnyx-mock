@@ -278,12 +278,14 @@ func (s *StubServer) initializeRouter() error {
 			var requestMediaType *string
 			var requestSchema *spec.Schema
 			var requestValidator *jsval.JSVal
+			var hasNestedProperties bool
 
 			// For `GET` and `DELETE`  requests we build a validator based off a
 			// pseudo-schema constructed from the endpoint's query parameters.
 			// For all other verbs we use the body schema.
 			if verb == "get" || verb == "delete" {
 				requestSchema = spec.BuildQuerySchema(operation)
+				hasNestedProperties = schemaHasNestedProperties(requestSchema)
 
 				var err error
 				requestValidator, err = spec.GetValidatorForOpenAPI3Schema(
@@ -321,13 +323,14 @@ func (s *StubServer) initializeRouter() error {
 			}
 
 			route := stubServerRoute{
-				hasPrimaryID:     hasPrimaryID,
-				pattern:          pathPattern,
-				operation:        operation,
-				pathParamNames:   pathParamNames,
-				requestMediaType: requestMediaType,
-				requestSchema:    requestSchema,
-				requestValidator: requestValidator,
+				hasPrimaryID:                     hasPrimaryID,
+				pattern:                          pathPattern,
+				operation:                        operation,
+				pathParamNames:                   pathParamNames,
+				requestMediaType:                 requestMediaType,
+				requestSchema:                    requestSchema,
+				requestValidator:                 requestValidator,
+				requestSchemaHasNestedProperties: hasNestedProperties,
 			}
 
 			// net/http will always give us verbs in uppercase, so build our
@@ -354,6 +357,16 @@ func (s *StubServer) initializeRouter() error {
 	fmt.Printf("Routing to %v path(s) and %v endpoint(s) with %v validator(s)\n",
 		numPaths, numEndpoints, numValidators)
 	return nil
+}
+
+func schemaHasNestedProperties(oaiSchema *spec.Schema) bool {
+	for _, v := range oaiSchema.Properties {
+		if len(v.Properties) > 0 {
+			return true
+		}
+	}
+
+	return false
 }
 
 // routeRequest tries to find a matching route for the given request. If
@@ -488,13 +501,14 @@ var pathParameterPattern = regexp.MustCompile(`\{(\w+)\}`)
 // pattern to match an incoming path and a description of the method that would
 // be executed in the event of a match.
 type stubServerRoute struct {
-	hasPrimaryID     bool
-	operation        *spec.Operation
-	pathParamNames   []string
-	pattern          *regexp.Regexp
-	requestMediaType *string
-	requestSchema    *spec.Schema
-	requestValidator *jsval.JSVal
+	hasPrimaryID                     bool
+	operation                        *spec.Operation
+	pathParamNames                   []string
+	pattern                          *regexp.Regexp
+	requestMediaType                 *string
+	requestSchema                    *spec.Schema
+	requestValidator                 *jsval.JSVal
+	requestSchemaHasNestedProperties bool
 }
 
 //
@@ -677,7 +691,15 @@ func validateAndCoerceRequest(
 		return nil, createTelnyxError(typeInvalidRequestError, message)
 	}
 
-	err = route.requestValidator.Validate(requestData)
+	var paramsForValidation map[string]interface{}
+
+	if (r.Method == http.MethodGet || r.Method == http.MethodDelete) && !route.requestSchemaHasNestedProperties {
+		paramsForValidation = flattenParams(requestData)
+	} else {
+		paramsForValidation = requestData
+	}
+
+	err = route.requestValidator.Validate(paramsForValidation)
 	if err != nil {
 		message := fmt.Sprintf("Request validation error: %v", err)
 		fmt.Printf(message + "\n")
@@ -686,6 +708,43 @@ func validateAndCoerceRequest(
 
 	// All checks were successful.
 	return requestData, nil
+}
+
+func flattenParams(params map[string]interface{}) map[string]interface{} {
+	return _flattenParams(params, 0)
+}
+
+func _flattenParams(params map[string]interface{}, depth int) map[string]interface{} {
+	var newKey string
+
+	r := make(map[string]interface{})
+
+	for k, v := range params {
+		switch child := v.(type) {
+		case map[string]interface{}:
+			depth = depth + 1
+			nm := _flattenParams(child, depth)
+
+			for nk, nv := range nm {
+				if depth == 1 {
+					newKey = k + "[" + nk
+				} else {
+					newKey = k + "][" + nk
+				}
+				r[newKey] = nv
+			}
+		default:
+			if depth >= 1 {
+				newKey = k + "]"
+			} else {
+				newKey = k
+			}
+
+			r[newKey] = v
+		}
+	}
+
+	return r
 }
 
 func validateAuth(auth string) bool {
