@@ -684,19 +684,19 @@ func validateAndCoerceRequest(
 
 	fmt.Printf("Request data: %v\n", requestData)
 
-	err := coercer.CoerceParams(route.requestSchema, requestData)
-	if err != nil {
-		message := fmt.Sprintf("Request coercion error: %v", err)
-		fmt.Printf(message + "\n")
-		return nil, createTelnyxError(typeInvalidRequestError, message)
-	}
-
 	var paramsForValidation map[string]interface{}
 
 	if (r.Method == http.MethodGet || r.Method == http.MethodDelete) && !route.requestSchemaHasNestedProperties {
 		paramsForValidation = flattenParams(requestData)
 	} else {
 		paramsForValidation = requestData
+	}
+
+	err := coercer.CoerceParams(route.requestSchema, paramsForValidation)
+	if err != nil {
+		message := fmt.Sprintf("Request coercion error: %v", err)
+		fmt.Printf(message + "\n")
+		return nil, createTelnyxError(typeInvalidRequestError, message)
 	}
 
 	err = route.requestValidator.Validate(paramsForValidation)
