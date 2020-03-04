@@ -284,10 +284,16 @@ func (s *StubServer) initializeRouter() error {
 			// pseudo-schema constructed from the endpoint's query parameters.
 			// For all other verbs we use the body schema.
 			if verb == "get" || verb == "delete" {
-				requestSchema = spec.BuildQuerySchema(operation)
+				var err error
+
+				requestSchema, err = spec.BuildQuerySchema(operation, s.spec.Components.Parameters)
+
+				if err != nil {
+					return err
+				}
+
 				hasNestedProperties = schemaHasNestedProperties(requestSchema)
 
-				var err error
 				requestValidator, err = spec.GetValidatorForOpenAPI3Schema(
 					requestSchema, nil)
 				if err != nil {

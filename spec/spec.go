@@ -32,8 +32,9 @@ const (
 // Components is a struct for the components section of an OpenAPI
 // specification.
 type Components struct {
-	Schemas   map[string]*Schema   `json:"schemas"`
-	Responses map[string]*Response `json:"responses"`
+	Schemas    map[string]*Schema    `json:"schemas"`
+	Parameters map[string]*Parameter `json:"parameters"`
+	Responses  map[string]*Response  `json:"responses"`
 }
 
 // ExpansionResources is a struct for possible expansions in a resource.
@@ -188,6 +189,7 @@ type Parameter struct {
 	Name        string  `json:"name"`
 	Required    bool    `json:"required"`
 	Schema      *Schema `json:"schema"`
+	Ref         string  `json:"$ref,omitempty"`
 }
 
 // Path is a type for an HTTP path in an OpenAPI specification.
