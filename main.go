@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/imdario/mergo"
 	"github.com/team-telnyx/telnyx-mock/spec"
 )
 
@@ -76,6 +77,8 @@ func main() {
 	if err != nil {
 		abort(err.Error())
 	}
+
+	flattenSpec(telnyxSpec)
 
 	stub := StubServer{fixtures: fixtures, spec: telnyxSpec}
 	err = stub.initializeRouter()
@@ -147,6 +150,56 @@ func main() {
 	// Block forever. The serve Goroutines above will abort the program if
 	// either of them fails.
 	select {}
+}
+
+func flattenSpec(s *spec.Spec) {
+	for _, verbs := range s.Paths {
+		for _, operation := range verbs {
+			if operation.RequestBody == nil {
+				continue
+			}
+
+			var contentType string
+			var mediaType spec.MediaType
+
+			for c, m := range operation.RequestBody.Content {
+				contentType = c
+				mediaType = m
+
+				break
+			}
+
+			schema := mediaType.Schema
+
+			newSchema := flattenAllOf(schema)
+
+			operation.RequestBody.Content[contentType] = spec.MediaType{Schema: newSchema}
+		}
+	}
+}
+
+func flattenAllOf(input *spec.Schema) *spec.Schema {
+	var flatten func(output *spec.Schema, input *spec.Schema)
+
+	flatten = func(output *spec.Schema, input *spec.Schema) {
+		allOf := input.AllOf
+
+		// Nillify `AllOf` so `mergo` will skip it in the merge. We don't want
+		// the `AllfOf` slice being added to the output.
+		input.AllOf = nil
+
+		mergo.Merge(output, input)
+
+		for _, v := range allOf {
+			flatten(output, v)
+		}
+	}
+
+	var output spec.Schema
+
+	flatten(&output, input)
+
+	return &output
 }
 
 //

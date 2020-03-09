@@ -57,6 +57,7 @@ type HTTPVerb string
 var supportedSchemaFields = []string{
 	"$ref",
 	"additionalProperties",
+	"allOf",
 	"anyOf",
 	"oneOf",
 	"description",
@@ -75,6 +76,8 @@ var supportedSchemaFields = []string{
 	"required",
 	"title",
 	"type",
+	"readOnly",
+	"writeOnly",
 	"x-expandableFields",
 	"x-expansionResources",
 	"x-resourceId",
@@ -99,6 +102,7 @@ type Schema struct {
 	// for anything right now.
 	AdditionalProperties interface{} `json:"additionalProperties,omitempty"`
 
+	AllOf      []*Schema          `json:"allOf,omitempty"`
 	AnyOf      []*Schema          `json:"anyOf,omitempty"`
 	OneOf      []*Schema          `json:"oneOf,omitempty"`
 	Enum       []interface{}      `json:"enum,omitempty"`
@@ -115,6 +119,8 @@ type Schema struct {
 	Properties map[string]*Schema `json:"properties,omitempty"`
 	Required   []string           `json:"required,omitempty"`
 	Type       string             `json:"type,omitempty"`
+	WriteOnly  bool               `json:"writeOnly,omitempty"`
+	ReadOnly   bool               `json:"readOnly,omitempty"`
 
 	// Ref is populated if this JSON Schema is actually a JSON reference, and
 	// it defines the location of the actual schema definition.

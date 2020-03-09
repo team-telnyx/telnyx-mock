@@ -717,40 +717,42 @@ func validateAndCoerceRequest(
 }
 
 func flattenParams(params map[string]interface{}) map[string]interface{} {
-	return _flattenParams(params, 0)
-}
+	var flatten func(params map[string]interface{}, depth int) map[string]interface{}
 
-func _flattenParams(params map[string]interface{}, depth int) map[string]interface{} {
-	var newKey string
+	flatten = func(params map[string]interface{}, depth int) map[string]interface{} {
+		var newKey string
 
-	r := make(map[string]interface{})
+		r := make(map[string]interface{})
 
-	for k, v := range params {
-		switch child := v.(type) {
-		case map[string]interface{}:
-			depth = depth + 1
-			nm := _flattenParams(child, depth)
+		for k, v := range params {
+			switch child := v.(type) {
+			case map[string]interface{}:
+				depth = depth + 1
+				nm := flatten(child, depth)
 
-			for nk, nv := range nm {
-				if depth == 1 {
-					newKey = k + "[" + nk
-				} else {
-					newKey = k + "][" + nk
+				for nk, nv := range nm {
+					if depth == 1 {
+						newKey = k + "[" + nk
+					} else {
+						newKey = k + "][" + nk
+					}
+					r[newKey] = nv
 				}
-				r[newKey] = nv
-			}
-		default:
-			if depth >= 1 {
-				newKey = k + "]"
-			} else {
-				newKey = k
-			}
+			default:
+				if depth >= 1 {
+					newKey = k + "]"
+				} else {
+					newKey = k
+				}
 
-			r[newKey] = v
+				r[newKey] = v
+			}
 		}
+
+		return r
 	}
 
-	return r
+	return flatten(params, 0)
 }
 
 func validateAuth(auth string) bool {
