@@ -341,7 +341,7 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 		return example.value, nil
 	}
 
-	if schema.Type == "object" && schema.Properties != nil {
+	if (schema.Type == "object" || schema.Type == "") && schema.Properties != nil {
 		exampleMap, ok := example.value.(map[string]interface{})
 		if !ok {
 			panic(fmt.Sprintf(
