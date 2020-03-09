@@ -716,7 +716,7 @@ func validateAndCoerceRequest(
 	// `DELETE` will often have no parameters. When it does, they're in the
 	// body, but we'll ignore content type validation in this one case for
 	// simplicity.
-	if r.Method != http.MethodDelete && r.Method != http.MethodGet {
+	if r.Method != http.MethodDelete && r.Method != http.MethodGet && route.requestSchema != nil {
 		contentType := r.Header.Get("Content-Type")
 		if contentType == "" {
 			message := fmt.Sprintf(contentTypeEmpty, *route.requestMediaType)
@@ -748,18 +748,18 @@ func validateAndCoerceRequest(
 		paramsForValidation = requestData
 	}
 
-	err := coercer.CoerceParams(route.requestSchema, paramsForValidation)
-	if err != nil {
-		message := fmt.Sprintf("Request coercion error: %v", err)
-		fmt.Printf(message + "\n")
-		return nil, createTelnyxError(typeInvalidRequestError, message)
-	}
+	if route.requestSchema != nil {
+		if err := coercer.CoerceParams(route.requestSchema, paramsForValidation); err != nil {
+			message := fmt.Sprintf("Request coercion error: %v", err)
+			fmt.Printf(message + "\n")
+			return nil, createTelnyxError(typeInvalidRequestError, message)
+		}
 
-	err = route.requestValidator.Validate(paramsForValidation)
-	if err != nil {
-		message := fmt.Sprintf("Request validation error: %v", err)
-		fmt.Printf(message + "\n")
-		return nil, createTelnyxError(typeInvalidRequestError, message)
+		if err := route.requestValidator.Validate(paramsForValidation); err != nil {
+			message := fmt.Sprintf("Request validation error: %v", err)
+			fmt.Printf(message + "\n")
+			return nil, createTelnyxError(typeInvalidRequestError, message)
+		}
 	}
 
 	// All checks were successful.
