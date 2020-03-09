@@ -170,25 +170,75 @@ func (s *StubServer) HandleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseName := strings.SplitAfterN(response.Ref, "#/components/responses/", 2)
-	responseObject, ok := s.spec.Components.Responses[responseName[1]]
-	responseContent, ok := responseObject.Content["application/json"]
+	var responseContent spec.MediaType
+	var schema *spec.Schema
+	var wrapWithList bool
 
-	wrapWithList := false
-	responseRef := responseContent.Schema.Properties["data"].Ref
-	if responseRef == "" {
-		responseRef = responseContent.Schema.Properties["data"].Items.Ref
-		wrapWithList = true
-	}
+	if response.Ref != "" {
+		responseName := strings.SplitAfterN(response.Ref, "#/components/responses/", 2)
+		responseObject, ok := s.spec.Components.Responses[responseName[1]]
 
-	schemaName := strings.SplitAfterN(responseRef, "#/components/schemas/", 2)
-	schema, ok := s.spec.Components.Schemas[schemaName[1]]
+		if !ok {
+			fmt.Printf("Couldn't find response name %s in #/components/responses/\n",
+				responseName)
 
-	if !ok || responseContent.Schema == nil {
-		fmt.Printf("Couldn't find application/json in response\n")
-		writeResponse(w, r, start, http.StatusInternalServerError,
-			createInternalServerError())
-		return
+			writeResponse(w, r, start, http.StatusInternalServerError,
+				createInternalServerError())
+
+			return
+		}
+
+		responseContent, ok = responseObject.Content["application/json"]
+
+		if !ok {
+			fmt.Printf("Couldn't find application/json content type #/components/responses/%s\n",
+				responseName)
+
+			writeResponse(w, r, start, http.StatusInternalServerError,
+				createInternalServerError())
+
+			return
+		}
+
+		responseRef := responseContent.Schema.Properties["data"].Ref
+
+		if responseRef == "" {
+			responseRef = responseContent.Schema.Properties["data"].Items.Ref
+			wrapWithList = true
+		}
+
+		schemaName := strings.SplitAfterN(responseRef, "#/components/schemas/", 2)
+		schema, ok = s.spec.Components.Schemas[schemaName[1]]
+
+		if !ok {
+			fmt.Printf("Couldn't find schema name %s in #/components/schemas/\n",
+				schemaName)
+
+			writeResponse(w, r, start, http.StatusInternalServerError,
+				createInternalServerError())
+
+			return
+		}
+	} else {
+		responseContent, ok = response.Content["application/json"]
+
+		if !ok {
+			fmt.Printf("Couldn't find application/json content type in response\n")
+
+			writeResponse(w, r, start, http.StatusInternalServerError,
+				createInternalServerError())
+
+			return
+		}
+
+		responseRef := responseContent.Schema.Properties["data"]
+
+		if responseRef.Items != nil {
+			responseRef = responseContent.Schema.Properties["data"].Items
+			wrapWithList = true
+		}
+
+		schema = responseRef
 	}
 
 	if verbose {
