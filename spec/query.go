@@ -1,9 +1,14 @@
 package spec
 
+import (
+	"fmt"
+	"strings"
+)
+
 // BuildQuerySchema builds a JSON schema that will be used to validate query
 // parameters on the incoming request. Unlike request bodies, OpenAPI puts
 // query parameters in a different, non-JSON schema part of an operation.
-func BuildQuerySchema(operation *Operation) *Schema {
+func BuildQuerySchema(operation *Operation, parameters map[string]*Parameter) (*Schema, error) {
 	schema := &Schema{
 		AdditionalProperties: false,
 		Properties:           make(map[string]*Schema),
@@ -12,10 +17,21 @@ func BuildQuerySchema(operation *Operation) *Schema {
 	}
 
 	if operation.Parameters == nil {
-		return schema
+		return schema, nil
 	}
 
 	for _, param := range operation.Parameters {
+		if param.Ref != "" {
+			refParts := strings.SplitAfterN(param.Ref, "#/components/parameters/", 2)
+			refName := refParts[1]
+
+			if v, ok := parameters[refName]; ok {
+				param = v
+			} else {
+				return nil, fmt.Errorf("invalid $ref '%s'", param.Ref)
+			}
+		}
+
 		if param.In != ParameterQuery {
 			continue
 		}
@@ -31,5 +47,5 @@ func BuildQuerySchema(operation *Operation) *Schema {
 		}
 	}
 
-	return schema
+	return schema, nil
 }

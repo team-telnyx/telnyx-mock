@@ -170,25 +170,75 @@ func (s *StubServer) HandleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseName := strings.SplitAfterN(response.Ref, "#/components/responses/", 2)
-	responseObject, ok := s.spec.Components.Responses[responseName[1]]
-	responseContent, ok := responseObject.Content["application/json"]
+	var responseContent spec.MediaType
+	var schema *spec.Schema
+	var wrapWithList bool
 
-	wrapWithList := false
-	responseRef := responseContent.Schema.Properties["data"].Ref
-	if responseRef == "" {
-		responseRef = responseContent.Schema.Properties["data"].Items.Ref
-		wrapWithList = true
-	}
+	if response.Ref != "" {
+		responseName := strings.SplitAfterN(response.Ref, "#/components/responses/", 2)
+		responseObject, ok := s.spec.Components.Responses[responseName[1]]
 
-	schemaName := strings.SplitAfterN(responseRef, "#/components/schemas/", 2)
-	schema, ok := s.spec.Components.Schemas[schemaName[1]]
+		if !ok {
+			fmt.Printf("Couldn't find response name %s in #/components/responses/\n",
+				responseName)
 
-	if !ok || responseContent.Schema == nil {
-		fmt.Printf("Couldn't find application/json in response\n")
-		writeResponse(w, r, start, http.StatusInternalServerError,
-			createInternalServerError())
-		return
+			writeResponse(w, r, start, http.StatusInternalServerError,
+				createInternalServerError())
+
+			return
+		}
+
+		responseContent, ok = responseObject.Content["application/json"]
+
+		if !ok {
+			fmt.Printf("Couldn't find application/json content type #/components/responses/%s\n",
+				responseName)
+
+			writeResponse(w, r, start, http.StatusInternalServerError,
+				createInternalServerError())
+
+			return
+		}
+
+		responseRef := responseContent.Schema.Properties["data"].Ref
+
+		if responseRef == "" {
+			responseRef = responseContent.Schema.Properties["data"].Items.Ref
+			wrapWithList = true
+		}
+
+		schemaName := strings.SplitAfterN(responseRef, "#/components/schemas/", 2)
+		schema, ok = s.spec.Components.Schemas[schemaName[1]]
+
+		if !ok {
+			fmt.Printf("Couldn't find schema name %s in #/components/schemas/\n",
+				schemaName)
+
+			writeResponse(w, r, start, http.StatusInternalServerError,
+				createInternalServerError())
+
+			return
+		}
+	} else {
+		responseContent, ok = response.Content["application/json"]
+
+		if !ok {
+			fmt.Printf("Couldn't find application/json content type in response\n")
+
+			writeResponse(w, r, start, http.StatusInternalServerError,
+				createInternalServerError())
+
+			return
+		}
+
+		responseRef := responseContent.Schema.Properties["data"]
+
+		if responseRef.Items != nil {
+			responseRef = responseContent.Schema.Properties["data"].Items
+			wrapWithList = true
+		}
+
+		schema = responseRef
 	}
 
 	if verbose {
@@ -284,10 +334,16 @@ func (s *StubServer) initializeRouter() error {
 			// pseudo-schema constructed from the endpoint's query parameters.
 			// For all other verbs we use the body schema.
 			if verb == "get" || verb == "delete" {
-				requestSchema = spec.BuildQuerySchema(operation)
+				var err error
+
+				requestSchema, err = spec.BuildQuerySchema(operation, s.spec.Components.Parameters)
+
+				if err != nil {
+					return err
+				}
+
 				hasNestedProperties = schemaHasNestedProperties(requestSchema)
 
-				var err error
 				requestValidator, err = spec.GetValidatorForOpenAPI3Schema(
 					requestSchema, nil)
 				if err != nil {
@@ -660,7 +716,7 @@ func validateAndCoerceRequest(
 	// `DELETE` will often have no parameters. When it does, they're in the
 	// body, but we'll ignore content type validation in this one case for
 	// simplicity.
-	if r.Method != http.MethodDelete && r.Method != http.MethodGet {
+	if r.Method != http.MethodDelete && r.Method != http.MethodGet && route.requestSchema != nil {
 		contentType := r.Header.Get("Content-Type")
 		if contentType == "" {
 			message := fmt.Sprintf(contentTypeEmpty, *route.requestMediaType)
@@ -684,13 +740,6 @@ func validateAndCoerceRequest(
 
 	fmt.Printf("Request data: %v\n", requestData)
 
-	err := coercer.CoerceParams(route.requestSchema, requestData)
-	if err != nil {
-		message := fmt.Sprintf("Request coercion error: %v", err)
-		fmt.Printf(message + "\n")
-		return nil, createTelnyxError(typeInvalidRequestError, message)
-	}
-
 	var paramsForValidation map[string]interface{}
 
 	if (r.Method == http.MethodGet || r.Method == http.MethodDelete) && !route.requestSchemaHasNestedProperties {
@@ -699,11 +748,18 @@ func validateAndCoerceRequest(
 		paramsForValidation = requestData
 	}
 
-	err = route.requestValidator.Validate(paramsForValidation)
-	if err != nil {
-		message := fmt.Sprintf("Request validation error: %v", err)
-		fmt.Printf(message + "\n")
-		return nil, createTelnyxError(typeInvalidRequestError, message)
+	if route.requestSchema != nil {
+		if err := coercer.CoerceParams(route.requestSchema, paramsForValidation); err != nil {
+			message := fmt.Sprintf("Request coercion error: %v", err)
+			fmt.Printf(message + "\n")
+			return nil, createTelnyxError(typeInvalidRequestError, message)
+		}
+
+		if err := route.requestValidator.Validate(paramsForValidation); err != nil {
+			message := fmt.Sprintf("Request validation error: %v", err)
+			fmt.Printf(message + "\n")
+			return nil, createTelnyxError(typeInvalidRequestError, message)
+		}
 	}
 
 	// All checks were successful.
@@ -711,40 +767,42 @@ func validateAndCoerceRequest(
 }
 
 func flattenParams(params map[string]interface{}) map[string]interface{} {
-	return _flattenParams(params, 0)
-}
+	var flatten func(params map[string]interface{}, depth int) map[string]interface{}
 
-func _flattenParams(params map[string]interface{}, depth int) map[string]interface{} {
-	var newKey string
+	flatten = func(params map[string]interface{}, depth int) map[string]interface{} {
+		var newKey string
 
-	r := make(map[string]interface{})
+		r := make(map[string]interface{})
 
-	for k, v := range params {
-		switch child := v.(type) {
-		case map[string]interface{}:
-			depth = depth + 1
-			nm := _flattenParams(child, depth)
+		for k, v := range params {
+			switch child := v.(type) {
+			case map[string]interface{}:
+				depth = depth + 1
+				nm := flatten(child, depth)
 
-			for nk, nv := range nm {
-				if depth == 1 {
-					newKey = k + "[" + nk
-				} else {
-					newKey = k + "][" + nk
+				for nk, nv := range nm {
+					if depth == 1 {
+						newKey = k + "[" + nk
+					} else {
+						newKey = k + "][" + nk
+					}
+					r[newKey] = nv
 				}
-				r[newKey] = nv
-			}
-		default:
-			if depth >= 1 {
-				newKey = k + "]"
-			} else {
-				newKey = k
-			}
+			default:
+				if depth >= 1 {
+					newKey = k + "]"
+				} else {
+					newKey = k
+				}
 
-			r[newKey] = v
+				r[newKey] = v
+			}
 		}
+
+		return r
 	}
 
-	return r
+	return flatten(params, 0)
 }
 
 func validateAuth(auth string) bool {

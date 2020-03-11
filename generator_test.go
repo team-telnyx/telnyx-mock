@@ -381,6 +381,13 @@ func TestValidFixtures(t *testing.T) {
 }
 
 func TestResourcesCanBeGenerated(t *testing.T) {
+	// TODO: This shouldn't be the case. Just because our current spec no
+	// longer uses `components`, we should still be able to test the old
+	// functionality still works (useful if we change our spec again). But
+	// because our tests use a global, shared `realSpec` object, that's hard
+	// to do. That object should be built and passed to each test.
+	t.Skip("skipping test as our spec no longer uses components")
+
 	for url, operations := range realSpec.Paths {
 		for method, operation := range operations {
 			ref := ""
