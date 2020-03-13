@@ -79,5 +79,7 @@ brews:
       </plist>
 
 dockers:
-  - image_templates:
-    - "telnyx/telnyx-mock:latest"
+  -
+    image_templates:
+      - "telnyx/telnyx-mock:latest"
+    dockerfile: "Dockerfile.goreleaser"
