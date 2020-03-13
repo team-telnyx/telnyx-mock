@@ -75,3 +75,7 @@ brews:
           <string>#{var}/log/telnyx-mock.log</string>
         </dict>
       </plist>
+
+dockers:
+  - image_templates:
+    - "telnyx/telnyx-mock:latest"
