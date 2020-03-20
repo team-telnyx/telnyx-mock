@@ -324,6 +324,12 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 		return nil, nil
 	}
 
+	// XXX: Not sure if this is the best solution for handling enums. Perhaps
+	// this should be handled by `isListResource`?
+	if len(schema.Enum) != 0 {
+		return example.value, nil
+	}
+
 	if schema.Type == "boolean" || schema.Type == "integer" ||
 		schema.Type == "number" || schema.Type == "string" {
 		return example.value, nil
