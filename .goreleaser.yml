@@ -82,4 +82,5 @@ dockers:
   -
     image_templates:
       - "telnyx/telnyx-mock:latest"
+      - "telnyx/telnyx-mock:{{ .Tag }}"
     dockerfile: "Dockerfile.goreleaser"
