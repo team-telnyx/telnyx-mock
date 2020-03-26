@@ -136,6 +136,10 @@
       "description": "Phone numbers"
     },
     {
+      "name": "Messaging Hosted Numbers",
+      "description": "Hosted SMS"
+    },
+    {
       "name": "Outbound Voice Profiles",
       "description": "Outbound voice profiles operations"
     },
@@ -1476,6 +1480,12 @@
                             "type": "array",
                             "items": {
                               "properties": {
+                                "record_type": {
+                                  "type": "string",
+                                  "description": "Identifies the type of the resource.",
+                                  "example": "regulatory_requirement",
+                                  "readOnly": true
+                                },
                                 "requirement_type": {
                                   "type": "string",
                                   "enum": [
@@ -2521,23 +2531,23 @@
                               "SIP INFO"
                             ],
                             "default": "RFC 2833",
-                            "example": "InBand"
+                            "example": "Inband"
                           },
                           "webhook_event_url": {
-                            "description": "The URL where webhooks related to this connection will be sent.",
+                            "description": "The URL where webhooks related to this connection will be sent. Must include a scheme, such as 'https'.",
                             "type": "string",
                             "format": "url",
                             "default": "",
                             "nullable": true,
-                            "example": "example.com"
+                            "example": "https://example.com"
                           },
                           "webhook_event_failover_url": {
-                            "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails.",
+                            "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails. Must include a scheme, such as 'https'.",
                             "type": "string",
                             "format": "url",
                             "default": "",
                             "nullable": true,
-                            "example": "example.com"
+                            "example": "https://failover.example.com"
                           },
                           "webhook_api_version": {
                             "description": "Determines which webhook format will be used, Telnyx API v1 or v2.",
@@ -2551,7 +2561,7 @@
                           },
                           "hangup_on_timeout": {
                             "type": "boolean",
-                            "description": "Specifies whether calls to phone numbers associated with this connection should hangup after when timing out.",
+                            "description": "Specifies whether calls to phone numbers associated with this connection should hang up after timing out.",
                             "default": false,
                             "example": true
                           },
@@ -2615,6 +2625,30 @@
                             "description": "ISO 8601 formatted date indicating when the resource was updated.",
                             "example": "2018-02-02T22:25:27.521Z"
                           }
+                        },
+                        "example": {
+                          "id": "1293384261075731499",
+                          "record_type": "call_control_application",
+                          "connection_name": "office-connection",
+                          "active": false,
+                          "anchorsite_override": "Amsterdam, Netherlands",
+                          "dtmf_type": "Inband",
+                          "webhook_event_url": "https://example.com",
+                          "webhook_event_failover_url": "https://failover.example.com",
+                          "webhook_api_version": "1",
+                          "hangup_on_timeout": true,
+                          "call_control_timeout": 120,
+                          "inbound": {
+                            "channel_limit": 10,
+                            "sip_subdomain": "example",
+                            "sip_subdomain_receive_settings": "only_my_connections"
+                          },
+                          "outbound": {
+                            "channel_limit": 10,
+                            "outbound_voice_profile_id": "1293384261075731499"
+                          },
+                          "created_at": "2018-02-02T22:25:27.521Z",
+                          "updated_at": "2018-02-02T22:25:27.521Z"
                         }
                       }
                     },
@@ -2657,7 +2691,7 @@
       },
       "post": {
         "description": "Creates a Call Control application.",
-        "summary": "Creates a Call Control applicaiton",
+        "summary": "Creates a Call Control application",
         "operationId": "CreateCallControlApplication",
         "tags": [
           "Call Control Applications"
@@ -2671,6 +2705,10 @@
               "schema": {
                 "type": "object",
                 "title": "Updatable attributes for Call Control applications",
+                "required": [
+                  "connection_name",
+                  "webhook_event_url"
+                ],
                 "properties": {
                   "connection_name": {
                     "type": "string",
@@ -2709,23 +2747,23 @@
                       "SIP INFO"
                     ],
                     "default": "RFC 2833",
-                    "example": "InBand"
+                    "example": "Inband"
                   },
                   "webhook_event_url": {
-                    "description": "The URL where webhooks related to this connection will be sent.",
+                    "description": "The URL where webhooks related to this connection will be sent. Must include a scheme, such as 'https'.",
                     "type": "string",
                     "format": "url",
                     "default": "",
                     "nullable": true,
-                    "example": "example.com"
+                    "example": "https://example.com"
                   },
                   "webhook_event_failover_url": {
-                    "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails.",
+                    "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails. Must include a scheme, such as 'https'.",
                     "type": "string",
                     "format": "url",
                     "default": "",
                     "nullable": true,
-                    "example": "example.com"
+                    "example": "https://failover.example.com"
                   },
                   "webhook_api_version": {
                     "description": "Determines which webhook format will be used, Telnyx API v1 or v2.",
@@ -2793,6 +2831,26 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "connection_name": "office-connection",
+                  "active": false,
+                  "anchorsite_override": "Amsterdam, Netherlands",
+                  "dtmf_type": "Inband",
+                  "webhook_event_url": "https://example.com",
+                  "webhook_event_failover_url": "https://failover.example.com",
+                  "webhook_api_version": "1",
+                  "hangup_on_timeout": true,
+                  "call_control_timeout": 120,
+                  "inbound": {
+                    "channel_limit": 10,
+                    "sip_subdomain": "example",
+                    "sip_subdomain_receive_settings": "only_my_connections"
+                  },
+                  "outbound": {
+                    "channel_limit": 10,
+                    "outbound_voice_profile_id": "1293384261075731499"
+                  }
                 }
               }
             }
@@ -2858,23 +2916,23 @@
                             "SIP INFO"
                           ],
                           "default": "RFC 2833",
-                          "example": "InBand"
+                          "example": "Inband"
                         },
                         "webhook_event_url": {
-                          "description": "The URL where webhooks related to this connection will be sent.",
+                          "description": "The URL where webhooks related to this connection will be sent. Must include a scheme, such as 'https'.",
                           "type": "string",
                           "format": "url",
                           "default": "",
                           "nullable": true,
-                          "example": "example.com"
+                          "example": "https://example.com"
                         },
                         "webhook_event_failover_url": {
-                          "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails.",
+                          "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails. Must include a scheme, such as 'https'.",
                           "type": "string",
                           "format": "url",
                           "default": "",
                           "nullable": true,
-                          "example": "example.com"
+                          "example": "https://failover.example.com"
                         },
                         "webhook_api_version": {
                           "description": "Determines which webhook format will be used, Telnyx API v1 or v2.",
@@ -2888,7 +2946,7 @@
                         },
                         "hangup_on_timeout": {
                           "type": "boolean",
-                          "description": "Specifies whether calls to phone numbers associated with this connection should hangup after when timing out.",
+                          "description": "Specifies whether calls to phone numbers associated with this connection should hang up after timing out.",
                           "default": false,
                           "example": true
                         },
@@ -2952,6 +3010,30 @@
                           "description": "ISO 8601 formatted date indicating when the resource was updated.",
                           "example": "2018-02-02T22:25:27.521Z"
                         }
+                      },
+                      "example": {
+                        "id": "1293384261075731499",
+                        "record_type": "call_control_application",
+                        "connection_name": "office-connection",
+                        "active": false,
+                        "anchorsite_override": "Amsterdam, Netherlands",
+                        "dtmf_type": "Inband",
+                        "webhook_event_url": "https://example.com",
+                        "webhook_event_failover_url": "https://failover.example.com",
+                        "webhook_api_version": "1",
+                        "hangup_on_timeout": true,
+                        "call_control_timeout": 120,
+                        "inbound": {
+                          "channel_limit": 10,
+                          "sip_subdomain": "example",
+                          "sip_subdomain_receive_settings": "only_my_connections"
+                        },
+                        "outbound": {
+                          "channel_limit": 10,
+                          "outbound_voice_profile_id": "1293384261075731499"
+                        },
+                        "created_at": "2018-02-02T22:25:27.521Z",
+                        "updated_at": "2018-02-02T22:25:27.521Z"
                       }
                     }
                   }
@@ -3046,23 +3128,23 @@
                             "SIP INFO"
                           ],
                           "default": "RFC 2833",
-                          "example": "InBand"
+                          "example": "Inband"
                         },
                         "webhook_event_url": {
-                          "description": "The URL where webhooks related to this connection will be sent.",
+                          "description": "The URL where webhooks related to this connection will be sent. Must include a scheme, such as 'https'.",
                           "type": "string",
                           "format": "url",
                           "default": "",
                           "nullable": true,
-                          "example": "example.com"
+                          "example": "https://example.com"
                         },
                         "webhook_event_failover_url": {
-                          "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails.",
+                          "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails. Must include a scheme, such as 'https'.",
                           "type": "string",
                           "format": "url",
                           "default": "",
                           "nullable": true,
-                          "example": "example.com"
+                          "example": "https://failover.example.com"
                         },
                         "webhook_api_version": {
                           "description": "Determines which webhook format will be used, Telnyx API v1 or v2.",
@@ -3076,7 +3158,7 @@
                         },
                         "hangup_on_timeout": {
                           "type": "boolean",
-                          "description": "Specifies whether calls to phone numbers associated with this connection should hangup after when timing out.",
+                          "description": "Specifies whether calls to phone numbers associated with this connection should hang up after timing out.",
                           "default": false,
                           "example": true
                         },
@@ -3140,6 +3222,30 @@
                           "description": "ISO 8601 formatted date indicating when the resource was updated.",
                           "example": "2018-02-02T22:25:27.521Z"
                         }
+                      },
+                      "example": {
+                        "id": "1293384261075731499",
+                        "record_type": "call_control_application",
+                        "connection_name": "office-connection",
+                        "active": false,
+                        "anchorsite_override": "Amsterdam, Netherlands",
+                        "dtmf_type": "Inband",
+                        "webhook_event_url": "https://example.com",
+                        "webhook_event_failover_url": "https://failover.example.com",
+                        "webhook_api_version": "1",
+                        "hangup_on_timeout": true,
+                        "call_control_timeout": 120,
+                        "inbound": {
+                          "channel_limit": 10,
+                          "sip_subdomain": "example",
+                          "sip_subdomain_receive_settings": "only_my_connections"
+                        },
+                        "outbound": {
+                          "channel_limit": 10,
+                          "outbound_voice_profile_id": "1293384261075731499"
+                        },
+                        "created_at": "2018-02-02T22:25:27.521Z",
+                        "updated_at": "2018-02-02T22:25:27.521Z"
                       }
                     }
                   }
@@ -3238,23 +3344,23 @@
                             "SIP INFO"
                           ],
                           "default": "RFC 2833",
-                          "example": "InBand"
+                          "example": "Inband"
                         },
                         "webhook_event_url": {
-                          "description": "The URL where webhooks related to this connection will be sent.",
+                          "description": "The URL where webhooks related to this connection will be sent. Must include a scheme, such as 'https'.",
                           "type": "string",
                           "format": "url",
                           "default": "",
                           "nullable": true,
-                          "example": "example.com"
+                          "example": "https://example.com"
                         },
                         "webhook_event_failover_url": {
-                          "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails.",
+                          "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails. Must include a scheme, such as 'https'.",
                           "type": "string",
                           "format": "url",
                           "default": "",
                           "nullable": true,
-                          "example": "example.com"
+                          "example": "https://failover.example.com"
                         },
                         "webhook_api_version": {
                           "description": "Determines which webhook format will be used, Telnyx API v1 or v2.",
@@ -3268,7 +3374,7 @@
                         },
                         "hangup_on_timeout": {
                           "type": "boolean",
-                          "description": "Specifies whether calls to phone numbers associated with this connection should hangup after when timing out.",
+                          "description": "Specifies whether calls to phone numbers associated with this connection should hang up after timing out.",
                           "default": false,
                           "example": true
                         },
@@ -3332,6 +3438,30 @@
                           "description": "ISO 8601 formatted date indicating when the resource was updated.",
                           "example": "2018-02-02T22:25:27.521Z"
                         }
+                      },
+                      "example": {
+                        "id": "1293384261075731499",
+                        "record_type": "call_control_application",
+                        "connection_name": "office-connection",
+                        "active": false,
+                        "anchorsite_override": "Amsterdam, Netherlands",
+                        "dtmf_type": "Inband",
+                        "webhook_event_url": "https://example.com",
+                        "webhook_event_failover_url": "https://failover.example.com",
+                        "webhook_api_version": "1",
+                        "hangup_on_timeout": true,
+                        "call_control_timeout": 120,
+                        "inbound": {
+                          "channel_limit": 10,
+                          "sip_subdomain": "example",
+                          "sip_subdomain_receive_settings": "only_my_connections"
+                        },
+                        "outbound": {
+                          "channel_limit": 10,
+                          "outbound_voice_profile_id": "1293384261075731499"
+                        },
+                        "created_at": "2018-02-02T22:25:27.521Z",
+                        "updated_at": "2018-02-02T22:25:27.521Z"
                       }
                     }
                   }
@@ -3378,6 +3508,10 @@
               "schema": {
                 "type": "object",
                 "title": "Updatable attributes for Call Control applications",
+                "required": [
+                  "connection_name",
+                  "webhook_event_url"
+                ],
                 "properties": {
                   "connection_name": {
                     "type": "string",
@@ -3416,23 +3550,23 @@
                       "SIP INFO"
                     ],
                     "default": "RFC 2833",
-                    "example": "InBand"
+                    "example": "Inband"
                   },
                   "webhook_event_url": {
-                    "description": "The URL where webhooks related to this connection will be sent.",
+                    "description": "The URL where webhooks related to this connection will be sent. Must include a scheme, such as 'https'.",
                     "type": "string",
                     "format": "url",
                     "default": "",
                     "nullable": true,
-                    "example": "example.com"
+                    "example": "https://example.com"
                   },
                   "webhook_event_failover_url": {
-                    "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails.",
+                    "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails. Must include a scheme, such as 'https'.",
                     "type": "string",
                     "format": "url",
                     "default": "",
                     "nullable": true,
-                    "example": "example.com"
+                    "example": "https://failover.example.com"
                   },
                   "webhook_api_version": {
                     "description": "Determines which webhook format will be used, Telnyx API v1 or v2.",
@@ -3500,6 +3634,26 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "connection_name": "office-connection",
+                  "active": false,
+                  "anchorsite_override": "Amsterdam, Netherlands",
+                  "dtmf_type": "Inband",
+                  "webhook_event_url": "https://example.com",
+                  "webhook_event_failover_url": "https://failover.example.com",
+                  "webhook_api_version": "1",
+                  "hangup_on_timeout": true,
+                  "call_control_timeout": 120,
+                  "inbound": {
+                    "channel_limit": 10,
+                    "sip_subdomain": "example",
+                    "sip_subdomain_receive_settings": "only_my_connections"
+                  },
+                  "outbound": {
+                    "channel_limit": 10,
+                    "outbound_voice_profile_id": "1293384261075731499"
+                  }
                 }
               }
             }
@@ -3565,23 +3719,23 @@
                             "SIP INFO"
                           ],
                           "default": "RFC 2833",
-                          "example": "InBand"
+                          "example": "Inband"
                         },
                         "webhook_event_url": {
-                          "description": "The URL where webhooks related to this connection will be sent.",
+                          "description": "The URL where webhooks related to this connection will be sent. Must include a scheme, such as 'https'.",
                           "type": "string",
                           "format": "url",
                           "default": "",
                           "nullable": true,
-                          "example": "example.com"
+                          "example": "https://example.com"
                         },
                         "webhook_event_failover_url": {
-                          "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails.",
+                          "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails. Must include a scheme, such as 'https'.",
                           "type": "string",
                           "format": "url",
                           "default": "",
                           "nullable": true,
-                          "example": "example.com"
+                          "example": "https://failover.example.com"
                         },
                         "webhook_api_version": {
                           "description": "Determines which webhook format will be used, Telnyx API v1 or v2.",
@@ -3595,7 +3749,7 @@
                         },
                         "hangup_on_timeout": {
                           "type": "boolean",
-                          "description": "Specifies whether calls to phone numbers associated with this connection should hangup after when timing out.",
+                          "description": "Specifies whether calls to phone numbers associated with this connection should hang up after timing out.",
                           "default": false,
                           "example": true
                         },
@@ -3659,6 +3813,30 @@
                           "description": "ISO 8601 formatted date indicating when the resource was updated.",
                           "example": "2018-02-02T22:25:27.521Z"
                         }
+                      },
+                      "example": {
+                        "id": "1293384261075731499",
+                        "record_type": "call_control_application",
+                        "connection_name": "office-connection",
+                        "active": false,
+                        "anchorsite_override": "Amsterdam, Netherlands",
+                        "dtmf_type": "Inband",
+                        "webhook_event_url": "https://example.com",
+                        "webhook_event_failover_url": "https://failover.example.com",
+                        "webhook_api_version": "1",
+                        "hangup_on_timeout": true,
+                        "call_control_timeout": 120,
+                        "inbound": {
+                          "channel_limit": 10,
+                          "sip_subdomain": "example",
+                          "sip_subdomain_receive_settings": "only_my_connections"
+                        },
+                        "outbound": {
+                          "channel_limit": 10,
+                          "outbound_voice_profile_id": "1293384261075731499"
+                        },
+                        "created_at": "2018-02-02T22:25:27.521Z",
+                        "updated_at": "2018-02-02T22:25:27.521Z"
                       }
                     }
                   }
@@ -12017,7 +12195,7 @@
                             "format": "url",
                             "default": "",
                             "nullable": true,
-                            "example": "example.com"
+                            "example": "https://example.com"
                           },
                           "webhook_event_failover_url": {
                             "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails.",
@@ -12025,7 +12203,7 @@
                             "format": "url",
                             "default": "",
                             "nullable": true,
-                            "example": "example.com"
+                            "example": "https://failover.example.com"
                           },
                           "webhook_api_version": {
                             "description": "Determines which webhook format will be used, Telnyx API v1 or v2.",
@@ -12046,8 +12224,8 @@
                           "connection_name": "string",
                           "created_at": "2018-02-02T22:25:27.521Z",
                           "updated_at": "2018-02-02T22:25:27.521Z",
-                          "webhook_event_url": "example.com",
-                          "webhook_event_failover_url": "example.com",
+                          "webhook_event_url": "https://example.com",
+                          "webhook_event_failover_url": "https://failover.example.com",
                           "webhook_api_version": "1"
                         }
                       }
@@ -12179,7 +12357,7 @@
                           "format": "url",
                           "default": "",
                           "nullable": true,
-                          "example": "example.com"
+                          "example": "https://example.com"
                         },
                         "webhook_event_failover_url": {
                           "description": "The failover URL where webhooks related to this connection will be sent if sending to the primary URL fails.",
@@ -12187,7 +12365,7 @@
                           "format": "url",
                           "default": "",
                           "nullable": true,
-                          "example": "example.com"
+                          "example": "https://failover.example.com"
                         },
                         "webhook_api_version": {
                           "description": "Determines which webhook format will be used, Telnyx API v1 or v2.",
@@ -12208,8 +12386,8 @@
                         "connection_name": "string",
                         "created_at": "2018-02-02T22:25:27.521Z",
                         "updated_at": "2018-02-02T22:25:27.521Z",
-                        "webhook_event_url": "example.com",
-                        "webhook_event_failover_url": "example.com",
+                        "webhook_event_url": "https://example.com",
+                        "webhook_event_failover_url": "https://failover.example.com",
                         "webhook_api_version": "1"
                       }
                     }
@@ -25335,7 +25513,7 @@
         "summary": "List All Messaging Hosted Number Orders",
         "operationId": "listMessagingHostedNumberOrder",
         "tags": [
-          "Messaging Hosted Number Orders"
+          "Messaging Hosted Numbers"
         ],
         "responses": {
           "200": {
@@ -25343,11 +25521,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "data": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
                         "example": {
                           "id": "86f58db9-0fe3-4adc-9d1f-46e66e6e9323",
@@ -25499,7 +25677,7 @@
         "summary": "New Messaging Hosted Numbers Order",
         "operationId": "newMessagingHostedNumberOrder",
         "tags": [
-          "Messaging Hosted Number Orders"
+          "Messaging Hosted Numbers"
         ],
         "requestBody": {
           "description": "Message payload",
@@ -25694,7 +25872,7 @@
         "summary": "Get Messaging Hosted Numbers Order Information",
         "operationId": "getMessagingHostedNumberOrder",
         "tags": [
-          "Messaging Hosted Number Orders"
+          "Messaging Hosted Numbers"
         ],
         "parameters": [
           {
@@ -25863,16 +26041,16 @@
         }
       }
     },
-    "/messaging_hosted_number_orders/{order_id}/actions/file_upload": {
+    "/messaging_hosted_number_orders/{id}/actions/file_upload": {
       "post": {
         "summary": "Upload LOA and Bill required for a Messaging Hosted Number Order",
         "operationId": "uploadFilesMessagingHostedNumberOrder",
         "tags": [
-          "Messaging Hosted Number Orders"
+          "Messaging Hosted Numbers"
         ],
         "parameters": [
           {
-            "name": "order_id",
+            "name": "id",
             "in": "path",
             "description": "Identifies the type of resource.",
             "required": true,
@@ -34377,6 +34555,14 @@
                           "max_destination_rate": 10,
                           "daily_spend_limit": "100.00",
                           "daily_spend_limit_enabled": true,
+                          "call_recording": {
+                            "call_recording_type": "by_call_phone_number",
+                            "call_recording_caller_phone_numbers": [
+                              "+19705555098"
+                            ],
+                            "call_recording_channels": "dual",
+                            "call_recording_format": "mp3"
+                          },
                           "billing_group_id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
                           "created_at": "2018-02-02T22:25:27.521Z",
                           "updated_at": "2018-02-02T22:25:27.521Z"
@@ -34491,7 +34677,8 @@
                                   "all",
                                   "none",
                                   "by_call_phone_number"
-                                ]
+                                ],
+                                "example": "by_call_phone_number"
                               },
                               "call_recording_caller_phone_numbers": {
                                 "type": "array",
@@ -34786,6 +34973,14 @@
                         "max_destination_rate": 10,
                         "daily_spend_limit": "100.00",
                         "daily_spend_limit_enabled": true,
+                        "call_recording": {
+                          "call_recording_type": "by_call_phone_number",
+                          "call_recording_caller_phone_numbers": [
+                            "+19705555098"
+                          ],
+                          "call_recording_channels": "dual",
+                          "call_recording_format": "mp3"
+                        },
                         "billing_group_id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
                         "created_at": "2018-02-02T22:25:27.521Z",
                         "updated_at": "2018-02-02T22:25:27.521Z"
@@ -34900,7 +35095,8 @@
                                 "all",
                                 "none",
                                 "by_call_phone_number"
-                              ]
+                              ],
+                              "example": "by_call_phone_number"
                             },
                             "call_recording_caller_phone_numbers": {
                               "type": "array",
@@ -35023,6 +35219,14 @@
                         "max_destination_rate": 10,
                         "daily_spend_limit": "100.00",
                         "daily_spend_limit_enabled": true,
+                        "call_recording": {
+                          "call_recording_type": "by_call_phone_number",
+                          "call_recording_caller_phone_numbers": [
+                            "+19705555098"
+                          ],
+                          "call_recording_channels": "dual",
+                          "call_recording_format": "mp3"
+                        },
                         "billing_group_id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
                         "created_at": "2018-02-02T22:25:27.521Z",
                         "updated_at": "2018-02-02T22:25:27.521Z"
@@ -35137,7 +35341,8 @@
                                 "all",
                                 "none",
                                 "by_call_phone_number"
-                              ]
+                              ],
+                              "example": "by_call_phone_number"
                             },
                             "call_recording_caller_phone_numbers": {
                               "type": "array",
@@ -35258,6 +35463,14 @@
                         "max_destination_rate": 10,
                         "daily_spend_limit": "100.00",
                         "daily_spend_limit_enabled": true,
+                        "call_recording": {
+                          "call_recording_type": "by_call_phone_number",
+                          "call_recording_caller_phone_numbers": [
+                            "+19705555098"
+                          ],
+                          "call_recording_channels": "dual",
+                          "call_recording_format": "mp3"
+                        },
                         "billing_group_id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
                         "created_at": "2018-02-02T22:25:27.521Z",
                         "updated_at": "2018-02-02T22:25:27.521Z"
@@ -35372,7 +35585,8 @@
                                 "all",
                                 "none",
                                 "by_call_phone_number"
-                              ]
+                              ],
+                              "example": "by_call_phone_number"
                             },
                             "call_recording_caller_phone_numbers": {
                               "type": "array",
@@ -35661,6 +35875,14 @@
                         "max_destination_rate": 10,
                         "daily_spend_limit": "100.00",
                         "daily_spend_limit_enabled": true,
+                        "call_recording": {
+                          "call_recording_type": "by_call_phone_number",
+                          "call_recording_caller_phone_numbers": [
+                            "+19705555098"
+                          ],
+                          "call_recording_channels": "dual",
+                          "call_recording_format": "mp3"
+                        },
                         "billing_group_id": "6a09cdc3-8948-47f0-aa62-74ac943d6c58",
                         "created_at": "2018-02-02T22:25:27.521Z",
                         "updated_at": "2018-02-02T22:25:27.521Z"
@@ -35775,7 +35997,8 @@
                                 "all",
                                 "none",
                                 "by_call_phone_number"
-                              ]
+                              ],
+                              "example": "by_call_phone_number"
                             },
                             "call_recording_caller_phone_numbers": {
                               "type": "array",
@@ -35880,7 +36103,7 @@
                         "properties": {
                           "record_type": {
                             "type": "string",
-                            "example": "phone_number_regulatory_group",
+                            "example": "phone_number_regulatory_requirement",
                             "readOnly": true
                           },
                           "phone_number": {
@@ -35897,6 +36120,12 @@
                             "type": "array",
                             "items": {
                               "properties": {
+                                "record_type": {
+                                  "type": "string",
+                                  "description": "Identifies the type of the resource.",
+                                  "example": "regulatory_requirement",
+                                  "readOnly": true
+                                },
                                 "requirement_type": {
                                   "type": "string",
                                   "enum": [
@@ -35934,7 +36163,7 @@
                           }
                         },
                         "example": {
-                          "record_type": "phone_number_regulatory_group",
+                          "record_type": "phone_number_regulatory_requirement",
                           "phone_number": "+19705555098",
                           "regulatory_group_id": "d70873cd-7c98-401a-81b6-b1ae08246995",
                           "regulatory_requirements": [
@@ -37053,7 +37282,7 @@
                         "type": "object",
                         "example": {
                           "record_type": "messaging_settings",
-                          "id": "+18665550001",
+                          "id": "1293384261075731499",
                           "phone_number": "+18005550001",
                           "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                           "created_at": "2019-01-23T18:10:02.574Z",
@@ -37434,7 +37663,7 @@
                         "properties": {
                           "id": {
                             "type": "string",
-                            "example": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+                            "example": "1293384261075731499",
                             "description": "Identifies the type of resource.",
                             "readOnly": true
                           },
@@ -37629,7 +37858,7 @@
                           }
                         },
                         "example": {
-                          "id": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+                          "id": "1293384261075731499",
                           "record_type": "voice_settings",
                           "connection_id": "1d0e6cb8-8668-462e-94c6-49ae0f0ed48b",
                           "tech_prefix_enabled": false,
@@ -38569,7 +38798,7 @@
                       "properties": {
                         "id": {
                           "type": "string",
-                          "example": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+                          "example": "1293384261075731499",
                           "description": "Identifies the type of resource.",
                           "readOnly": true
                         },
@@ -38764,7 +38993,7 @@
                         }
                       },
                       "example": {
-                        "id": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+                        "id": "1293384261075731499",
                         "record_type": "voice_settings",
                         "connection_id": "1d0e6cb8-8668-462e-94c6-49ae0f0ed48b",
                         "tech_prefix_enabled": false,
@@ -38813,7 +39042,7 @@
                       "properties": {
                         "id": {
                           "type": "string",
-                          "example": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+                          "example": "1293384261075731499",
                           "description": "Identifies the type of resource.",
                           "readOnly": true
                         },
@@ -39008,7 +39237,7 @@
                         }
                       },
                       "example": {
-                        "id": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+                        "id": "1293384261075731499",
                         "record_type": "voice_settings",
                         "connection_id": "1d0e6cb8-8668-462e-94c6-49ae0f0ed48b",
                         "tech_prefix_enabled": false,
@@ -39138,7 +39367,7 @@
                       "type": "object",
                       "example": {
                         "record_type": "messaging_settings",
-                        "id": "+18665550001",
+                        "id": "1293384261075731499",
                         "phone_number": "+18005550001",
                         "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                         "created_at": "2019-01-23T18:10:02.574Z",
@@ -39458,7 +39687,7 @@
                       "type": "object",
                       "example": {
                         "record_type": "messaging_settings",
-                        "id": "+18665550001",
+                        "id": "1293384261075731499",
                         "phone_number": "+18005550001",
                         "messaging_profile_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                         "created_at": "2019-01-23T18:10:02.574Z",
@@ -39756,7 +39985,7 @@
                       "properties": {
                         "id": {
                           "type": "string",
-                          "example": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+                          "example": "1293384261075731499",
                           "description": "Identifies the type of resource.",
                           "readOnly": true
                         },
@@ -39951,7 +40180,7 @@
                         }
                       },
                       "example": {
-                        "id": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+                        "id": "1293384261075731499",
                         "record_type": "voice_settings",
                         "connection_id": "1d0e6cb8-8668-462e-94c6-49ae0f0ed48b",
                         "tech_prefix_enabled": false,
@@ -40257,7 +40486,7 @@
                       "properties": {
                         "id": {
                           "type": "string",
-                          "example": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+                          "example": "1293384261075731499",
                           "description": "Identifies the type of resource.",
                           "readOnly": true
                         },
@@ -40452,7 +40681,7 @@
                         }
                       },
                       "example": {
-                        "id": "42587e44-3a3e-46de-9255-0c9a7a1d1ec7",
+                        "id": "1293384261075731499",
                         "record_type": "voice_settings",
                         "connection_id": "1d0e6cb8-8668-462e-94c6-49ae0f0ed48b",
                         "tech_prefix_enabled": false,
@@ -41301,6 +41530,12 @@
                       "type": "array",
                       "items": {
                         "properties": {
+                          "record_type": {
+                            "type": "string",
+                            "description": "Identifies the type of the resource.",
+                            "example": "regulatory_requirement",
+                            "readOnly": true
+                          },
                           "requirement_type": {
                             "type": "string",
                             "enum": [
@@ -41454,6 +41689,12 @@
                   "properties": {
                     "data": {
                       "properties": {
+                        "record_type": {
+                          "type": "string",
+                          "description": "Identifies the type of the resource.",
+                          "example": "regulatory_requirement",
+                          "readOnly": true
+                        },
                         "requirement_type": {
                           "type": "string",
                           "enum": [
