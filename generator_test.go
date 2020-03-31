@@ -659,9 +659,10 @@ func TestGenerateSyntheticFixture(t *testing.T) {
 	// Object
 	assert.Equal(t,
 		map[string]interface{}{
-			"has_more": true,
-			"object":   "list",
-			"url":      "",
+			"has_more":    true,
+			"object":      "list",
+			"total_count": 0,
+			"url":         "",
 		},
 		generateSyntheticFixture(&spec.Schema{
 			Type: "object",
@@ -678,11 +679,6 @@ func TestGenerateSyntheticFixture(t *testing.T) {
 				"url": {
 					Type: "string",
 				},
-			},
-			Required: []string{
-				"has_more",
-				"object",
-				"url",
 			},
 		}, ""),
 	)

@@ -104,12 +104,19 @@ func (g *DataGenerator) Generate(params *GenerateParams) (interface{}, error) {
 		requestPathDisplay = "(empty request path)"
 	}
 
-	var fixture interface{}
-	err := json.Unmarshal(params.Schema.Example, &fixture)
-	if err != nil {
-		panic(err)
+	var example *valueWrapper
+
+	if params.Schema.Example != nil {
+		var fixture interface{}
+
+		if err := json.Unmarshal(params.Schema.Example, &fixture); err != nil {
+			panic(err)
+		}
+
+		example = &valueWrapper{value: fixture}
+	} else {
+		example = nil
 	}
-	example := &valueWrapper{value: fixture}
 
 	data, err := g.generateInternal(&GenerateParams{
 		Expansions:    params.Expansions,
@@ -645,6 +652,11 @@ func distributeReplacedIDsInValue(pathParams *PathParamsMap, value interface{}) 
 func generateSyntheticFixture(schema *spec.Schema, context string) interface{} {
 	context = fmt.Sprintf("%sGenerating synthetic fixture: %+v\n", context, schema)
 
+	// Always try to use the user provided example first
+	if schema.Example != nil {
+		return schema.Example
+	}
+
 	// Return the minimum viable object by returning nil/null for a nullable
 	// property.
 	if schema.Nullable {
@@ -684,12 +696,6 @@ func generateSyntheticFixture(schema *spec.Schema, context string) interface{} {
 	case spec.TypeObject:
 		fixture := make(map[string]interface{})
 		for property, subSchema := range schema.Properties {
-			// Return the minimum viable object by not including properties
-			// that are not necessary for a valid object.
-			if !isRequiredProperty(schema, property) {
-				continue
-			}
-
 			fixture[property] = generateSyntheticFixture(subSchema, context)
 		}
 		return fixture
