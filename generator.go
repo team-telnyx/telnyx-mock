@@ -118,12 +118,14 @@ func (g *DataGenerator) Generate(params *GenerateParams) (interface{}, error) {
 		example = nil
 	}
 
+	flattenedSchema := params.Schema.FlattenAllOf()
+
 	data, err := g.generateInternal(&GenerateParams{
 		Expansions:    params.Expansions,
 		PathParams:    nil,
 		RequestMethod: params.RequestMethod,
 		RequestPath:   params.RequestPath,
-		Schema:        params.Schema,
+		Schema:        flattenedSchema,
 		WrapWithList:  params.WrapWithList,
 
 		context: fmt.Sprintf("Responding to %s %s:\n",

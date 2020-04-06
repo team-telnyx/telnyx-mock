@@ -3,6 +3,8 @@ package spec
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/imdario/mergo"
 )
 
 //
@@ -171,6 +173,35 @@ func (s *Schema) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// FlattenAllOf will flatten the AllOf []*Schema slice and return a new
+// single *Schema
+func (s *Schema) FlattenAllOf() *Schema {
+	var flatten func(output *Schema, input *Schema)
+
+	flatten = func(output *Schema, input *Schema) {
+		allOf := input.AllOf
+
+		// Nillify `AllOf` so `mergo` will skip it in the merge. We don't want
+		// the `AllfOf` slice being added to the output.
+		input.AllOf = nil
+
+		mergo.Merge(output, input)
+
+		// Now add it back so we don't cause side affects
+		input.AllOf = allOf
+
+		for _, v := range allOf {
+			flatten(output, v)
+		}
+	}
+
+	var output Schema
+
+	flatten(&output, s)
+
+	return &output
+}
+
 // MediaType is a struct bucketing a request or response by media type in an
 // OpenAPI specification.
 type MediaType struct {
@@ -226,6 +257,34 @@ type ResourceID string
 type Spec struct {
 	Components Components                       `json:"components"`
 	Paths      map[Path]map[HTTPVerb]*Operation `json:"paths"`
+}
+
+// Flatten will walk the Paths and flatten the RequestBody AllOf slices to
+// a single Schema.
+func (s *Spec) Flatten() {
+	for _, verbs := range s.Paths {
+		for _, operation := range verbs {
+			if operation.RequestBody == nil {
+				continue
+			}
+
+			var contentType string
+			var mediaType MediaType
+
+			for c, m := range operation.RequestBody.Content {
+				contentType = c
+				mediaType = m
+
+				break
+			}
+
+			schema := mediaType.Schema
+
+			newSchema := schema.FlattenAllOf()
+
+			operation.RequestBody.Content[contentType] = MediaType{Schema: newSchema}
+		}
+	}
 }
 
 // StatusCode is a type for the response status code of an HTTP operation in an
