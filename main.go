@@ -11,6 +11,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -20,6 +21,10 @@ import (
 
 const defaultPortHTTP = 12111
 const defaultPortHTTPS = 12112
+
+const liveSpecFile = "https://raw.githubusercontent.com/team-telnyx/openapi/master/openapi/spec3.json"
+
+var liveSpecCache = path.Join(os.TempDir(), "telnyx-mock-spec.json")
 
 // verbose tracks whether the program is operating in verbose mode
 var verbose bool
@@ -44,9 +49,11 @@ func main() {
 	flag.IntVar(&options.httpsPort, "https-port", -1, "Port to listen on for HTTPS")
 	flag.StringVar(&options.httpsUnixSocket, "https-unix", "", "Unix socket to listen on for HTTPS")
 
-	flag.IntVar(&options.port, "port", -1, "Port to listen on (also respects PORT from environment)")
 	flag.StringVar(&options.fixturesPath, "fixtures", "", "Path to fixtures to use instead of bundled version (should be JSON)")
-	flag.StringVar(&options.specPath, "spec", "", "Path to OpenAPI spec to use instead of bundled version (should be JSON)")
+	flag.StringVar(&options.specPath, "spec", "", "Path to OpenAPI spec to use instead of the latest version (should be JSON)")
+	flag.BoolVar(&options.specSkipCache, "spec-skip-cache", false, "Skip the cache when fetching the live API spec")
+
+	flag.IntVar(&options.port, "port", -1, "Port to listen on (also respects PORT from environment)")
 	flag.StringVar(&options.unixSocket, "unix", "", "Unix socket to listen on")
 	flag.BoolVar(&verbose, "verbose", false, "Enable verbose mode")
 	flag.BoolVar(&options.showVersion, "version", false, "Show version and exit")
@@ -67,7 +74,7 @@ func main() {
 	// For both spec and fixtures telnyx-mock will by default load data from
 	// internal assets compiled into the binary, but either one can be
 	// overridden with a -spec or -fixtures argument and a path to a file.
-	telnyxSpec, err := getSpec(options.specPath)
+	telnyxSpec, err := getSpec(options.specPath, options.specSkipCache)
 	if err != nil {
 		abort(err.Error())
 	}
@@ -157,8 +164,6 @@ func main() {
 
 // options is a container for the command line options passed to telnyx-mock.
 type options struct {
-	fixturesPath string
-
 	http            bool
 	httpPortDefault int // For testability -- in practice always defaultPortHTTP
 	httpPort        int
@@ -171,8 +176,11 @@ type options struct {
 
 	port        int
 	showVersion bool
-	specPath    string
 	unixSocket  string
+
+	fixturesPath  string
+	specPath      string
+	specSkipCache bool
 }
 
 func (o *options) checkConflictingOptions() error {
@@ -356,13 +364,18 @@ func getPortListenerDefault(defaultPort int, protocol string) (net.Listener, err
 	return getPortListener(defaultPort, protocol)
 }
 
-func getSpec(specPath string) (*spec.Spec, error) {
+func getSpec(specPath string, skipCache bool) (*spec.Spec, error) {
 	var data []byte
 	var err error
 
 	if specPath == "" {
-		// Load the spec information from go-bindata
-		data, err = Asset("openapi/openapi/spec3.json")
+		fmt.Printf("Downloading API spec file from: %s\n", liveSpecFile)
+
+		data, err = downloadSpec(skipCache)
+
+		if err != nil {
+			return nil, fmt.Errorf("error downloading spec file: %v", err)
+		}
 	} else {
 		if !isJSONFile(specPath) {
 			return nil, fmt.Errorf("spec should come from a JSON file")
@@ -381,6 +394,35 @@ func getSpec(specPath string) (*spec.Spec, error) {
 	}
 
 	return &telnyxSpec, nil
+}
+
+func downloadSpec(skipCache bool) ([]byte, error) {
+	var resp *http.Response
+	var data []byte
+	var err error
+
+	if cachedData, err := ioutil.ReadFile(liveSpecCache); err == nil && !skipCache {
+		fmt.Println("using cache")
+		return cachedData, nil
+	}
+
+	resp, err = http.Get(liveSpecFile)
+
+	if err != nil {
+		return nil, fmt.Errorf("error fetching spec file: %v", err)
+	}
+
+	defer resp.Body.Close()
+
+	data, err = ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return nil, fmt.Errorf("error reading spec file: %v", err)
+	}
+
+	ioutil.WriteFile(liveSpecCache, data, 0644)
+
+	return data, nil
 }
 
 func getUnixSocketListener(unixSocket, protocol string) (net.Listener, error) {
