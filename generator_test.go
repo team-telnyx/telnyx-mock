@@ -433,11 +433,6 @@ func TestResourcesCanBeGeneratedAndExpanded(t *testing.T) {
 // Tests for private functions
 //
 
-func TestDefinitionFromJSONPointer(t *testing.T) {
-	definition := definitionFromJSONPointer("#/components/schemas/charge")
-	assert.Equal(t, "charge", definition)
-}
-
 // This is meant as quite a blunt test. See TestMaybeReplaceID for something
 // that's probably easier to introspect/debug.
 func TestDistributeReplacedIDs(t *testing.T) {

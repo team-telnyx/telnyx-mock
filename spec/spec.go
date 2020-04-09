@@ -3,6 +3,7 @@ package spec
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/imdario/mergo"
 )
@@ -202,6 +203,25 @@ func (s *Schema) FlattenAllOf() *Schema {
 	return &output
 }
 
+// ResolveRef returns the ultimate *Schema.
+//
+// If Ref is nil, the same *Schema is returned that was passed in. Otherwise,
+// the *Schema will be resolved from the provided schemas map.
+func (s *Schema) ResolveRef(schemas map[string]*Schema) (*Schema, error) {
+	if s.Ref == "" {
+		return s, nil
+	}
+
+	schemaName := strings.SplitAfterN(s.Ref, "#/components/schemas/", 2)
+	schema, ok := schemas[schemaName[1]]
+
+	if !ok {
+		return nil, fmt.Errorf("Could not find response %s in #/components/responses/", schemaName)
+	}
+
+	return schema, nil
+}
+
 // MediaType is a struct bucketing a request or response by media type in an
 // OpenAPI specification.
 type MediaType struct {
@@ -247,6 +267,25 @@ type Response struct {
 	// Ref is populated if this JSON Schema is actually a JSON reference, and
 	// it defines the location of the actual schema definition.
 	Ref string `json:"$ref,omitempty"`
+}
+
+// ResolveRef returns the ultimate *Response.
+//
+// If Ref is nil, the same *Response is returned that was passed in. Otherwise,
+// the *Response will be resolved from the provided responses map.
+func (r *Response) ResolveRef(responses map[string]*Response) (*Response, error) {
+	if r.Ref == "" {
+		return r, nil
+	}
+
+	responseName := strings.SplitAfterN(r.Ref, "#/components/responses/", 2)
+	responseObject, ok := responses[responseName[1]]
+
+	if !ok {
+		return nil, fmt.Errorf("Could not find response %s in #/components/responses/", responseName)
+	}
+
+	return responseObject, nil
 }
 
 // ResourceID is a type for the ID of a response resource in an OpenAPI

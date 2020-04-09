@@ -182,7 +182,9 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 	// correctly on every resource; hopefully this will at least allow us to catch
 	// any errors in advance.
 
-	schema, context, err := g.maybeDereference(params.Schema, params.context)
+	context := params.context
+	schema, err := params.Schema.ResolveRef(g.definitions)
+
 	if err != nil {
 		return nil, err
 	}
@@ -422,7 +424,8 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 // a deleted resource or not based off of the value of the deleted argument.
 func (g *DataGenerator) findAnyOfBranch(schema *spec.Schema, deleted bool) (*spec.Schema, error) {
 	for _, anyOfSchema := range schema.AnyOf {
-		anyOfSchema, _, err := g.maybeDereference(anyOfSchema, "")
+		anyOfSchema, err := anyOfSchema.ResolveRef(g.definitions)
+
 		if err != nil {
 			return nil, err
 		}
@@ -433,20 +436,6 @@ func (g *DataGenerator) findAnyOfBranch(schema *spec.Schema, deleted bool) (*spe
 		}
 	}
 	return nil, nil
-}
-
-func (g *DataGenerator) maybeDereference(schema *spec.Schema, context string) (*spec.Schema, string, error) {
-	if schema.Ref != "" {
-		definition := definitionFromJSONPointer(schema.Ref)
-
-		newSchema, ok := g.definitions[definition]
-		if !ok {
-			panic(fmt.Sprintf("Couldn't dereference: %v", schema.Ref))
-		}
-		context = fmt.Sprintf("%sDereferencing '%s':\n", context, schema.Ref)
-		schema = newSchema
-	}
-	return schema, context, nil
 }
 
 func (g *DataGenerator) generateListResource(params *GenerateParams) (interface{}, error) {
@@ -527,24 +516,6 @@ type valueWrapper struct {
 //
 // Private functions
 //
-
-// definitionFromJSONPointer extracts the name of a JSON schema definition from
-// a JSON pointer, so "#/components/schemas/charge" would become just "charge".
-// This is a simplified workaround to avoid bringing in JSON schema
-// infrastructure because we can guarantee that the spec we're producing will
-// take a certain shape. If this gets too hacky, it will be better to put a more
-// legitimate JSON schema parser in place.
-func definitionFromJSONPointer(pointer string) string {
-	parts := strings.Split(pointer, "/")
-
-	if len(parts) != 4 ||
-		parts[0] != "#" ||
-		parts[1] != "components" ||
-		parts[2] != "schemas" {
-		panic(fmt.Sprintf("Expected '#/components/schemas/...' but got '%v'", pointer))
-	}
-	return parts[3]
-}
 
 // distributeReplacedIDs descends through a generated data structure
 // recursively looking for IDs that were generated during data generation and
