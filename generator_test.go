@@ -58,9 +58,10 @@ func TestConcurrentAccess(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			_, err := generator.Generate(&GenerateParams{
-				Schema: &spec.Schema{Ref: "#/components/schemas/messaging_profile"},
-			})
+
+			schema := &spec.Schema{Ref: "#/components/schemas/messaging_profile"}
+
+			_, err := generator.Generate(schema, nil, &GenerateParams{})
 			assert.NoError(t, err)
 		}()
 	}
@@ -73,9 +74,8 @@ func TestGenerateResponseData(t *testing.T) {
 	// basic reference
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		data, err := generator.Generate(&GenerateParams{
-			Schema: &spec.Schema{Ref: "#/components/schemas/charge"},
-		})
+		schema := &spec.Schema{Ref: "#/components/schemas/charge"}
+		data, err := generator.Generate(schema, nil, &GenerateParams{})
 		assert.Nil(t, err)
 		assert.Equal(t,
 			testFixtures.Resources["charge"].(map[string]interface{})["id"],
@@ -90,13 +90,13 @@ func TestGenerateResponseData(t *testing.T) {
 	// expansion
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		data, err := generator.Generate(&GenerateParams{
+		schema := &spec.Schema{Ref: "#/components/schemas/charge"}
+		data, err := generator.Generate(schema, nil, &GenerateParams{
 			Expansions: &ExpansionLevel{
 				expansions: map[string]*ExpansionLevel{"customer": {
 					expansions: map[string]*ExpansionLevel{}},
 				},
 			},
-			Schema: &spec.Schema{Ref: "#/components/schemas/charge"},
 		})
 
 		assert.Nil(t, err)
@@ -108,13 +108,13 @@ func TestGenerateResponseData(t *testing.T) {
 	// bad expansion
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		_, err := generator.Generate(&GenerateParams{
+		schema := &spec.Schema{Ref: "#/components/schemas/charge"}
+		_, err := generator.Generate(schema, nil, &GenerateParams{
 			Expansions: &ExpansionLevel{
 				expansions: map[string]*ExpansionLevel{"id": {
 					expansions: map[string]*ExpansionLevel{}},
 				},
 			},
-			Schema: &spec.Schema{Ref: "#/components/schemas/charge"},
 		})
 
 		assert.Equal(t, err, errExpansionNotSupported)
@@ -123,13 +123,13 @@ func TestGenerateResponseData(t *testing.T) {
 	// bad nested expansion
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		_, err := generator.Generate(&GenerateParams{
+		schema := &spec.Schema{Ref: "#/components/schemas/charge"}
+		_, err := generator.Generate(schema, nil, &GenerateParams{
 			Expansions: &ExpansionLevel{
 				expansions: map[string]*ExpansionLevel{"customer.id": {
 					expansions: map[string]*ExpansionLevel{}},
 				},
 			},
-			Schema: &spec.Schema{Ref: "#/components/schemas/charge"},
 		})
 		assert.Equal(t, err, errExpansionNotSupported)
 	}
@@ -137,9 +137,9 @@ func TestGenerateResponseData(t *testing.T) {
 	// wildcard expansion
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		data, err := generator.Generate(&GenerateParams{
+		schema := &spec.Schema{Ref: "#/components/schemas/charge"}
+		data, err := generator.Generate(schema, nil, &GenerateParams{
 			Expansions: &ExpansionLevel{wildcard: true},
-			Schema:     &spec.Schema{Ref: "#/components/schemas/charge"},
 		})
 		assert.Nil(t, err)
 		assert.Equal(t,
@@ -150,9 +150,8 @@ func TestGenerateResponseData(t *testing.T) {
 	// list
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		data, err := generator.Generate(&GenerateParams{
+		data, err := generator.Generate(listSchema, nil, &GenerateParams{
 			RequestPath: "/v2/charges",
-			Schema:      listSchema,
 		})
 		assert.Nil(t, err)
 		assert.Equal(t, "list", data.(map[string]interface{})["object"])
@@ -177,15 +176,14 @@ func TestGenerateResponseData(t *testing.T) {
 				},
 			},
 		}
-		data, err := generator.Generate(&GenerateParams{
-			Schema: &spec.Schema{
-				Type: "object",
-				Properties: map[string]*spec.Schema{
-					"charges_list": listSchema,
-				},
-				XResourceID: "with_charges_list",
+		schema := &spec.Schema{
+			Type: "object",
+			Properties: map[string]*spec.Schema{
+				"charges_list": listSchema,
 			},
-		})
+			XResourceID: "with_charges_list",
+		}
+		data, err := generator.Generate(schema, nil, &GenerateParams{})
 		assert.Nil(t, err)
 		chargesList := data.(map[string]interface{})["charges_list"]
 		assert.Equal(t, "list", chargesList.(map[string]interface{})["object"])
@@ -211,9 +209,9 @@ func TestGenerateResponseData(t *testing.T) {
 			},
 		}}
 		newID := "ch_123_InjectedFromURL"
-		data, err := generator.Generate(&GenerateParams{
+		schema := &spec.Schema{Ref: "#/components/schemas/charge"}
+		data, err := generator.Generate(schema, nil, &GenerateParams{
 			PathParams: &PathParamsMap{PrimaryID: &newID},
-			Schema:     &spec.Schema{Ref: "#/components/schemas/charge"},
 		})
 		assert.Nil(t, err)
 		assert.Equal(t,
@@ -238,7 +236,8 @@ func TestGenerateResponseData(t *testing.T) {
 			},
 		}}
 		newCustomerID := "cus_123_InjectedFromURL"
-		data, err := generator.Generate(&GenerateParams{
+		schema := &spec.Schema{Ref: "#/components/schemas/charge"}
+		data, err := generator.Generate(schema, nil, &GenerateParams{
 			Expansions: &ExpansionLevel{
 				expansions: map[string]*ExpansionLevel{"customer": {
 					expansions: map[string]*ExpansionLevel{}},
@@ -249,7 +248,6 @@ func TestGenerateResponseData(t *testing.T) {
 					{ID: newCustomerID, Name: "customer"},
 				},
 			},
-			Schema: &spec.Schema{Ref: "#/components/schemas/charge"},
 		})
 		assert.Nil(t, err)
 
@@ -270,12 +268,12 @@ func TestGenerateResponseData(t *testing.T) {
 	// data replacement on `POST`
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		data, err := generator.Generate(&GenerateParams{
+		schema := &spec.Schema{Ref: "#/components/schemas/charge"}
+		data, err := generator.Generate(schema, nil, &GenerateParams{
 			RequestData: map[string]interface{}{
 				"customer": "cus_9999",
 			},
 			RequestMethod: http.MethodPost,
-			Schema:        &spec.Schema{Ref: "#/components/schemas/charge"},
 		})
 		assert.Nil(t, err)
 		assert.Equal(t,
@@ -286,12 +284,12 @@ func TestGenerateResponseData(t *testing.T) {
 	// *no* data replacement on non-`POST`
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		data, err := generator.Generate(&GenerateParams{
+		schema := &spec.Schema{Ref: "#/components/schemas/charge"}
+		data, err := generator.Generate(schema, nil, &GenerateParams{
 			RequestData: map[string]interface{}{
 				"customer": "cus_9999",
 			},
 			RequestMethod: http.MethodGet,
-			Schema:        &spec.Schema{Ref: "#/components/schemas/charge"},
 		})
 		assert.Nil(t, err)
 		assert.NotEqual(t,
@@ -302,18 +300,17 @@ func TestGenerateResponseData(t *testing.T) {
 	// synthetic schema
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		data, err := generator.Generate(&GenerateParams{
-			Schema: &spec.Schema{
-				Properties: map[string]*spec.Schema{
-					"string_property": {
-						Type: spec.TypeString,
-					},
+		schema := &spec.Schema{
+			Properties: map[string]*spec.Schema{
+				"string_property": {
+					Type: spec.TypeString,
 				},
-				Required:    []string{"string_property"},
-				Type:        spec.TypeObject,
-				XResourceID: "",
 			},
-		})
+			Required:    []string{"string_property"},
+			Type:        spec.TypeObject,
+			XResourceID: "",
+		}
+		data, err := generator.Generate(schema, nil, &GenerateParams{})
 		assert.Nil(t, err)
 		assert.Equal(t,
 			map[string]interface{}{
@@ -326,15 +323,15 @@ func TestGenerateResponseData(t *testing.T) {
 	// pick non-deleted anyOf branch
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		data, err := generator.Generate(&GenerateParams{
+		schema := &spec.Schema{AnyOf: []*spec.Schema{
+			// put the deleted version first so we know it's not just
+			// returning the first result
+			{Ref: "#/components/schemas/deleted_customer"},
+			{Ref: "#/components/schemas/customer"},
+		}}
+		data, err := generator.Generate(schema, nil, &GenerateParams{
 			// Just needs to be any HTTP method that's not DELETE
 			RequestMethod: http.MethodPost,
-			Schema: &spec.Schema{AnyOf: []*spec.Schema{
-				// put the deleted version first so we know it's not just
-				// returning the first result
-				{Ref: "#/components/schemas/deleted_customer"},
-				{Ref: "#/components/schemas/customer"},
-			}},
 		})
 		assert.Nil(t, err)
 
@@ -346,14 +343,14 @@ func TestGenerateResponseData(t *testing.T) {
 	// pick deleted anyOf branch
 	{
 		generator := DataGenerator{testSpec.Components.Schemas, &testFixtures}
-		data, err := generator.Generate(&GenerateParams{
+		schema := &spec.Schema{AnyOf: []*spec.Schema{
+			// put the non-deleted version first so we know it's not just
+			// returning the first result
+			{Ref: "#/components/schemas/customer"},
+			{Ref: "#/components/schemas/deleted_customer"},
+		}}
+		data, err := generator.Generate(schema, nil, &GenerateParams{
 			RequestMethod: http.MethodDelete,
-			Schema: &spec.Schema{AnyOf: []*spec.Schema{
-				// put the non-deleted version first so we know it's not just
-				// returning the first result
-				{Ref: "#/components/schemas/customer"},
-				{Ref: "#/components/schemas/deleted_customer"},
-			}},
 		})
 		assert.Nil(t, err)
 
@@ -849,10 +846,10 @@ func testCanGenerate(t *testing.T, path spec.Path, schema *spec.Schema, expand b
 	var example interface{}
 	var err error
 	assert.NotPanics(t, func() {
-		example, err = generator.Generate(&GenerateParams{
+		schema := schema
+		example, err = generator.Generate(schema, nil, &GenerateParams{
 			Expansions:  expansions,
 			RequestPath: string(path),
-			Schema:      schema,
 		})
 	})
 	assert.NoError(t, err)

@@ -208,7 +208,7 @@ func (s *StubServer) HandleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if dataObject.Items != nil {
-		itemObject, err := dataObject.Items.ResolveRef(s.spec.Components.Schemas)
+		schema, err = dataObject.Items.ResolveRef(s.spec.Components.Schemas)
 
 		if err != nil {
 			fmt.Printf("error resolving item object ref: %s\n", err)
@@ -219,10 +219,24 @@ func (s *StubServer) HandleRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		schema = itemObject
 		wrapWithList = true
 	} else {
 		schema = dataObject
+	}
+
+	var metaObject *spec.Schema
+
+	if meta, ok := responseContent.Schema.Properties["meta"]; ok {
+		metaObject, err = meta.ResolveRef(s.spec.Components.Schemas)
+
+		if err != nil {
+			fmt.Printf("error resolving meta object ref: %s\n", err)
+
+			writeResponse(w, r, start, http.StatusInternalServerError,
+				createInternalServerError())
+
+			return
+		}
 	}
 
 	if verbose {
@@ -262,13 +276,13 @@ func (s *StubServer) HandleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	generator := DataGenerator{s.spec.Components.Schemas, s.fixtures}
-	responseData, err := generator.Generate(&GenerateParams{
+
+	responseData, err := generator.Generate(schema, metaObject, &GenerateParams{
 		Expansions:    expansions,
 		PathParams:    pathParams,
 		RequestData:   requestData,
 		RequestMethod: r.Method,
 		RequestPath:   r.URL.Path,
-		Schema:        schema,
 		WrapWithList:  wrapWithList,
 	})
 

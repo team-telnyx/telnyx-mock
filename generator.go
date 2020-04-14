@@ -60,6 +60,10 @@ type GenerateParams struct {
 	// recursion.
 	RequestPath string
 
+	// Specify whether the object should be wrapped in a list before being
+	// returned.
+	WrapWithList bool
+
 	//
 	// Private fields
 	//
@@ -70,11 +74,7 @@ type GenerateParams struct {
 	// schema at that level of recursion.
 	//
 	// This field is required.
-	Schema *spec.Schema
-
-	// Specify whether the object should be wrapped in a list before being
-	// returned.
-	WrapWithList bool
+	schema *spec.Schema
 
 	// context is a breadcrumb trail that's added to as Generate recurses. It's
 	// not important for the final result, but is very useful for debugging.
@@ -96,7 +96,7 @@ type DataGenerator struct {
 }
 
 // Generate generates a fixture response.
-func (g *DataGenerator) Generate(params *GenerateParams) (interface{}, error) {
+func (g *DataGenerator) Generate(dataSchema *spec.Schema, metaSchema *spec.Schema, params *GenerateParams) (interface{}, error) {
 	// This just makes our context message readable in case there was no
 	// request path specified.
 	requestPathDisplay := params.RequestPath
@@ -104,36 +104,42 @@ func (g *DataGenerator) Generate(params *GenerateParams) (interface{}, error) {
 		requestPathDisplay = "(empty request path)"
 	}
 
-	var example *valueWrapper
-
-	if params.Schema.Example != nil {
-		var fixture interface{}
-
-		if err := json.Unmarshal(params.Schema.Example, &fixture); err != nil {
-			panic(err)
-		}
-
-		example = &valueWrapper{value: fixture}
-	} else {
-		example = nil
-	}
-
-	flattenedSchema := params.Schema.FlattenAllOf()
-
 	data, err := g.generateInternal(&GenerateParams{
 		Expansions:    params.Expansions,
 		PathParams:    nil,
 		RequestMethod: params.RequestMethod,
 		RequestPath:   params.RequestPath,
-		Schema:        flattenedSchema,
 		WrapWithList:  params.WrapWithList,
 
+		schema: dataSchema.FlattenAllOf(),
 		context: fmt.Sprintf("Responding to %s %s:\n",
 			params.RequestMethod, requestPathDisplay),
-		example: example,
+		example: g.prepareSchemaExample(dataSchema),
 	})
+
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error generating data response: %v", err)
+	}
+
+	var meta interface{}
+
+	if metaSchema != nil {
+		meta, err = g.generateInternal(&GenerateParams{
+			Expansions:    nil,
+			PathParams:    nil,
+			RequestMethod: params.RequestMethod,
+			RequestPath:   params.RequestPath,
+			WrapWithList:  false,
+
+			schema: metaSchema.FlattenAllOf(),
+			context: fmt.Sprintf("Responding to %s %s:\n",
+				params.RequestMethod, requestPathDisplay),
+			example: g.prepareSchemaExample(metaSchema),
+		})
+
+		if err != nil {
+			return nil, fmt.Errorf("error generating meta response: %v", err)
+		}
 	}
 
 	if params.PathParams != nil {
@@ -160,8 +166,9 @@ func (g *DataGenerator) Generate(params *GenerateParams) (interface{}, error) {
 	}
 
 	if params.WrapWithList {
-		nestedData := map[string][]interface{}{
-			"data": {data},
+		nestedData := map[string]interface{}{
+			"data": []interface{}{data},
+			"meta": meta,
 		}
 		return nestedData, nil
 	}
@@ -169,6 +176,20 @@ func (g *DataGenerator) Generate(params *GenerateParams) (interface{}, error) {
 		"data": data,
 	}
 	return nestedData, nil
+}
+
+func (g *DataGenerator) prepareSchemaExample(s *spec.Schema) *valueWrapper {
+	if s.Example != nil {
+		var fixture interface{}
+
+		if err := json.Unmarshal(s.Example, &fixture); err != nil {
+			panic(err)
+		}
+
+		return &valueWrapper{value: fixture}
+	}
+
+	return nil
 }
 
 // generateInternal encompasses all the generation logic. It's separate from
@@ -183,7 +204,7 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 	// any errors in advance.
 
 	context := params.context
-	schema, err := params.Schema.ResolveRef(g.definitions)
+	schema, err := params.schema.ResolveRef(g.definitions)
 
 	if err != nil {
 		return nil, err
@@ -221,8 +242,8 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 				PathParams:    nil,
 				RequestMethod: params.RequestMethod,
 				RequestPath:   params.RequestPath,
-				Schema:        schema.XExpansionResources.OneOf[0],
 
+				schema:  schema.XExpansionResources.OneOf[0],
 				context: fmt.Sprintf("%sExpanding optional expandable field:\n", context),
 				example: nil,
 			})
@@ -235,8 +256,8 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 			PathParams:    nil,
 			RequestMethod: params.RequestMethod,
 			RequestPath:   params.RequestPath,
-			Schema:        schema.AnyOf[0],
 
+			schema:  schema.AnyOf[0],
 			context: fmt.Sprintf("%sNot expanding optional expandable field:\n", context),
 			example: example,
 		})
@@ -254,8 +275,8 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 				PathParams:    nil,
 				RequestMethod: params.RequestMethod,
 				RequestPath:   params.RequestPath,
-				Schema:        schema.AnyOf[0],
 
+				schema:  schema.AnyOf[0],
 				context: fmt.Sprintf("%sChoosing only branch of anyOf:\n", context),
 				example: example,
 			})
@@ -284,8 +305,8 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 			PathParams:    nil,
 			RequestMethod: params.RequestMethod,
 			RequestPath:   params.RequestPath,
-			Schema:        anyOfSchema,
 
+			schema:  anyOfSchema,
 			context: context,
 			example: nil,
 		})
@@ -299,8 +320,8 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 			PathParams:    nil,
 			RequestMethod: params.RequestMethod,
 			RequestPath:   params.RequestPath,
-			Schema:        schema,
 
+			schema:  schema,
 			context: context,
 			example: example,
 		})
@@ -400,8 +421,8 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 				PathParams:    nil,
 				RequestMethod: params.RequestMethod,
 				RequestPath:   params.RequestPath,
-				Schema:        subSchema,
 
+				schema:  subSchema,
 				context: fmt.Sprintf("%sIn property '%s' of object:\n", context, key),
 				example: subvalueWrapper,
 			})
@@ -449,8 +470,8 @@ func (g *DataGenerator) generateListResource(params *GenerateParams) (interface{
 		PathParams:    nil,
 		RequestMethod: params.RequestMethod,
 		RequestPath:   params.RequestPath,
-		Schema:        params.Schema.Properties["data"].Items,
 
+		schema:  params.schema.Properties["data"].Items,
 		context: fmt.Sprintf("%sPopulating list resource:\n", params.context),
 		example: nil,
 	})
@@ -462,7 +483,7 @@ func (g *DataGenerator) generateListResource(params *GenerateParams) (interface{
 	// it respects the list properties dictated by the included schema rather
 	// than assuming its own.
 	listData := make(map[string]interface{})
-	for key, subSchema := range params.Schema.Properties {
+	for key, subSchema := range params.schema.Properties {
 		var val interface{}
 		switch key {
 		case "data":
