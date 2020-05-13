@@ -621,27 +621,29 @@ func TestFindAnyOfBranch(t *testing.T) {
 }
 
 func TestGenerateSyntheticFixture(t *testing.T) {
+	generator := DataGenerator{nil, nil}
+
 	// Scalars (and an array, which is easy)
-	assert.Equal(t, []string{}, generateSyntheticFixture(&spec.Schema{Type: spec.TypeArray}, ""))
-	assert.Equal(t, true, generateSyntheticFixture(&spec.Schema{Type: spec.TypeBoolean}, ""))
-	assert.Equal(t, 0, generateSyntheticFixture(&spec.Schema{Type: spec.TypeInteger}, ""))
-	assert.Equal(t, 0.0, generateSyntheticFixture(&spec.Schema{Type: spec.TypeNumber}, ""))
-	assert.Equal(t, "", generateSyntheticFixture(&spec.Schema{Type: spec.TypeString}, ""))
+	assert.Equal(t, []string{}, generator.generateSyntheticFixture(&spec.Schema{Type: spec.TypeArray}, ""))
+	assert.Equal(t, true, generator.generateSyntheticFixture(&spec.Schema{Type: spec.TypeBoolean}, ""))
+	assert.Equal(t, 0, generator.generateSyntheticFixture(&spec.Schema{Type: spec.TypeInteger}, ""))
+	assert.Equal(t, 0.0, generator.generateSyntheticFixture(&spec.Schema{Type: spec.TypeNumber}, ""))
+	assert.Equal(t, "", generator.generateSyntheticFixture(&spec.Schema{Type: spec.TypeString}, ""))
 
 	// Nullable property
-	assert.Equal(t, nil, generateSyntheticFixture(&spec.Schema{
+	assert.Equal(t, nil, generator.generateSyntheticFixture(&spec.Schema{
 		Nullable: true,
 		Type:     spec.TypeString,
 	}, ""))
 
 	// Property with enum
-	assert.Equal(t, "list", generateSyntheticFixture(&spec.Schema{
+	assert.Equal(t, "list", generator.generateSyntheticFixture(&spec.Schema{
 		Enum: []interface{}{"list"},
 		Type: spec.TypeString,
 	}, ""))
 
 	// Takes the first non-reference branch of an anyOf
-	assert.Equal(t, "", generateSyntheticFixture(&spec.Schema{
+	assert.Equal(t, "", generator.generateSyntheticFixture(&spec.Schema{
 		AnyOf: []*spec.Schema{
 			{Ref: "#/components/schemas/radar_rule"},
 			{Type: spec.TypeString},
@@ -656,7 +658,7 @@ func TestGenerateSyntheticFixture(t *testing.T) {
 			"total_count": 0,
 			"url":         "",
 		},
-		generateSyntheticFixture(&spec.Schema{
+		generator.generateSyntheticFixture(&spec.Schema{
 			Type: "object",
 			Properties: map[string]*spec.Schema{
 				"has_more": {

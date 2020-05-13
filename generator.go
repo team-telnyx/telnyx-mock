@@ -330,7 +330,7 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 
 	// Generate a synthethic schema as a last ditch effort
 	if example == nil && schema.XResourceID == "" {
-		example = &valueWrapper{value: generateSyntheticFixture(schema, context)}
+		example = &valueWrapper{value: g.generateSyntheticFixture(schema, context)}
 
 		context = fmt.Sprintf("%sGenerated synthetic fixture: %+v\n", context, schema)
 
@@ -514,6 +514,85 @@ func (g *DataGenerator) generateListResource(params *GenerateParams) (interface{
 	return listData, nil
 }
 
+// generateSyntheticFixture generates a synthetic fixture for the given schema
+// by examining its properties and returning default values for each.
+//
+// This is useful in cases where we don't have a valid fixture for some object.
+// That could happen for a prerelease object or in cases where an expansion has
+// been requested for an embedded object that doesn't occur at the top level of
+// the API.
+//
+// This function calls itself recursively by initially iterating through every
+// property in an object schema, then recursing and returning values for
+// embedded objects and scalars.
+func (g *DataGenerator) generateSyntheticFixture(schema *spec.Schema, context string) interface{} {
+	context = fmt.Sprintf("%sGenerating synthetic fixture: %+v\n", context, schema)
+
+	// Always try to use the user provided example first
+	if schema.Example != nil {
+		return schema.Example
+	}
+
+	// Return the minimum viable object by returning nil/null for a nullable
+	// property.
+	if schema.Nullable {
+		return nil
+	}
+
+	if schema.Ref != "" {
+		resolved, err := schema.ResolveRef(g.definitions)
+
+		if err != nil {
+			panic(err)
+		}
+
+		return g.generateSyntheticFixture(resolved, context)
+	}
+
+	// Return a member of an enum if one is available because it's probably
+	// going to be a more realistic value.
+	if len(schema.Enum) > 0 {
+		return schema.Enum[0]
+	}
+
+	if len(schema.AnyOf) > 0 {
+		for _, subSchema := range schema.AnyOf {
+			// We don't handle dereferencing here right now, but it's plausible
+			if subSchema.Ref != "" {
+				continue
+			}
+			return g.generateSyntheticFixture(subSchema, context)
+		}
+		panic(fmt.Sprintf("%sCouldn't find an anyOf branch to take", context))
+	}
+
+	switch schema.Type {
+	case spec.TypeArray:
+		return []string{}
+
+	case spec.TypeBoolean:
+		return true
+
+	case spec.TypeInteger:
+		return 0
+
+	case spec.TypeNumber:
+		return 0.0
+
+	case spec.TypeObject:
+		fixture := make(map[string]interface{})
+		for property, subSchema := range schema.Properties {
+			fixture[property] = g.generateSyntheticFixture(subSchema, context)
+		}
+		return fixture
+
+	case spec.TypeString:
+		return ""
+	}
+
+	panic(fmt.Sprintf("%sUnhandled type: %s", context, stringOrEmpty(schema.Type)))
+}
+
 //
 // Private values
 //
@@ -630,75 +709,6 @@ func distributeReplacedIDsInValue(pathParams *PathParamsMap, value interface{}) 
 	}
 
 	return "", false
-}
-
-// generateSyntheticFixture generates a synthetic fixture for the given schema
-// by examining its properties and returning default values for each.
-//
-// This is useful in cases where we don't have a valid fixture for some object.
-// That could happen for a prerelease object or in cases where an expansion has
-// been requested for an embedded object that doesn't occur at the top level of
-// the API.
-//
-// This function calls itself recursively by initially iterating through every
-// property in an object schema, then recursing and returning values for
-// embedded objects and scalars.
-func generateSyntheticFixture(schema *spec.Schema, context string) interface{} {
-	context = fmt.Sprintf("%sGenerating synthetic fixture: %+v\n", context, schema)
-
-	// Always try to use the user provided example first
-	if schema.Example != nil {
-		return schema.Example
-	}
-
-	// Return the minimum viable object by returning nil/null for a nullable
-	// property.
-	if schema.Nullable {
-		return nil
-	}
-
-	// Return a member of an enum if one is available because it's probably
-	// going to be a more realistic value.
-	if len(schema.Enum) > 0 {
-		return schema.Enum[0]
-	}
-
-	if len(schema.AnyOf) > 0 {
-		for _, subSchema := range schema.AnyOf {
-			// We don't handle dereferencing here right now, but it's plausible
-			if subSchema.Ref != "" {
-				continue
-			}
-			return generateSyntheticFixture(subSchema, context)
-		}
-		panic(fmt.Sprintf("%sCouldn't find an anyOf branch to take", context))
-	}
-
-	switch schema.Type {
-	case spec.TypeArray:
-		return []string{}
-
-	case spec.TypeBoolean:
-		return true
-
-	case spec.TypeInteger:
-		return 0
-
-	case spec.TypeNumber:
-		return 0.0
-
-	case spec.TypeObject:
-		fixture := make(map[string]interface{})
-		for property, subSchema := range schema.Properties {
-			fixture[property] = generateSyntheticFixture(subSchema, context)
-		}
-		return fixture
-
-	case spec.TypeString:
-		return ""
-	}
-
-	panic(fmt.Sprintf("%sUnhandled type: %s", context, stringOrEmpty(schema.Type)))
 }
 
 func isDeletedResource(schema *spec.Schema) bool {
