@@ -196,7 +196,33 @@ func (s *StubServer) HandleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dataObject, err := responseContent.Schema.Properties["data"].ResolveRef(s.spec.Components.Schemas)
+	dataRoot := responseContent.Schema
+
+	// It's possible the Response object won't have a literal `data` object
+	// and will instead use a `$ref` to (eventually) point to the `data`
+	// object. We're gonna recurse a bit until we find it or give up.
+	for i := 0; i < 3; i++ {
+		if _, ok := dataRoot.Properties["data"]; ok {
+			break
+		}
+
+		if dataRoot.Ref != "" {
+			dataRoot, _ = dataRoot.ResolveRef(s.spec.Components.Schemas)
+		} else {
+			break
+		}
+	}
+
+	if _, ok := dataRoot.Properties["data"]; !ok {
+		fmt.Printf("Couldn't find data object in response\n")
+
+		writeResponse(w, r, start, http.StatusInternalServerError,
+			createInternalServerError())
+
+		return
+	}
+
+	dataObject, err := dataRoot.Properties["data"].ResolveRef(s.spec.Components.Schemas)
 
 	if err != nil {
 		fmt.Printf("error resolving data object ref: %s\n", err)
