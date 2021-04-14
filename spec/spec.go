@@ -84,6 +84,8 @@ var supportedSchemaFields = []string{
 	"x-expandableFields",
 	"x-expansionResources",
 	"x-resourceId",
+	"x-enum-descriptions",
+	"x-enum-varnames",
 
 	// This is currently being used to store additional metadata for our SDKs. It's
 	// passed through our Spec and should be ignored
