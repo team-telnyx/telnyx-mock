@@ -369,7 +369,7 @@ func (s *StubServer) initializeRouter() error {
 				hasNestedProperties = schemaHasNestedProperties(requestSchema)
 
 				requestValidator, err = spec.GetValidatorForOpenAPI3Schema(
-					requestSchema, nil)
+					requestSchema, componentsForValidation)
 				if err != nil {
 					return err
 				}
