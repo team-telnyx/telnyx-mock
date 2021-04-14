@@ -32,7 +32,7 @@ archives:
 
 brews:
   -
-    github:
+    tap:
       owner: team-telnyx
       name: homebrew-telnyx-mock
 
