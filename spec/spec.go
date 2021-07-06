@@ -64,6 +64,7 @@ var supportedSchemaFields = []string{
 	"anyOf",
 	"oneOf",
 	"description",
+	"discriminator",
 	"enum",
 	"example",
 	"format",
@@ -106,6 +107,12 @@ type Schema struct {
 	// We currently just read it as an `interface{}` because we're not using it
 	// for anything right now.
 	AdditionalProperties interface{} `json:"additionalProperties,omitempty"`
+
+	// Discriminator is used for polymorphic responses, helping the client to
+	// detect the object type
+	//
+	// We currently just read it as an `interface{}` because we're not using it
+	Discriminator        interface{} `json:"discriminator,omitempty"`
 
 	AllOf      []*Schema          `json:"allOf,omitempty"`
 	AnyOf      []*Schema          `json:"anyOf,omitempty"`
