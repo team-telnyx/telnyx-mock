@@ -185,6 +185,22 @@ func (s *StubServer) HandleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if responseContent, ok = responseObject.Content["text/plain"]; ok {
+		generator := DataGenerator{}
+		valueWrapper := generator.prepareSchemaExample(responseContent.Schema)
+		value := fmt.Sprintf("%v", valueWrapper.value)
+
+		if verbose {
+			fmt.Printf("Response data: %s\n", value)
+		}
+
+		w.Header().Set("Content-type", "text/plain")
+
+		writeResponse(w, r, start, http.StatusOK, []byte(value))
+
+		return
+	}
+
 	responseContent, ok = responseObject.Content["application/json"]
 
 	if !ok {
@@ -872,11 +888,26 @@ func writeResponse(w http.ResponseWriter, r *http.Request, start time.Time, stat
 	var encodedData []byte
 	var err error
 
-	if !isCurl(r.Header.Get("User-Agent")) {
-		encodedData, err = json.Marshal(&data)
+	if v := w.Header().Get("Content-Type"); v == "" {
+		w.Header().Set("Content-Type", "application/json")
+
+		if !isCurl(r.Header.Get("User-Agent")) {
+			encodedData, err = json.Marshal(&data)
+		} else {
+			encodedData, err = json.MarshalIndent(&data, "", "  ")
+			encodedData = append(encodedData, '\n')
+		}
 	} else {
-		encodedData, err = json.MarshalIndent(&data, "", "  ")
-		encodedData = append(encodedData, '\n')
+		var ok bool
+
+		encodedData, ok = data.([]byte)
+
+		if !ok {
+			// Reset this as our API errors are json
+			w.Header().Set("Content-type", "application/json")
+
+			err = fmt.Errorf("Error decoding data to []byte: %v", data)
+		}
 	}
 
 	if err != nil {
@@ -885,7 +916,6 @@ func writeResponse(w http.ResponseWriter, r *http.Request, start time.Time, stat
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Telnyx-Mock-Version", version)
 
 	w.WriteHeader(status)
