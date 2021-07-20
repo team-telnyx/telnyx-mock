@@ -3,6 +3,7 @@
 package main
 
 import (
+	"crypto/md5"
 	"crypto/tls"
 	"encoding/json"
 	"flag"
@@ -10,6 +11,7 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -23,8 +25,6 @@ const defaultPortHTTP = 12111
 const defaultPortHTTPS = 12112
 
 const liveSpecFile = "https://raw.githubusercontent.com/team-telnyx/openapi/master/openapi/spec3.json"
-
-var liveSpecCache = path.Join(os.TempDir(), "telnyx-mock-spec.json")
 
 // verbose tracks whether the program is operating in verbose mode
 var verbose bool
@@ -369,9 +369,13 @@ func getSpec(specPath string, skipCache bool) (*spec.Spec, error) {
 	var err error
 
 	if specPath == "" {
-		fmt.Printf("Downloading API spec file from: %s\n", liveSpecFile)
+		specPath = liveSpecFile
+	}
 
-		data, err = downloadSpec(skipCache)
+	if _, err := url.ParseRequestURI(specPath); err == nil {
+		fmt.Printf("Downloading API spec file from: %s\n", specPath)
+
+		data, err = downloadSpec(specPath, skipCache)
 
 		if err != nil {
 			return nil, fmt.Errorf("error downloading spec file: %v", err)
@@ -396,17 +400,22 @@ func getSpec(specPath string, skipCache bool) (*spec.Spec, error) {
 	return &telnyxSpec, nil
 }
 
-func downloadSpec(skipCache bool) ([]byte, error) {
+func downloadSpec(url string, skipCache bool) ([]byte, error) {
 	var resp *http.Response
 	var data []byte
 	var err error
 
-	if cachedData, err := ioutil.ReadFile(liveSpecCache); err == nil && !skipCache {
+	cacheName := path.Join(
+		os.TempDir(),
+		fmt.Sprintf("telnyx-mock-spec-%x.json", md5.Sum([]byte(url))),
+	)
+
+	if cachedData, err := ioutil.ReadFile(cacheName); err == nil && !skipCache {
 		fmt.Println("using cache")
 		return cachedData, nil
 	}
 
-	resp, err = http.Get(liveSpecFile)
+	resp, err = http.Get(url)
 
 	if err != nil {
 		return nil, fmt.Errorf("error fetching spec file: %v", err)
@@ -420,7 +429,7 @@ func downloadSpec(skipCache bool) ([]byte, error) {
 		return nil, fmt.Errorf("error reading spec file: %v", err)
 	}
 
-	ioutil.WriteFile(liveSpecCache, data, 0644)
+	os.WriteFile(cacheName, data, 0644)
 
 	return data, nil
 }
