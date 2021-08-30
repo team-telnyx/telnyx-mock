@@ -429,7 +429,7 @@ func downloadSpec(url string, skipCache bool) ([]byte, error) {
 		return nil, fmt.Errorf("error reading spec file: %v", err)
 	}
 
-	os.WriteFile(cacheName, data, 0644)
+	ioutil.WriteFile(cacheName, data, 0644)
 
 	return data, nil
 }
