@@ -312,6 +312,20 @@ func (g *DataGenerator) generateInternal(params *GenerateParams) (interface{}, e
 		})
 	}
 
+    if len(schema.OneOf) > 0 {
+        // For OneOf, we always return the fist branch
+        return g.generateInternal(&GenerateParams{
+            Expansions:    params.Expansions,
+            PathParams:    nil,
+            RequestMethod: params.RequestMethod,
+            RequestPath:   params.RequestPath,
+
+            schema:  schema.OneOf[0],
+            context: fmt.Sprintf("%sChoosing first branch of oneOf:\n", context),
+            example: example,
+        })
+    }
+
 	if isListResource(schema) {
 		// We special-case list resources and always fill in the list with at least
 		// one item of data, regardless of what was present in the example

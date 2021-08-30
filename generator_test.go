@@ -358,6 +358,43 @@ func TestGenerateResponseData(t *testing.T) {
 		_, ok := data.(map[string]interface{})["deleted"]
 		assert.True(t, ok)
 	}
+
+    // pick first anyOf branch
+    {
+        // create a "charge" schema using oneOf
+        var schemas map[string]*spec.Schema
+        for k,v := range testSpec.Components.Schemas {
+            if k == "charge" {
+                schemas[k] = &spec.Schema{
+                    Example: json.RawMessage(`{"id": "foo"}`),
+                    Type:    "object",
+                    Properties: map[string]*spec.Schema{
+                        "id": {Type: "string"},
+                        "customer": {
+                            OneOf: []*spec.Schema{
+                                {Ref: "#/components/schemas/customer"},
+                                {Type: "string"},
+                            },
+                        },
+                    },
+                }
+            } else {
+                schemas[k] = v
+            }
+        }
+
+        generator := DataGenerator{schemas, &testFixtures}
+        schema := &spec.Schema{Ref: "#/components/schemas/charge"}
+        data, err := generator.Generate(schema, nil, &GenerateParams{
+            RequestMethod: http.MethodPost,
+        })
+        assert.Nil(t, err)
+
+        // There should be a customer.id as per the first oneOf branch
+        assert.Equal(t,
+            testFixtures.Resources["customer"].(map[string]interface{})["id"],
+            data.(map[string]interface{})["customer"])
+    }
 }
 
 func TestValidFixtures(t *testing.T) {
