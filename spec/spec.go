@@ -69,6 +69,8 @@ var supportedSchemaFields = []string{
 	"example",
 	"format",
 	"items",
+	"maxItems",
+	"minItems,
 	"maxLength",
 	"minLength",
 	"maximum",
