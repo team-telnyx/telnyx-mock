@@ -1,6 +1,6 @@
 # Deprecation Notice
 
-**This repository is no longer actively maintained or updated.** We encourage developers to utilize the official Telnyx [OpenAPI Specifications](https://developers.telnyx.com/docs/api/v2/overview) alongside modern mocking tools. By doing so, you can quickly spin up a pseudo mock server for prototyping or testing without relying on this deprecated project.
+**This repository is no longer actively maintained or updated.** We encourage developers to utilize the official Telnyx [OpenAPI Specifications](https://github.com/team-telnyx/openapi) alongside modern mocking tools. By doing so, you can quickly spin up a pseudo mock server for prototyping or testing without relying on this deprecated project.
 
 ## Recommended Alternatives
 
