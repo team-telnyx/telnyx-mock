@@ -1,3 +1,44 @@
+# Deprecation Notice
+
+**This repository is no longer actively maintained or updated.** We encourage developers to utilize the official Telnyx [OpenAPI Specifications](https://developers.telnyx.com/docs/api/v2/overview) alongside modern mocking tools. By doing so, you can quickly spin up a pseudo mock server for prototyping or testing without relying on this deprecated project.
+
+## Recommended Alternatives
+
+Below are some popular OpenAPI-based mocking tools that can help you replicate a mock server workflow:
+
+1. **[Stoplight’s Prism](https://github.com/stoplightio/prism)**
+   - Prism can mock APIs based on an OpenAPI document, allowing you to simulate request/response behavior quickly.
+   - **Example Usage:**
+     ```bash
+     # Install Prism CLI
+     npm install -g @stoplight/prism-cli
+
+     # Run Prism in mock mode
+     prism mock /path/to/telnyx-openapi.yaml
+     ```
+   - Prism supports dynamic responses, request validation, and proxying to real endpoints if needed.
+
+2. **[API Dog](https://apidog.io/)**
+   - API Dog can load your OpenAPI spec and create mock endpoints that reflect the defined paths and schemas.
+   - Offers a web-based interface to explore, configure, and test responses.
+
+3. **[Hoppscotch](https://hoppscotch.io/)**
+   - Primarily known as a web-based API client (similar to Postman), Hoppscotch also supports importing OpenAPI specs.
+   - You can mock or quickly test your endpoints to verify correctness and response structure.
+
+## How to Use the Official Telnyx OpenAPI Specification
+
+1. **Obtain the Spec**
+   - You can download the official Telnyx OpenAPI YAML or JSON specification from the [Telnyx Developer Documentation](https://developers.telnyx.com/docs/api/v2/overview).
+
+2. **Load It into Your Tool of Choice**
+   - Most tools listed above (Prism, API Dog, Hoppscotch) allow you to import your OpenAPI spec either via a file or a URL.
+
+3. **Configure and Start Mocking**
+   - Once loaded, each tool provides different configurations to tailor response status codes, payload data, request validation, and more.
+   - Consult each tool’s documentation for advanced configurations like dynamic mocking, route overrides, or environment variables.
+
+
 # telnyx-mock [![Build Status](https://travis-ci.org/team-telnyx/telnyx-mock.svg?branch=master)](https://travis-ci.org/team-telnyx/telnyx-mock)
 
 telnyx-mock is a mock HTTP server that responds like the real Telnyx API. It
